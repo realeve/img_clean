@@ -9,28 +9,40 @@
 }
 .imageItem {
   margin: 10px;
-  cursor: pointer;
-  position: relative;
-  .box {
-    position: absolute;
-    border: 1px solid #fff022;
-  }
-  :hover {
-    transform: scale(1.02);
-    transition: transform 0.3s ease;
-  }
-  .spot {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    width: 24px;
-    height: 24px;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    background-color: #e23;
-    color: #fff;
-    border-radius: 50%;
+  overflow: hidden;
+  .detail {
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    transform: scale(1) translateX(0px);
+    .box {
+      position: absolute;
+      border: 1px solid #fff022;
+    }
+    .box2 {
+      position: absolute;
+      border: 1px solid #22ff64;
+    }
+    &:hover {
+      z-index: 2;
+      transform: scale(1.4) translateX(56px);
+      transition: transform 0.3s;
+      transition-timing-function: ease-in-out;
+    }
+
+    .spot {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      width: 24px;
+      height: 24px;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: center;
+      background-color: #e23;
+      color: #fff;
+      border-radius: 50%;
+    }
   }
 }
 .tool {

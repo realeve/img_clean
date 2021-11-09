@@ -47,19 +47,32 @@ const ImageItem = ({
       }}
       style={{ height: imgHeight }}
     >
-      <img src={`${imageHost}${item.img_url}`} style={{ height: '100%' }} />
-      {box && (
-        <div
-          className={styles.box}
-          style={{
-            left: scale * box.x1,
-            top: scale * box.y1,
-            width: scale * (box.x2 - box.x1),
-            height: scale * (box.y2 - box.y1),
-          }}
-        ></div>
-      )}
-      <div className={styles.spot}>{item.id}</div>
+      <div className={styles.detail} style={{ height: imgHeight }}>
+        <img src={`${imageHost}${item.img_url}`} style={{ height: '100%' }} />
+        {box && (
+          <div
+            className={styles.box}
+            style={{
+              left: scale * box.x1,
+              top: scale * box.y1,
+              width: scale * (box.x2 - box.x1),
+              height: scale * (box.y2 - box.y1),
+            }}
+          />
+        )}
+        {box && (
+          <div
+            className={styles.box2}
+            style={{
+              left: scale * (box.x1 + 112),
+              top: scale * box.y1,
+              width: scale * (box.x2 - box.x1),
+              height: scale * (box.y2 - box.y1),
+            }}
+          />
+        )}
+        <div className={styles.spot}>{item.id}</div>
+      </div>
     </div>
   );
 };
