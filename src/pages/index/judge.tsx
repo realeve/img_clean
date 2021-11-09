@@ -59,6 +59,7 @@ const ImageItem = ({
           }}
         ></div>
       )}
+      <div className={styles.spot}>{item.id}</div>
     </div>
   );
 };
