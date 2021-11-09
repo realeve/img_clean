@@ -1,36 +1,22 @@
-import {
-  axios,
-  IAxiosState,
-  AxiosError,
-  DEV,
-  mock,
-  _commonData,
-  TDbWrite,
-} from '@/utils/axios';
-import useFetch, { IFetchState } from '@/utils/useFetch';
+import { axios, IAxiosState, DEV, _commonData, TDbWrite } from '@/utils/axios';
 
+export interface IImageItem {
+  id: number;
+  img_url: string;
+}
 /**
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 获取100条图像核查待清洗数据 }
  */
-export const getImageJudge: (manual_flag: string) => Promise<IAxiosState> = (
+export const getImgs: (manual_flag: number) => Promise<IImageItem[]> = (
   manual_flag,
 ) =>
-  axios({
-    url: DEV ? '@/mock/1391_188caccc16.json' : '/1391/188caccc16.json',
+  axios<IImageItem>({
+    url: DEV ? '/mock/1391_188caccc16.json' : '/1391/188caccc16.json',
     params: {
       manual_flag,
     },
-  });
-
-/**
- *   @database: { 生产指挥中心BI数据 }
- *   @desc:     { 图像核查待清洗数据总量 }
- */
-export const getImageJudgeCount: () => Promise<IAxiosState> = () =>
-  axios({
-    url: DEV ? undefined : '/1392/70919f0f45.json',
-  });
+  }).then((res) => res.data);
 
 /**
  *   @database: { 生产指挥中心BI数据 }
