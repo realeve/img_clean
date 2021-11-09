@@ -8,7 +8,7 @@ export interface IImageItem {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 获取100条图像核查待清洗数据 }
  */
-export const getImgs: (manual_flag: number) => Promise<IImageItem[]> = (
+export const getImgs: (manual_flag: string) => Promise<IImageItem[]> = (
   manual_flag,
 ) =>
   axios<IImageItem>({

@@ -31,11 +31,16 @@ export default function IndexPage() {
   const [judgeType, setJudgeType] = useState<'0' | '1'>('1');
 
   const [imgs, setImgs] = useState<IImageItem[]>([]);
-  useEffect(() => {
-    db.getImgs(1).then((res) => {
+
+  const [dataLoading, setDataLoading] = useState(true);
+  const refeshData = () => {
+    setDataLoading(true);
+    db.getImgs(judgeType).then((res) => {
       setImgs(res);
+      setDataLoading(false);
     });
-  }, []);
+  };
+  useEffect(refeshData, []);
 
   return (
     <div className="card-content">
@@ -65,7 +70,12 @@ export default function IndexPage() {
           </Radio.Group>
         </div>
       </div>
-      <JudgePage judgeType={judgeType} data={imgs} />
+      <JudgePage
+        loading={dataLoading}
+        judgeType={judgeType}
+        data={imgs}
+        onRefresh={refeshData}
+      />
     </div>
   );
 }
