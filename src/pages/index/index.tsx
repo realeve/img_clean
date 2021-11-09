@@ -6,6 +6,7 @@ import { IImageItem } from './db';
 
 import { useState, useEffect } from 'react';
 import styles from './index.less';
+import JudgePage from './judge';
 
 type TTaskNum = { manual_flag: number; img_num: number };
 
@@ -66,6 +67,7 @@ export default function IndexPage() {
         </div>
       </div>
       <Divider />
+      <JudgePage judgeType={judgeType} data={imgs} />
     </div>
   );
 }

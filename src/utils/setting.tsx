@@ -5,3 +5,5 @@ export const DEV: boolean =
   process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
 
 export const host = DEV ? 'http://localhost:90/api/' : 'http://10.8.1.25:100';
+
+export const imageHost = 'http://localhost:98/';
