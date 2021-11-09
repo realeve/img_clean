@@ -136,6 +136,8 @@ export default ({
     onRefresh();
   };
 
+  const fakeWidth = judgeType == '0' ? 8 : 16;
+
   return (
     <Row gutter={16} style={{ marginTop: 20 }}>
       <Col span={12}>
@@ -176,15 +178,15 @@ export default ({
         </Button>
       </Col>
       <Divider />
-      <Col span={12}>
+      <Col span={fakeWidth}>
         <h1 className={styles.center}>实废（{judgeData.fake.length}）</h1>
         <div className={styles.center}>请点击下方你认为是误废的产品</div>
       </Col>
-      <Col span={12} style={{ borderLeft: '9px solid #888' }}>
+      <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
         <h1 className={styles.center}>误废（{judgeData.normal.length}）</h1>
         <div className={styles.center}>请点击下方你认为是废票的产品</div>
       </Col>
-      <Col span={12}>
+      <Col span={fakeWidth}>
         <div className={styles.list}>
           {judgeData.fake.map((id, i) => {
             const item = data.find((item) => item.id === id) as IImageItem;
@@ -210,7 +212,7 @@ export default ({
           })}
         </div>
       </Col>
-      <Col span={12} style={{ borderLeft: '9px solid #888' }}>
+      <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
         <div className={styles.list}>
           {judgeData.normal.map((id, i) => {
             const item = data.find((item) => item.id === id) as IImageItem;
