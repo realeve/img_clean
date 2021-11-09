@@ -7,10 +7,12 @@ import { IImageItem } from './db';
 import { useState, useEffect } from 'react';
 import styles from './index.less';
 import JudgePage from './judge';
+import { connect } from 'dva';
+import { ICommon } from '@/models/common';
 
 type TTaskNum = { manual_flag: number; img_num: number };
 
-export default function IndexPage() {
+function IndexPage({ ip }) {
   const { data, loading } = useFetch<TTaskNum>({
     param: {
       url: DEV ? '@/mock/1392_70919f0f45.json' : '/1392/70919f0f45.json',
@@ -28,13 +30,14 @@ export default function IndexPage() {
     },
   });
 
-  const [judgeType, setJudgeType] = useState<'0' | '1'>('1');
+  const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
   const [imgs, setImgs] = useState<IImageItem[]>([]);
 
   const [dataLoading, setDataLoading] = useState(true);
   const refeshData = () => {
     setDataLoading(true);
+    setImgs([]);
     db.getImgs(judgeType).then((res) => {
       setImgs(res);
       setDataLoading(false);
@@ -50,7 +53,7 @@ export default function IndexPage() {
           <Skeleton
             title={false}
             active
-            loading={true || loading}
+            loading={loading}
             paragraph={{ rows: 1, width: 300 }}
           >
             {data && `实废：${data.fake}, 误废：${data.normal}`}
@@ -75,7 +78,12 @@ export default function IndexPage() {
         judgeType={judgeType}
         data={imgs}
         onRefresh={refeshData}
+        ip={ip}
       />
     </div>
   );
 }
+
+export default connect(({ common }: { common: ICommon }) => ({
+  ip: common.ip,
+}))(IndexPage);

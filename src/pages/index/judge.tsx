@@ -1,8 +1,8 @@
 import styles from './judge.less';
-import { Row, Col, Divider, Radio, Button, Modal, Spin } from 'antd';
+import { Row, Col, Divider, Radio, Button, Modal, message } from 'antd';
 import { imageHost } from '@/utils/setting';
 
-import { IImageItem } from './db';
+import { IImageItem, setImageJudge } from './db';
 
 import { useState, useEffect } from 'react';
 
@@ -20,10 +20,12 @@ const ImageItem = ({
   item,
   onChange,
   imgHeight = defaultImageSize,
+  idx,
 }: {
   item: IImageItem;
   imgHeight: number;
   onChange: () => void;
+  idx: number;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
@@ -71,7 +73,7 @@ const ImageItem = ({
             }}
           />
         )}
-        <div className={styles.spot}>{item.id}</div>
+        <div className={styles.spot}>{idx}</div>
       </div>
     </div>
   );
@@ -81,12 +83,14 @@ export default ({
   data,
   judgeType,
   onRefresh,
+  ip,
   loading = true,
 }: {
   data: IImageItem[];
   judgeType: '0' | '1';
   onRefresh: () => void;
   loading?: boolean;
+  ip: string;
 }) => {
   const [judgeData, setJudgeData] = useSetState<{
     fake: number[];
@@ -107,7 +111,21 @@ export default ({
   const [imgHeight, setImgHeight] = useState(defaultImageSize);
 
   const submit = async () => {
-    console.log(judgeData);
+    let success1 = await setImageJudge({
+      ip,
+      audit_flag: 1,
+      _id: judgeData.fake,
+    });
+    let success2 = await setImageJudge({
+      ip,
+      audit_flag: 1,
+      _id: judgeData.fake,
+    });
+    if (!success1 || !success2) {
+      message.error('数据提交失败，请稍后重试');
+      return;
+    }
+    message.success('数据提交成功');
     onRefresh();
   };
 
@@ -150,12 +168,12 @@ export default ({
       </Col>
       <Divider />
       <Col span={12}>
-        <h1 style={{ textAlign: 'center' }}>实废（{judgeData.fake.length}）</h1>
+        <h1 className={styles.center}>实废（{judgeData.fake.length}）</h1>
+        <div className={styles.center}>请点击下方你认为是误废的产品</div>
       </Col>
       <Col span={12} style={{ borderLeft: '9px solid #888' }}>
-        <h1 style={{ textAlign: 'center' }}>
-          误废（{judgeData.normal.length}）
-        </h1>
+        <h1 className={styles.center}>误废（{judgeData.normal.length}）</h1>
+        <div className={styles.center}>请点击下方你认为是废票的产品</div>
       </Col>
       <Col span={12}>
         <div className={styles.list}>
@@ -174,6 +192,7 @@ export default ({
                   });
                 }}
                 imgHeight={imgHeight}
+                idx={i + 1}
               />
             );
           })}
@@ -196,6 +215,7 @@ export default ({
                   });
                 }}
                 imgHeight={imgHeight}
+                idx={i + 1}
               />
             );
           })}

@@ -23,8 +23,9 @@ export const getImgs: (manual_flag: string) => Promise<IImageItem[]> = (
  *   @desc:     { 更新数据清洗信息 }
  */
 export const setImageJudge: (params: {
-  audit_flag: string;
-  _id: string;
+  audit_flag: number;
+  _id: number[];
+  ip: string;
 }) => Promise<boolean> = (params) =>
   axios<TDbWrite>({
     url: DEV ? _commonData : '/1393/10aa1bc9e4.json',
