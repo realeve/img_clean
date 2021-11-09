@@ -29,6 +29,9 @@ const ImageItem = ({
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
+    if (!item) {
+      return;
+    }
     let unmounted = true;
     fetchXML(item.img_url).then((res) => {
       unmounted && setBox(res);
@@ -118,8 +121,8 @@ export default ({
     });
     let success2 = await setImageJudge({
       ip,
-      audit_flag: 1,
-      _id: judgeData.fake,
+      audit_flag: 0,
+      _id: judgeData.normal,
     });
     if (!success1 || !success2) {
       message.error('数据提交失败，请稍后重试');
@@ -156,7 +159,9 @@ export default ({
           type="primary"
           onClick={() => {
             confirm({
-              onOk: submit,
+              onOk: () => {
+                submit();
+              },
               title: '是否所有数据已经判废完成，确认提交？',
               okText: '提交入库',
               cancelText: '取消',
