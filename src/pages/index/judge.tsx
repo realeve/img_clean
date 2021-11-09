@@ -104,6 +104,10 @@ export default ({
   });
 
   useEffect(() => {
+    if (data.length === 0) {
+      setJudgeData({ fake: [], normal: [] });
+      return;
+    }
     const ids = data.map((item) => item.id);
     setJudgeData({
       fake: judgeType === '1' ? ids : [],
@@ -184,6 +188,9 @@ export default ({
         <div className={styles.list}>
           {judgeData.fake.map((id, i) => {
             const item = data.find((item) => item.id === id) as IImageItem;
+            if (!item) {
+              return null;
+            }
             return (
               <ImageItem
                 item={item}
@@ -207,6 +214,9 @@ export default ({
         <div className={styles.list}>
           {judgeData.normal.map((id, i) => {
             const item = data.find((item) => item.id === id) as IImageItem;
+            if (!item) {
+              return null;
+            }
             return (
               <ImageItem
                 item={item}
