@@ -1,6 +1,6 @@
 import Footer from './Footer';
 import './index.less';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, BackTop } from 'antd';
 import { menu as menuData } from './menu';
 import { HomeOutlined } from '@ant-design/icons';
 
@@ -28,6 +28,7 @@ const LayoutWrapper = ({ children }: { children?: React.ReactNode }) => {
       </Header>
       <Content style={{ padding: '0 50px' }}>{children}</Content>
       <Footer />
+      <BackTop />
     </Layout>
   );
 };

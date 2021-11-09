@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 
 import { useSetState } from 'react-use';
 import * as R from 'ramda';
-import { fetchXML, IBoxItem } from './lib';
+import { fetchXML, IBoxItem, saveImageSize, getImageSize } from './lib';
 
 const defaultImageSize = 192;
 const originSize = 112;
@@ -117,6 +117,11 @@ export default ({
 
   const [imgHeight, setImgHeight] = useState(defaultImageSize);
 
+  useEffect(() => {
+    let height = getImageSize(defaultImageSize);
+    setImgHeight(height);
+  }, []);
+
   const submit = async () => {
     let success1 = await setImageJudge({
       ip,
@@ -148,6 +153,7 @@ export default ({
           buttonStyle="solid"
           onChange={(e) => {
             setImgHeight(e.target.value);
+            saveImageSize(e.target.value);
           }}
         >
           {imgSize.map((item) => {

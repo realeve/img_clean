@@ -13,7 +13,7 @@ import { ICommon } from '@/models/common';
 type TTaskNum = { manual_flag: number; img_num: number };
 
 function IndexPage({ ip }) {
-  const { data, loading } = useFetch<TTaskNum>({
+  const { data, loading, reFetch } = useFetch<TTaskNum>({
     param: {
       url: DEV ? '@/mock/1392_70919f0f45.json' : '/1392/70919f0f45.json',
     },
@@ -77,7 +77,10 @@ function IndexPage({ ip }) {
         loading={dataLoading}
         judgeType={judgeType}
         data={imgs}
-        onRefresh={refeshData}
+        onRefresh={() => {
+          refeshData();
+          reFetch();
+        }}
         ip={ip}
       />
     </div>

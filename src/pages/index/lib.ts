@@ -34,3 +34,13 @@ export const fetchXML = async (url: string) => {
 
   return { x1, y1, x2, y2 };
 };
+
+const key = 'img_judge_';
+export const saveImageSize = (imgsize: number) => {
+  window.localStorage.setItem(key + 'imgsize', String(imgsize));
+};
+
+export const getImageSize = (defaultImageSize = 192) => {
+  let res = window.localStorage.getItem(key + 'imgsize') || defaultImageSize;
+  return Number(res);
+};
