@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "manual_flag": 1,
+      "img_num": 104235
+    },
+    {
+      "manual_flag": 0,
+      "img_num": 475074
+    }
+  ],
+  "rows": 2,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["manual_flag", "img_num"],
+  "title": "图像核查待清洗数据总量",
+  "time": "564.369ms",
+  "serverTime": "2021-11-09 14:18:09",
+  "source": "数据来源：生产指挥中心BI数据",
+  "hash": "W/\"f4e71b8e5bade4365a23226655224013\""
+}

@@ -1,0 +1,55 @@
+#root,
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  .ant-back-top-content {
+    transition: background-color 0.5s linear;
+    &:hover {
+      background-color: #120c0c;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #434b55;
+  border: 1px solid #434b55;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--datav-scroll-track-bg);
+}
+
+.card-content {
+  padding: 24px;
+  background: #fff;
+  h3 {
+    font-weight: bold;
+  }
+}
+
+@keyframes fxRichTextFadeIn {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  color: #fff !important;
+  background: #2681ff !important;
+  border-color: #2681ff !important;
+  &:hover {
+    color: #fff !important;
+    background: #4f9eff !important;
+    border-color: #4f9eff !important;
+  }
+}

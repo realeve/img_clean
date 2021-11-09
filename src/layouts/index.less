@@ -1,0 +1,33 @@
+.ant-layout {
+  flex-direction: column !important;
+  height: 100%;
+  min-height: 100vh;
+  &-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .logo {
+      width: 240px;
+      height: 60px;
+      line-height: 60px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 22px;
+      cursor: pointer;
+    }
+  }
+  &-content {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    max-width: 1800px;
+    height: 100%;
+    margin: 30px auto;
+  }
+}
+
+@media print {
+  .ant-layout {
+    background: #fff;
+  }
+}
