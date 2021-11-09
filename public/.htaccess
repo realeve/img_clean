@@ -1,0 +1,27 @@
+﻿<IfModule mod_rewrite.c>
+	<Files ~ "^.(htaccess|htpasswd)$">
+	deny from all
+	</Files>
+
+	Options -Indexes
+	Options +FollowSymLinks
+
+	#允许解析文件中的SSI指令
+	Options +Includes
+	 
+	#定义目录索引页面
+	DirectoryIndex index.php index.html index.htm
+	order deny,allow
+</IfModule>
+
+<IfModule mod_headers.c>
+	Header append Vary Accept env=REDIRECT_accept
+	Header set Access-Control-Allow-Origin *
+	Header set Access-Control-Allow-Methods "GET,POST,OPTIONS,DELETE,PUT"
+    Header set Access-Control-Allow-Credentials true
+	Header set Access-Control-Allow-Headers "range,Authorization"
+	Header set Access-Control-Expose-Headers "Content-Length"
+	Header set Accept-Ranges bytes
+</IfModule>
+
+AddType image/webp .webp

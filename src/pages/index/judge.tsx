@@ -1,21 +1,35 @@
 import styles from './judge.less';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Divider, Radio } from 'antd';
 import { imageHost } from '@/utils/setting';
 
 import { IImageItem } from './db';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useSetState } from 'react-use';
 import * as R from 'ramda';
+import { fetchXML, IBoxItem } from './lib';
+
+const defaultImageSize = 192;
+const originSize = 112;
+const imgSize = [112, 128, 192, 224, 256, 384];
 
 const ImageItem = ({
   item,
   onChange,
+  imgHeight = defaultImageSize,
 }: {
   item: IImageItem;
+  imgHeight: number;
   onChange: () => void;
 }) => {
+  const [box, setBox] = useState<IBoxItem | null>(null);
+  useEffect(() => {
+    fetchXML(item.img_url).then(setBox);
+  }, [item]);
+
+  const scale = imgHeight / originSize;
+
   return (
     <div
       className={styles.imageItem}
@@ -23,8 +37,20 @@ const ImageItem = ({
       onClick={() => {
         onChange();
       }}
+      style={{ height: imgHeight }}
     >
-      <img src={`${imageHost}${item.img_url}`} />
+      <img src={`${imageHost}${item.img_url}`} style={{ height: '100%' }} />
+      {box && (
+        <div
+          className={styles.box}
+          style={{
+            left: scale * box.x1,
+            top: scale * box.y1,
+            width: scale * (box.x2 - box.x1),
+            height: scale * (box.y2 - box.y1),
+          }}
+        ></div>
+      )}
     </div>
   );
 };
@@ -52,8 +78,30 @@ export default ({
     });
   }, [data]);
 
+  const [imgHeight, setImgHeight] = useState(defaultImageSize);
+
   return (
     <Row gutter={16}>
+      <Col span={24}>
+        图片默认大小(像素)：
+        <Radio.Group
+          defaultValue={defaultImageSize}
+          value={imgHeight}
+          buttonStyle="solid"
+          onChange={(e) => {
+            setImgHeight(e.target.value);
+          }}
+        >
+          {imgSize.map((item) => {
+            return (
+              <Radio.Button value={item} key={String(item)}>
+                {item}
+              </Radio.Button>
+            );
+          })}
+        </Radio.Group>
+      </Col>
+      <Divider />
       <Col span={12}>
         <h2 style={{ textAlign: 'center' }}>实废（{judgeData.fake.length}）</h2>
       </Col>
@@ -78,6 +126,7 @@ export default ({
                     normal,
                   });
                 }}
+                imgHeight={imgHeight}
               />
             );
           })}
@@ -99,6 +148,7 @@ export default ({
                     normal,
                   });
                 }}
+                imgHeight={imgHeight}
               />
             );
           })}

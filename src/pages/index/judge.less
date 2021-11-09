@@ -8,11 +8,20 @@
   flex-wrap: wrap;
 }
 .imageItem {
-  margin: 5px;
-  padding: 5px;
-  background: #f2f2f2;
-  img {
-    height: 192px;
-  }
+  margin: 10px;
   cursor: pointer;
+  position: relative;
+  .box {
+    position: absolute;
+    border: 1px solid #fff022;
+  }
+  :hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+  }
+}
+.tool {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
 }

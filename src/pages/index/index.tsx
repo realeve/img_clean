@@ -1,4 +1,4 @@
-import { Skeleton, Divider, Radio } from 'antd';
+import { Skeleton, Radio } from 'antd';
 import { DEV } from '@/utils/setting';
 import useFetch from '@/component/hooks/useFetch';
 import * as db from './db';
@@ -34,7 +34,6 @@ export default function IndexPage() {
   useEffect(() => {
     db.getImgs(1).then((res) => {
       setImgs(res);
-      console.log(res);
     });
   }, []);
 
@@ -66,7 +65,6 @@ export default function IndexPage() {
           </Radio.Group>
         </div>
       </div>
-      <Divider />
       <JudgePage judgeType={judgeType} data={imgs} />
     </div>
   );
