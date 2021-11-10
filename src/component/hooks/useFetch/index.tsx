@@ -66,7 +66,7 @@ export interface IFetchResponse<T> {
 const useAxios = <T extends {} | void>({
   param,
   initData,
-  callback: onFetchData = (e) => e,
+  callback: onFetchData = (e: T) => e,
   interval = 0,
   valid = () => true,
   refreshOnWindowFocus = true,

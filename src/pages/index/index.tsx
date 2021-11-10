@@ -1,6 +1,6 @@
 import { Skeleton, Radio } from 'antd';
 import { DEV } from '@/utils/setting';
-import useFetch from '@/component/hooks/useFetch';
+import useFetch, { IFetchState } from '@/component/hooks/useFetch';
 import * as db from './db';
 import { IImageItem } from './db';
 
@@ -30,6 +30,26 @@ function IndexPage({ ip }) {
     },
   });
 
+  /**
+   *   useFetch (React hooks)
+   *   @database: { 生产指挥中心BI数据 }
+   *   @desc:     { 我的判废数量 }
+   *   useFetch 返回值说明： data(返回数据), error(报错), loading(加载状态), reFetch(强制刷新),setData(强制设定数据)
+   */
+  const { data: judgeNum, loading: judgeLoading } = useFetch<{
+    fake: number;
+    normal: number;
+  }>({
+    param: {
+      url: `/1394/2f1cbb3ffe.json`,
+      params: {
+        ip,
+      },
+    },
+    valid: () => ip.length > 0,
+    callback: (e) => e.data?.[0] || { fake: 0, normal: 0 },
+  });
+
   const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
   const [imgs, setImgs] = useState<IImageItem[]>([]);
@@ -49,15 +69,28 @@ function IndexPage({ ip }) {
     <div className="card-content">
       <div className={styles.head}>
         <div className={styles.main}>
-          <div style={{ width: 200 }}>待判废数据：</div>
-          <Skeleton
-            title={false}
-            active
-            loading={loading}
-            paragraph={{ rows: 1, width: 300 }}
-          >
-            {data && `实废：${data.fake}, 误废：${data.normal}`}
-          </Skeleton>
+          <div className={styles.item}>
+            <div style={{ width: 200 }}>待判废数据：</div>
+            <Skeleton
+              title={false}
+              active
+              loading={loading}
+              paragraph={{ rows: 1, width: 300 }}
+            >
+              {data && `实废：${data.fake}, 误废：${data.normal}`}
+            </Skeleton>
+          </div>
+          <div className={styles.item}>
+            <div style={{ width: 200 }}>{ip} 已判废:</div>
+            <Skeleton
+              title={false}
+              active
+              loading={judgeLoading}
+              paragraph={{ rows: 1, width: 300 }}
+            >
+              {judgeNum && `实废：${judgeNum.fake}, 误废：${judgeNum.normal}`}
+            </Skeleton>
+          </div>
         </div>
         <div className={styles.action}>
           <Radio.Group
