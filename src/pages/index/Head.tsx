@@ -197,7 +197,7 @@ export default forwardRef(
                   });
                 }}
               >
-                更新
+                {userInfoMode == 'add' ? '添加' : '更新'}
               </Button>
             </div>
           </div>
