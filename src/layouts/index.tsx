@@ -2,7 +2,7 @@ import Footer from './Footer';
 import './index.less';
 import { Layout, Menu, BackTop } from 'antd';
 import { menu as menuData } from './menu';
-import { HomeOutlined } from '@ant-design/icons';
+import { Link } from 'umi';
 
 const { Header, Content } = Layout;
 
@@ -19,14 +19,14 @@ const LayoutWrapper = ({ children }: { children?: React.ReactNode }) => {
         >
           {menuData.map((item) => {
             return (
-              <Menu.Item key={item.key} icon={<HomeOutlined />}>
-                {item.title}
+              <Menu.Item key={item.key} icon={item.icon}>
+                <Link to={item.key}>{item.title}</Link>
               </Menu.Item>
             );
           })}
         </Menu>
       </Header>
-      <Content style={{ padding: '0 50px' }}>{children}</Content>
+      <Content style={{ padding: '0 20px' }}>{children}</Content>
       <Footer />
       <BackTop />
     </Layout>

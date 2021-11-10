@@ -3,6 +3,13 @@ export const routes = [
   {
     path: '/',
     component: '@/layouts/',
-    routes: [{ path: '/', component: '@/pages/index', title: '数据标记' }],
+    routes: [
+      { path: '/', component: '@/pages/index', title: '数据标记' },
+      {
+        path: '/main/result',
+        component: '@/pages/index/result',
+        title: '标记结果',
+      },
+    ],
   },
 ];
