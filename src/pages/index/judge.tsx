@@ -1,5 +1,5 @@
 import styles from './judge.less';
-import { Row, Col, Divider, Button, Modal, message } from 'antd';
+import { Row, Col, Divider, Button, Modal, message, Skeleton } from 'antd';
 import { imageHost } from '@/utils/setting';
 
 import { IImageItem, setImageJudge } from './db';
@@ -12,8 +12,13 @@ import { fetchXML, IBoxItem } from './lib';
 
 import { originSize, defaultImageSize } from './Head';
 
+import Animate from 'rc-animate';
+
+import LazyLoad from 'react-lazyload';
+
 const confirm = Modal.confirm;
 
+// TODO: lazyload
 export const ImageItem = ({
   item,
   onChange,
@@ -48,34 +53,36 @@ export const ImageItem = ({
       onClick={() => {
         onChange();
       }}
-      style={{ height: imgHeight }}
+      style={{ height: imgHeight, width: 2 * imgHeight }}
     >
-      <div className={styles.detail} style={{ height: imgHeight }}>
-        <img src={`${imageHost}${item.img_url}`} style={{ height: '100%' }} />
-        {box && (
-          <div
-            className={styles.box}
-            style={{
-              left: scale * box.x1,
-              top: scale * box.y1,
-              width: scale * (box.x2 - box.x1),
-              height: scale * (box.y2 - box.y1),
-            }}
-          />
-        )}
-        {box && (
-          <div
-            className={styles.box2}
-            style={{
-              left: scale * (box.x1 + 112),
-              top: scale * box.y1,
-              width: scale * (box.x2 - box.x1),
-              height: scale * (box.y2 - box.y1),
-            }}
-          />
-        )}
-        <div className={styles.spot}>{idx}</div>
-      </div>
+      <Animate key="0" transitionName="fade" transitionAppear>
+        <div className={styles.detail} style={{ height: imgHeight }}>
+          <img src={`${imageHost}${item.img_url}`} className={styles.img} />
+          {box && (
+            <div
+              className={styles.box}
+              style={{
+                left: scale * box.x1,
+                top: scale * box.y1,
+                width: scale * (box.x2 - box.x1),
+                height: scale * (box.y2 - box.y1),
+              }}
+            />
+          )}
+          {box && (
+            <div
+              className={styles.box2}
+              style={{
+                left: scale * (box.x1 + 112),
+                top: scale * box.y1,
+                width: scale * (box.x2 - box.x1),
+                height: scale * (box.y2 - box.y1),
+              }}
+            />
+          )}
+          <div className={styles.spot}>{idx}</div>
+        </div>
+      </Animate>
     </div>
   );
 };
@@ -158,20 +165,22 @@ export default ({
               return null;
             }
             return (
-              <ImageItem
-                item={item}
-                key={id}
-                onChange={() => {
-                  const fake = R.remove(i, 1, judgeData.fake);
-                  const normal = R.append(id, judgeData.normal);
-                  setJudgeData({
-                    fake,
-                    normal,
-                  });
-                }}
-                imgHeight={imgHeight}
-                idx={i + 1}
-              />
+              <LazyLoad height={imgHeight}>
+                <ImageItem
+                  item={item}
+                  key={id}
+                  onChange={() => {
+                    const fake = R.remove(i, 1, judgeData.fake);
+                    const normal = R.append(id, judgeData.normal);
+                    setJudgeData({
+                      fake,
+                      normal,
+                    });
+                  }}
+                  imgHeight={imgHeight}
+                  idx={i + 1}
+                />
+              </LazyLoad>
             );
           })}
         </div>
@@ -184,20 +193,22 @@ export default ({
               return null;
             }
             return (
-              <ImageItem
-                item={item}
-                key={id}
-                onChange={() => {
-                  const normal = R.remove(i, 1, judgeData.normal);
-                  const fake = R.append(id, judgeData.fake);
-                  setJudgeData({
-                    fake,
-                    normal,
-                  });
-                }}
-                imgHeight={imgHeight}
-                idx={i + 1}
-              />
+              <LazyLoad height={imgHeight}>
+                <ImageItem
+                  item={item}
+                  key={id}
+                  onChange={() => {
+                    const normal = R.remove(i, 1, judgeData.normal);
+                    const fake = R.append(id, judgeData.fake);
+                    setJudgeData({
+                      fake,
+                      normal,
+                    });
+                  }}
+                  imgHeight={imgHeight}
+                  idx={i + 1}
+                />
+              </LazyLoad>
             );
           })}
         </div>
