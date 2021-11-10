@@ -31,3 +31,31 @@ export const setImageJudge: (params: {
     url: DEV ? _commonData : '/1393/10aa1bc9e4.json',
     params,
   }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);
+
+export interface IAuditItem {
+  id: number;
+  img_url: string;
+  username: string;
+  audit_flag: string;
+}
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 按页获取用户判废结果 }
+ */
+export const getImageJudge: (params: {
+  manual_flag: string;
+  max_id: number;
+}) => Promise<IAuditItem[]> = (params) =>
+  axios<IAuditItem>({
+    url: DEV ? '@/mock/1395_1b873dfb50.json' : '/1395/1b873dfb50.json',
+    params,
+  }).then((res) => res.data);
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 已判废结果分页索引 }
+ */
+export const getImageJudgePageIndex: () => Promise<IAxiosState> = () =>
+  axios({
+    url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1396/bf3f4dafb4.json',
+  });

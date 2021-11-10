@@ -8,11 +8,9 @@ import { useState, useEffect } from 'react';
 
 import { useSetState } from 'react-use';
 import * as R from 'ramda';
-import { fetchXML, IBoxItem, saveImageSize, getImageSize } from './lib';
+import { fetchXML, IBoxItem } from './lib';
 
-const defaultImageSize = 192;
-const originSize = 112;
-const imgSize = [112, 128, 192, 224, 256, 384];
+import { originSize, defaultImageSize } from './Head';
 
 const confirm = Modal.confirm;
 
@@ -87,12 +85,14 @@ export default ({
   judgeType,
   onRefresh,
   ip,
+  imgHeight,
   loading = true,
 }: {
   data: IImageItem[];
   judgeType: '0' | '1';
   onRefresh: () => void;
   loading?: boolean;
+  imgHeight: number;
   ip: string;
 }) => {
   const [judgeData, setJudgeData] = useSetState<{
@@ -114,13 +114,6 @@ export default ({
       normal: judgeType === '0' ? ids : [],
     });
   }, [data]);
-
-  const [imgHeight, setImgHeight] = useState(defaultImageSize);
-
-  useEffect(() => {
-    let height = getImageSize(defaultImageSize);
-    setImgHeight(height);
-  }, []);
 
   const submit = async () => {
     let success1 = await setImageJudge({
@@ -144,46 +137,25 @@ export default ({
   const fakeWidth = judgeType == '0' ? 8 : 16;
 
   return (
-    <Row gutter={16} style={{ marginTop: 20 }}>
-      <Col span={12}>
-        图片默认大小(像素)：
-        <Radio.Group
-          defaultValue={defaultImageSize}
-          value={imgHeight}
-          buttonStyle="solid"
-          onChange={(e) => {
-            setImgHeight(e.target.value);
-            saveImageSize(e.target.value);
-          }}
-        >
-          {imgSize.map((item) => {
-            return (
-              <Radio.Button value={item} key={String(item)}>
-                {item}
-              </Radio.Button>
-            );
-          })}
-        </Radio.Group>
-      </Col>
-      <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          size="large"
-          type="primary"
-          onClick={() => {
-            confirm({
-              onOk: () => {
-                submit();
-              },
-              title: '是否所有数据已经判废完成，确认提交？',
-              okText: '提交入库',
-              cancelText: '取消',
-            });
-          }}
-        >
-          确认提交
-        </Button>
-      </Col>
+    <Row gutter={16} style={{ position: 'relative' }}>
       <Divider />
+      <Button
+        size="large"
+        type="primary"
+        onClick={() => {
+          confirm({
+            onOk: () => {
+              submit();
+            },
+            title: '是否所有数据已经判废完成，确认提交？',
+            okText: '提交入库',
+            cancelText: '取消',
+          });
+        }}
+        style={{ position: 'absolute', top: 35, right: 5 }}
+      >
+        确认提交
+      </Button>
       <Col span={fakeWidth}>
         <h1 className={styles.center}>实废（{judgeData.fake.length}）</h1>
         <div className={styles.center}>请点击下方你认为是误废的产品</div>
