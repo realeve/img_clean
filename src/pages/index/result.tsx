@@ -9,7 +9,7 @@ import { ICommon } from '@/models/common';
 import AuditHead, { defaultImageSize } from './Head';
 
 import { useSetState } from 'react-use';
-
+import Pagination from './Pagination';
 function IndexPage({ ip }) {
   const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
@@ -28,7 +28,7 @@ function IndexPage({ ip }) {
       setDataLoading(false);
     });
   };
-  useEffect(refeshData, []);
+  useEffect(refeshData, [maxId]);
 
   const ref = useRef(null);
 
@@ -64,6 +64,7 @@ function IndexPage({ ip }) {
         onLoadData={setJudgeType}
         updateImgHeight={setImgHeight}
       />
+      <Pagination setMaxId={setMaxId} />
       <JudgePage
         judgeData={judgeData}
         setJudgeData={setJudgeData}

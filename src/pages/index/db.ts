@@ -55,10 +55,10 @@ export const getImageJudge: (params: {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 已判废结果分页索引 }
  */
-export const getImageJudgePageIndex: () => Promise<IAxiosState> = () =>
-  axios({
+export const getImageJudgePageIndex = () =>
+  axios<{ pageNum: number; id: number }>({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1396/bf3f4dafb4.json',
-  });
+  }).then((res) => res.data);
 
 export interface IUserInfo {
   ip: string;
