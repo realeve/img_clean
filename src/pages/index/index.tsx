@@ -19,14 +19,19 @@ function IndexPage({ ip }) {
 
   const [dataLoading, setDataLoading] = useState(true);
   const refeshData = () => {
+    if (ip.length === 0) {
+      return;
+    }
     setDataLoading(true);
     setImgs([]);
-    db.getImgs(judgeType).then((res) => {
+    db.getImgs({ manual_flag: judgeType, ip }).then((res) => {
       setImgs(res);
       setDataLoading(false);
+      let _id = res.map((item) => item.id);
+      db.receiveImageJudge({ ip, _id });
     });
   };
-  useEffect(refeshData, []);
+  useEffect(refeshData, [ip]);
 
   const ref = useRef(null);
 

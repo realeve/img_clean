@@ -8,15 +8,30 @@ export interface IImageItem {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 获取100条图像核查待清洗数据 }
  */
-export const getImgs: (manual_flag: string) => Promise<IImageItem[]> = (
-  manual_flag,
-) =>
+export const getImgs: (params: {
+  manual_flag: string;
+  ip: string;
+}) => Promise<IImageItem[]> = (params) =>
   axios<IImageItem>({
     url: DEV ? '/mock/1391_188caccc16.json' : '/1391/188caccc16.json',
-    params: {
-      manual_flag,
-    },
+    params,
   }).then((res) => res.data);
+
+/**
+*   @database: { 生产指挥中心BI数据 }
+*   @desc:     { 领用一组判废图片 } 
+	以下参数在建立过程中与系统保留字段冲突，已自动替换:
+	@id:_id. 参数说明：api 索引序号 
+*/
+export const receiveImageJudge: (data: {
+  ip: string;
+  _id: number[];
+}) => Promise<boolean> = (data) =>
+  axios<TDbWrite>({
+    method: 'post',
+    url: DEV ? _commonData : '/1400/28acffdf50.json',
+    data,
+  }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);
 
 /**
  *   @database: { 生产指挥中心BI数据 }
