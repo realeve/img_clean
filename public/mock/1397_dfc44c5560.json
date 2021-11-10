@@ -1,0 +1,12 @@
+{
+  "data": [{ "id": 1, "ip": "10.8.60.203", "username": "李宾" }],
+  "rows": 1,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["id", "ip", "username"],
+  "title": "用户信息查询",
+  "time": "12.157ms",
+  "serverTime": "2021-11-10 12:00:54",
+  "source": "数据来源：生产指挥中心BI数据",
+  "hash": "W/\"1b1ff4e9bf8028e510278b0fc958cdf8\""
+}

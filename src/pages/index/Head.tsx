@@ -1,4 +1,4 @@
-import { Skeleton, Radio, Row, Col } from 'antd';
+import { Skeleton, Radio, Row, Col, Input, Button, message } from 'antd';
 import { DEV } from '@/utils/setting';
 import useFetch from '@/component/hooks/useFetch';
 
@@ -8,6 +8,8 @@ import styles from './index.less';
 import { saveImageSize, getImageSize } from './lib';
 
 type TTaskNum = { manual_flag: number; img_num: number };
+
+import * as db from './db';
 
 import { forwardRef, useImperativeHandle } from 'react';
 
@@ -86,6 +88,22 @@ export default forwardRef(
       updateImgHeight(height);
     }, []);
 
+    const [userInfoMode, setUserInfoMode] = useState<'add' | 'update'>('add');
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+      if (ip.length === 0) {
+        return;
+      }
+      db.getImageJudgeUsers(ip).then((res) => {
+        setUserInfoMode(!res ? 'add' : 'update');
+        if (!res) {
+          return;
+        }
+        setUserName(res.username);
+      });
+    }, [ip]);
+
     return (
       <Row className={styles.head}>
         <Col span={18}>
@@ -129,7 +147,7 @@ export default forwardRef(
             <Radio.Button value="0">加载误废</Radio.Button>
           </Radio.Group>
         </Col>
-        <Col span={24} style={{ marginTop: 10 }}>
+        <Col span={12} style={{ marginTop: 10 }}>
           图片默认大小(像素)：
           <Radio.Group
             defaultValue={defaultImageSize}
@@ -149,6 +167,40 @@ export default forwardRef(
               );
             })}
           </Radio.Group>
+        </Col>
+        <Col className={styles.action} span={12}>
+          <div>
+            <div>本机IP地址：{ip}</div>
+            <div>
+              本机用户：
+              <Input
+                value={userName}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                }}
+                placeholder="请在此输入你的姓名"
+                style={{ width: 160 }}
+              />
+              <Button
+                type="default"
+                onClick={() => {
+                  if (userName.length === 0) {
+                    return;
+                  }
+                  db.udpateUserInfo(
+                    { ip, username: userName },
+                    userInfoMode,
+                  ).then((success) => {
+                    message[success ? 'success' : 'error'](
+                      `数据更新${success ? '成功' : '失败'}`,
+                    );
+                  });
+                }}
+              >
+                更新
+              </Button>
+            </div>
+          </div>
         </Col>
       </Row>
     );

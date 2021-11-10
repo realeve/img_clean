@@ -59,3 +59,55 @@ export const getImageJudgePageIndex: () => Promise<IAxiosState> = () =>
   axios({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1396/bf3f4dafb4.json',
   });
+
+export interface IUserInfo {
+  ip: string;
+  id: number;
+  username: string;
+}
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 用户信息查询 }
+ */
+export const getImageJudgeUsers: (ip: string) => Promise<IUserInfo> = (ip) =>
+  axios<IUserInfo>({
+    url: DEV ? '@/mock/1397_dfc44c5560.json' : '/1397/dfc44c5560.json',
+    params: {
+      ip,
+    },
+  }).then((res) => res.data?.[0]);
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 更新用户 }
+ */
+export const setImageJudgeUsers: (params: {
+  username: string;
+  ip: string;
+}) => Promise<boolean> = (params) =>
+  axios<TDbWrite>({
+    url: DEV ? _commonData : '/1399/5ab9ff085b.json',
+    params,
+  }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 添加用户 }
+ */
+export const addImageJudgeUsers: (params: {
+  ip: string;
+  username: string;
+}) => Promise<number | undefined> = (params) =>
+  axios<TDbWrite>({
+    url: DEV ? _commonData : '/1398/fab9688559.json',
+    params,
+  }).then(({ data: [{ id }] }) => id);
+
+export const udpateUserInfo = (
+  param: { ip: string; username: string },
+  type: 'add' | 'update',
+) => {
+  return type == 'update'
+    ? setImageJudgeUsers(param)
+    : addImageJudgeUsers(param);
+};
