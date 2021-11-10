@@ -31,7 +31,7 @@ function IndexPage({ ip }) {
       db.receiveImageJudge({ ip, _id });
     });
   };
-  useEffect(refeshData, [ip]);
+  useEffect(refeshData, [ip, judgeType]);
 
   const ref = useRef(null);
 
