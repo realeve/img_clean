@@ -1,20 +1,20 @@
 import styles from './judge.less';
-import { Row, Col, Divider, Radio, Button, Modal, message } from 'antd';
+import { Row, Col, Divider, Button, Modal, message } from 'antd';
 import { imageHost } from '@/utils/setting';
 
 import { IImageItem, setImageJudge } from './db';
 
 import { useState, useEffect } from 'react';
 
-import { useSetState } from 'react-use';
 import * as R from 'ramda';
+
 import { fetchXML, IBoxItem } from './lib';
 
 import { originSize, defaultImageSize } from './Head';
 
 const confirm = Modal.confirm;
 
-const ImageItem = ({
+export const ImageItem = ({
   item,
   onChange,
   imgHeight = defaultImageSize,
@@ -80,41 +80,27 @@ const ImageItem = ({
   );
 };
 
+export interface IJudgeData {
+  fake: number[];
+  normal: number[];
+}
 export default ({
   data,
   judgeType,
   onRefresh,
   ip,
   imgHeight,
-  loading = true,
+  setJudgeData,
+  judgeData,
 }: {
   data: IImageItem[];
   judgeType: '0' | '1';
   onRefresh: () => void;
-  loading?: boolean;
   imgHeight: number;
   ip: string;
+  setJudgeData: (e: IJudgeData) => void;
+  judgeData: IJudgeData;
 }) => {
-  const [judgeData, setJudgeData] = useSetState<{
-    fake: number[];
-    normal: number[];
-  }>({
-    fake: [],
-    normal: [],
-  });
-
-  useEffect(() => {
-    if (data.length === 0) {
-      setJudgeData({ fake: [], normal: [] });
-      return;
-    }
-    const ids = data.map((item) => item.id);
-    setJudgeData({
-      fake: judgeType === '1' ? ids : [],
-      normal: judgeType === '0' ? ids : [],
-    });
-  }, [data]);
-
   const submit = async () => {
     let success1 = await setImageJudge({
       ip,
@@ -126,7 +112,7 @@ export default ({
       audit_flag: 0,
       _id: judgeData.normal,
     });
-    if (!success1 || !success2) {
+    if (!success1 && !success2) {
       message.error('数据提交失败，请稍后重试');
       return;
     }
@@ -152,7 +138,7 @@ export default ({
             cancelText: '取消',
           });
         }}
-        style={{ position: 'absolute', top: 35, right: 5 }}
+        style={{ position: 'absolute', top: 35, right: 5, zIndex: 10 }}
       >
         确认提交
       </Button>

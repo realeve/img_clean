@@ -2,11 +2,13 @@ import * as db from './db';
 import { IImageItem } from './db';
 
 import { useState, useEffect, useRef } from 'react';
-import JudgePage from './judge';
+import JudgePage, { IJudgeData } from './judge';
 import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 
 import AuditHead, { defaultImageSize } from './Head';
+
+import { useSetState } from 'react-use';
 
 function IndexPage({ ip }) {
   const [imgHeight, setImgHeight] = useState(defaultImageSize);
@@ -28,6 +30,23 @@ function IndexPage({ ip }) {
 
   const ref = useRef(null);
 
+  const [judgeData, setJudgeData] = useSetState<IJudgeData>({
+    fake: [],
+    normal: [],
+  });
+
+  useEffect(() => {
+    if (imgs.length === 0) {
+      setJudgeData({ fake: [], normal: [] });
+      return;
+    }
+    const ids = imgs.map((item) => item.id);
+    setJudgeData({
+      fake: judgeType === '1' ? ids : [],
+      normal: judgeType === '0' ? ids : [],
+    });
+  }, [imgs]);
+
   return (
     <div className="card-content">
       <AuditHead
@@ -37,7 +56,8 @@ function IndexPage({ ip }) {
         updateImgHeight={setImgHeight}
       />
       <JudgePage
-        loading={dataLoading}
+        judgeData={judgeData}
+        setJudgeData={setJudgeData}
         judgeType={judgeType}
         data={imgs}
         onRefresh={() => {
