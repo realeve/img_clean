@@ -10,6 +10,8 @@ import AuditHead, { defaultImageSize } from './Head';
 
 import { useSetState } from 'react-use';
 import Pagination from './Pagination';
+import * as R from 'ramda';
+
 function IndexPage({ ip }) {
   const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
@@ -40,6 +42,8 @@ function IndexPage({ ip }) {
     normal: [],
   });
 
+  const [judgeUser, setJudgeUser] = useState<string[]>([]);
+
   useEffect(() => {
     if (imgs.length === 0) {
       setJudgeData({ fake: [], normal: [] });
@@ -54,6 +58,9 @@ function IndexPage({ ip }) {
         .filter((item) => item.audit_flag == '0')
         .map((item) => item.id),
     });
+    let users = imgs.map((item) => item.username);
+    users = R.uniq(users);
+    setJudgeUser(users);
   }, [imgs]);
 
   return (
@@ -64,7 +71,7 @@ function IndexPage({ ip }) {
         onLoadData={setJudgeType}
         updateImgHeight={setImgHeight}
       />
-      <Pagination setMaxId={setMaxId} />
+      <Pagination judgeUser={judgeUser} setMaxId={setMaxId} />
       <JudgePage
         judgeData={judgeData}
         setJudgeData={setJudgeData}
