@@ -109,16 +109,22 @@ export default ({
   judgeData: IJudgeData;
 }) => {
   const submit = async () => {
-    let success1 = await setImageJudge({
-      ip,
-      audit_flag: 1,
-      _id: judgeData.fake,
-    });
-    let success2 = await setImageJudge({
-      ip,
-      audit_flag: 0,
-      _id: judgeData.normal,
-    });
+    let success1 =
+      judgeData.fake.length == 0
+        ? true
+        : await setImageJudge({
+            ip,
+            audit_flag: 1,
+            _id: judgeData.fake,
+          });
+    let success2 =
+      judgeData.normal.length == 0
+        ? true
+        : await setImageJudge({
+            ip,
+            audit_flag: 0,
+            _id: judgeData.normal,
+          });
     if (!success1 && !success2) {
       message.error('数据提交失败，请稍后重试');
       return;

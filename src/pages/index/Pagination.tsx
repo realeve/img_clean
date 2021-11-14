@@ -35,6 +35,7 @@ export default ({
         defaultCurrent={1}
         total={pages.length * 100}
         onChange={onPageChange}
+        pageSize={100}
         showSizeChanger={false}
       />
     </div>
