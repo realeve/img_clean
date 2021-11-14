@@ -16,7 +16,12 @@ export interface IBoxItem {
 }
 export const fetchXML = async (url: string) => {
   let xmlUrl = imageHost + url.replace('.bmp', '.xml');
-  let xml = await axios({ url: xmlUrl });
+  let xml = await axios({ url: xmlUrl }).catch((e) => {
+    return false;
+  });
+  if (!xml) {
+    return { x1: 0, y1: 0, x2: 112, y2: 112 };
+  }
   let result = await decodeXML(xml);
   if (!result) {
     return null;

@@ -190,6 +190,25 @@ export default ({
             );
           })}
         </div>
+        {judgeType == '1' && (
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => {
+              confirm({
+                onOk: () => {
+                  submit();
+                },
+                title: '是否所有数据已经判废完成，确认提交？',
+                okText: '提交入库',
+                cancelText: '取消',
+              });
+            }}
+            style={{ marginTop: 10, zIndex: 10 }}
+          >
+            确认提交
+          </Button>
+        )}
       </Col>
       <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
         <div className={styles.list}>
@@ -218,6 +237,26 @@ export default ({
             );
           })}
         </div>
+        <Divider />
+        {judgeType == '0' && (
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => {
+              confirm({
+                onOk: () => {
+                  submit();
+                },
+                title: '是否所有数据已经判废完成，确认提交？',
+                okText: '提交入库',
+                cancelText: '取消',
+              });
+            }}
+            style={{ marginTop: 10, zIndex: 10 }}
+          >
+            确认提交
+          </Button>
+        )}
       </Col>
     </Row>
   );
