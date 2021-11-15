@@ -16,7 +16,7 @@ const defaultState: ICommon = {
   version: {},
   ip: '',
   // 显示模板图
-  showModel: true,
+  showModel: false,
   imgHeight: defaultImageSize,
 };
 

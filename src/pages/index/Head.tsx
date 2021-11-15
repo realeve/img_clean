@@ -14,7 +14,7 @@ import useFetch from '@/component/hooks/useFetch';
 import { useState, useEffect } from 'react';
 import styles from './index.less';
 
-import { saveImageSize, getImageSize, saveShowModel } from './lib';
+import { saveImageSize, saveShowModel } from './lib';
 
 import * as db from './db';
 

@@ -1,5 +1,5 @@
 import styles from './judge.less';
-import { Row, Col, Divider, Button, Modal, message, Skeleton } from 'antd';
+import { Row, Col, Divider, Button, Modal, message } from 'antd';
 import { imageHost } from '@/utils/setting';
 
 import { IImageItem, setImageJudge } from './db';
@@ -14,6 +14,8 @@ import { originSize, defaultImageSize } from './Head';
 
 import { connect } from 'dva';
 import { ICommon } from '@/models/common';
+
+import { RightOutlined } from '@ant-design/icons';
 
 // import Animate from 'rc-animate';
 
@@ -51,6 +53,8 @@ export const ImageItem = ({
 
   const scale = imgHeight / originSize;
 
+  const [hover, setHover] = useState(false);
+
   return (
     <div
       className={styles.imageItem}
@@ -58,11 +62,28 @@ export const ImageItem = ({
       onClick={() => {
         onChange();
       }}
-      style={{ height: imgHeight, width: (showModel ? 2 : 1) * imgHeight }}
+      style={{
+        height: imgHeight,
+        width: (showModel || hover ? 2 : 1) * imgHeight,
+      }}
     >
       {/* <Animate key="0" transitionName="fade" transitionAppear> */}
       <div className={styles.detail} style={{ height: imgHeight }}>
         <img src={`${imageHost}${item.img_url}`} className={styles.img} />
+        {!showModel && (
+          <div
+            className={styles.act}
+            style={{ left: imgHeight - 30 }}
+            onMouseEnter={() => {
+              setHover(true);
+            }}
+            onMouseLeave={() => {
+              setHover(false);
+            }}
+          >
+            <RightOutlined />
+          </div>
+        )}
         {box && (
           <div
             className={styles.box}
@@ -142,6 +163,8 @@ const JudgePage = ({
   };
 
   const fakeWidth = judgeType == '0' ? 8 : 16;
+
+  // ,overflowY:'scroll',height:'80vh'
 
   return (
     <Row gutter={16} style={{ position: 'relative' }}>
