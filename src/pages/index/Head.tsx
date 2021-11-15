@@ -29,22 +29,17 @@ type TTaskNum = { manual_flag: number; img_num: number };
 export const originSize = 112;
 export const imgSize = [112, 128, 192, 224, 256, 384];
 export const defaultImageSize = 192;
+interface IHeadInterface {
+  ip: string;
+  onLoadData: (e: '0' | '1') => void;
+  showModel?: boolean;
+  dispatch: Dispatch;
+  imgHeight: number;
+}
 
 const Head = forwardRef(
   (
-    {
-      ip,
-      onLoadData,
-      showModel = false,
-      dispatch,
-      imgHeight,
-    }: {
-      ip: string;
-      onLoadData: (e: '0' | '1') => void;
-      showModel?: boolean;
-      dispatch: Dispatch;
-      imgHeight: number;
-    },
+    { ip, onLoadData, showModel = false, dispatch, imgHeight }: IHeadInterface,
     ref,
   ) => {
     const { data, loading, reFetch } = useFetch<TTaskNum>({

@@ -15,7 +15,7 @@ import { originSize, defaultImageSize } from './Head';
 import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 
-import { RightOutlined } from '@ant-design/icons';
+import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 
 // import Animate from 'rc-animate';
 
@@ -57,31 +57,42 @@ export const ImageItem = ({
     <div
       className={styles.imageItem}
       title="点击改变状态"
-      onClick={() => {
-        onChange();
-      }}
       style={{
         height: imgHeight,
         width: (showModel || hover ? 2 : 1) * imgHeight,
       }}
     >
+      {!showModel && (
+        <div
+          className={styles.act}
+          style={{ left: imgHeight - 30 }}
+          // onMouseEnter={() => {
+          //   setHover(true);
+          // }}
+          // onMouseLeave={() => {
+          //   setHover(false);
+          // }}
+          onClick={() => {
+            setHover(!hover);
+          }}
+        >
+          <RightOutlined
+            style={{
+              transform: `rotate(${hover ? 180 : 0}deg)`,
+              transition: 'ease-in-out transform 0.5s',
+            }}
+          />
+        </div>
+      )}
       {/* <Animate key="0" transitionName="fade" transitionAppear> */}
-      <div className={styles.detail} style={{ height: imgHeight }}>
+      <div
+        className={styles.detail}
+        style={{ height: imgHeight }}
+        onClick={() => {
+          onChange();
+        }}
+      >
         <img src={`${imageHost}${item.img_url}`} className={styles.img} />
-        {!showModel && (
-          <div
-            className={styles.act}
-            style={{ left: imgHeight - 30 }}
-            onMouseEnter={() => {
-              setHover(true);
-            }}
-            onMouseLeave={() => {
-              setHover(false);
-            }}
-          >
-            <RightOutlined />
-          </div>
-        )}
         {box && (
           <div
             className={styles.box}

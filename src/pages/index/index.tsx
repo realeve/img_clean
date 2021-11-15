@@ -60,7 +60,10 @@ function IndexPage({ ip }: { ip: string }) {
         data={imgs}
         onRefresh={() => {
           refeshData();
-          ref?.current?.refresh?.();
+          if (!ref) {
+            return;
+          }
+          ref.current?.refresh?.();
         }}
       />
     </div>
