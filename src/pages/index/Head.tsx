@@ -1,32 +1,49 @@
-import { Skeleton, Radio, Row, Col, Input, Button, message } from 'antd';
+import {
+  Skeleton,
+  Radio,
+  Row,
+  Col,
+  Input,
+  Button,
+  message,
+  Switch,
+} from 'antd';
 import { DEV } from '@/utils/setting';
 import useFetch from '@/component/hooks/useFetch';
 
 import { useState, useEffect } from 'react';
 import styles from './index.less';
 
-import { saveImageSize, getImageSize } from './lib';
-
-type TTaskNum = { manual_flag: number; img_num: number };
+import { saveImageSize, getImageSize, saveShowModel } from './lib';
 
 import * as db from './db';
 
 import { forwardRef, useImperativeHandle } from 'react';
 
+import { connect } from 'dva';
+import { ICommon } from '@/models/common';
+import { Dispatch } from 'redux';
+
+type TTaskNum = { manual_flag: number; img_num: number };
+
 export const originSize = 112;
 export const imgSize = [112, 128, 192, 224, 256, 384];
 export const defaultImageSize = 192;
 
-export default forwardRef(
+const Head = forwardRef(
   (
     {
       ip,
       onLoadData,
-      updateImgHeight,
+      showModel = false,
+      dispatch,
+      imgHeight,
     }: {
       ip: string;
       onLoadData: (e: '0' | '1') => void;
-      updateImgHeight: (e: number) => void;
+      showModel?: boolean;
+      dispatch: Dispatch;
+      imgHeight: number;
     },
     ref,
   ) => {
@@ -80,13 +97,14 @@ export default forwardRef(
       },
     }));
 
-    const [imgHeight, setImgHeight] = useState(defaultImageSize);
-
-    useEffect(() => {
-      let height = getImageSize(defaultImageSize);
-      setImgHeight(height);
-      updateImgHeight(height);
-    }, []);
+    const updateImgHeight = (imgHeight: number) => {
+      dispatch({
+        type: 'common/setStore',
+        payload: {
+          imgHeight,
+        },
+      });
+    };
 
     const [userInfoMode, setUserInfoMode] = useState<'add' | 'update'>('add');
     const [userName, setUserName] = useState('');
@@ -154,7 +172,6 @@ export default forwardRef(
             value={imgHeight}
             buttonStyle="solid"
             onChange={(e) => {
-              setImgHeight(e.target.value);
               updateImgHeight(e.target.value);
               saveImageSize(e.target.value);
             }}
@@ -202,7 +219,30 @@ export default forwardRef(
             </div>
           </div>
         </Col>
+        <Col span={6}>
+          <div>
+            显示模板图：
+            <Switch
+              checked={showModel}
+              onChange={(e) => {
+                saveShowModel(e);
+                dispatch({
+                  type: 'common/setStore',
+                  payload: {
+                    showModel: e,
+                  },
+                });
+              }}
+            />
+          </div>
+        </Col>
       </Row>
     );
   },
 );
+
+export default connect(({ common }: { common: ICommon }) => ({
+  showModel: common.showModel,
+  ip: common.ip,
+  imgHeight: common.imgHeight,
+}))(Head);

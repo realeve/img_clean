@@ -49,3 +49,12 @@ export const getImageSize = (defaultImageSize = 192) => {
   let res = window.localStorage.getItem(key + 'imgsize') || defaultImageSize;
   return Number(res);
 };
+
+export const getShowModel = () => {
+  let res = window.localStorage.getItem(key + 'showModel') || '0';
+  return Boolean(Number(res));
+};
+
+export const saveShowModel = (showModel = false) => {
+  window.localStorage.setItem(key + 'showModel', showModel ? '1' : '0');
+};

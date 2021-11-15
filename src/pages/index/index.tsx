@@ -6,13 +6,11 @@ import JudgePage, { IJudgeData } from './judge';
 import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 
-import AuditHead, { defaultImageSize } from './Head';
+import AuditHead from './Head';
 
 import { useSetState } from 'react-use';
 
-function IndexPage({ ip }) {
-  const [imgHeight, setImgHeight] = useState(defaultImageSize);
-
+function IndexPage({ ip }: { ip: string }) {
   const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
   const [imgs, setImgs] = useState<IImageItem[]>([]);
@@ -54,12 +52,7 @@ function IndexPage({ ip }) {
 
   return (
     <div className="card-content">
-      <AuditHead
-        ref={ref}
-        ip={ip}
-        onLoadData={setJudgeType}
-        updateImgHeight={setImgHeight}
-      />
+      <AuditHead ref={ref} onLoadData={setJudgeType} />
       <JudgePage
         judgeData={judgeData}
         setJudgeData={setJudgeData}
@@ -69,8 +62,6 @@ function IndexPage({ ip }) {
           refeshData();
           ref?.current?.refresh?.();
         }}
-        ip={ip}
-        imgHeight={imgHeight}
       />
     </div>
   );

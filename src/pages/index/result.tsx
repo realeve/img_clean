@@ -12,10 +12,8 @@ import { useSetState } from 'react-use';
 import Pagination from './Pagination';
 import * as R from 'ramda';
 
-function IndexPage({ ip }) {
+function IndexPage({ ip }: { ip: string }) {
   const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
-
-  const [imgHeight, setImgHeight] = useState(defaultImageSize);
 
   const [maxId, setMaxId] = useState(0);
 
@@ -23,6 +21,9 @@ function IndexPage({ ip }) {
 
   const [dataLoading, setDataLoading] = useState(true);
   const refeshData = () => {
+    if (ip.length === 0) {
+      return;
+    }
     setDataLoading(true);
     setImgs([]);
     db.getImageJudge({ manual_flag: judgeType, max_id: maxId }).then((res) => {
@@ -65,12 +66,7 @@ function IndexPage({ ip }) {
 
   return (
     <div className="card-content">
-      <AuditHead
-        ref={ref}
-        ip={ip}
-        onLoadData={setJudgeType}
-        updateImgHeight={setImgHeight}
-      />
+      <AuditHead ref={ref} onLoadData={setJudgeType} />
       <Pagination judgeUser={judgeUser} setMaxId={setMaxId} />
       <JudgePage
         judgeData={judgeData}
@@ -80,8 +76,6 @@ function IndexPage({ ip }) {
         onRefresh={() => {
           refeshData();
         }}
-        imgHeight={imgHeight}
-        ip={ip}
       />
     </div>
   );

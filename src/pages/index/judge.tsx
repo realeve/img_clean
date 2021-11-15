@@ -12,6 +12,9 @@ import { fetchXML, IBoxItem } from './lib';
 
 import { originSize, defaultImageSize } from './Head';
 
+import { connect } from 'dva';
+import { ICommon } from '@/models/common';
+
 // import Animate from 'rc-animate';
 
 // import LazyLoad from 'react-lazyload';
@@ -22,6 +25,7 @@ const confirm = Modal.confirm;
 export const ImageItem = ({
   item,
   onChange,
+  showModel = true,
   imgHeight = defaultImageSize,
   idx,
 }: {
@@ -29,6 +33,7 @@ export const ImageItem = ({
   imgHeight: number;
   onChange: () => void;
   idx: number;
+  showModel?: boolean;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
@@ -53,7 +58,7 @@ export const ImageItem = ({
       onClick={() => {
         onChange();
       }}
-      style={{ height: imgHeight, width: 2 * imgHeight }}
+      style={{ height: imgHeight, width: (showModel ? 2 : 1) * imgHeight }}
     >
       {/* <Animate key="0" transitionName="fade" transitionAppear> */}
       <div className={styles.detail} style={{ height: imgHeight }}>
@@ -91,7 +96,8 @@ export interface IJudgeData {
   fake: number[];
   normal: number[];
 }
-export default ({
+
+const JudgePage = ({
   data,
   judgeType,
   onRefresh,
@@ -99,6 +105,7 @@ export default ({
   imgHeight,
   setJudgeData,
   judgeData,
+  showModel = false,
 }: {
   data: IImageItem[];
   judgeType: '0' | '1';
@@ -107,6 +114,7 @@ export default ({
   ip: string;
   setJudgeData: (e: IJudgeData) => void;
   judgeData: IJudgeData;
+  showModel?: boolean;
 }) => {
   const submit = async () => {
     let success1 =
@@ -183,6 +191,7 @@ export default ({
                     normal,
                   });
                 }}
+                showModel={showModel}
                 imgHeight={imgHeight}
                 idx={i + 1}
               />
@@ -222,6 +231,7 @@ export default ({
               <ImageItem
                 item={item}
                 key={id}
+                showModel={showModel}
                 onChange={() => {
                   const normal = R.remove(i, 1, judgeData.normal);
                   const fake = R.append(id, judgeData.fake);
@@ -261,3 +271,9 @@ export default ({
     </Row>
   );
 };
+
+export default connect(({ common }: { common: ICommon }) => ({
+  showModel: common.showModel,
+  ip: common.ip,
+  imgHeight: common.imgHeight,
+}))(JudgePage);
