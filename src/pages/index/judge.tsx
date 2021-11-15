@@ -29,12 +29,10 @@ export const ImageItem = ({
   onChange,
   showModel = true,
   imgHeight = defaultImageSize,
-  idx,
 }: {
   item: IImageItem;
   imgHeight: number;
   onChange: () => void;
-  idx: number;
   showModel?: boolean;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
@@ -106,7 +104,7 @@ export const ImageItem = ({
             }}
           />
         )}
-        <div className={styles.spot}>{idx}</div>
+        <div className={styles.spot}>{item.imageIdx}</div>
       </div>
       {/* </Animate> */}
     </div>
@@ -216,7 +214,6 @@ const JudgePage = ({
                 }}
                 showModel={showModel}
                 imgHeight={imgHeight}
-                idx={i + 1}
               />
               // </LazyLoad>
             );
@@ -264,7 +261,6 @@ const JudgePage = ({
                   });
                 }}
                 imgHeight={imgHeight}
-                idx={i + 1}
               />
               // </LazyLoad>
             );

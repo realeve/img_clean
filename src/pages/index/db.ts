@@ -3,6 +3,7 @@ import { axios, IAxiosState, DEV, _commonData, TDbWrite } from '@/utils/axios';
 export interface IImageItem {
   id: number;
   img_url: string;
+  imageIdx: number;
 }
 /**
  *   @database: { 生产指挥中心BI数据 }
@@ -15,7 +16,11 @@ export const getImgs: (params: {
   axios<IImageItem>({
     url: DEV ? '/mock/1391_188caccc16.json' : '/1391/188caccc16.json',
     params,
-  }).then((res) => res.data);
+  }).then((res) =>
+    res.data.map((item, i) => {
+      return { ...item, imageIdx: i + 1 };
+    }),
+  );
 
 /**
 *   @database: { 生产指挥中心BI数据 }
@@ -52,6 +57,7 @@ export interface IAuditItem {
   img_url: string;
   username: string;
   audit_flag: string;
+  imageIdx: number;
 }
 /**
  *   @database: { 生产指挥中心BI数据 }
@@ -64,7 +70,11 @@ export const getImageJudge: (params: {
   axios<IAuditItem>({
     url: DEV ? '@/mock/1395_1b873dfb50.json' : '/1395/1b873dfb50.json',
     params,
-  }).then((res) => res.data);
+  }).then((res) =>
+    res.data.map((item, i) => {
+      return { ...item, imageIdx: i + 1 };
+    }),
+  );
 
 /**
  *   @database: { 生产指挥中心BI数据 }
