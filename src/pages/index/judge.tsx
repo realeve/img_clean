@@ -65,7 +65,7 @@ export const ImageItem = ({
       {!showModel && (
         <div
           className={styles.act}
-          style={{ left: imgHeight - 30 }}
+          // style={{ left: imgHeight - 30 }}
           // onMouseEnter={() => {
           //   setHover(true);
           // }}
