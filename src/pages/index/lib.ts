@@ -26,6 +26,7 @@ export const fetchXML = async (url: string) => {
   if (!result) {
     return null;
   }
+
   const obj = result.annotation.object[0];
   const box = obj?.bndbox?.[0];
 
@@ -37,6 +38,15 @@ export const fetchXML = async (url: string) => {
     x2 = Number(box.xmax[0]),
     y2 = Number(box.ymax[0]);
 
+  // 20211116 背面缺陷框位置需要做坐标系转换
+  if (url.includes('image/14')) {
+    let temp = x2;
+    x2 = 112 - x1;
+    x1 = 112 - temp;
+    temp = y2;
+    y2 = 112 - y1;
+    y1 = 112 - temp;
+  }
   return { x1, y1, x2, y2 };
 };
 
