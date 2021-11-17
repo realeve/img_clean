@@ -35,7 +35,8 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
     });
     let users = imgs.map((item) => item.username);
     users = R.uniq(users);
-    setJudgeUser(users);
+    let append = imgs?.[0]?.check_ip ? ` (${imgs[0].check_ip}审核)` : '';
+    setJudgeUser(users[0] + append);
   };
 
   const [imgs, setImgs] = useState<IAuditItem[]>([]);
@@ -72,6 +73,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
   useEffect(refeshData, [maxId, curUser]);
 
   const ref = useRef(null);
+  const pageRef = useRef(null);
 
   const [judgeData, setJudgeData] = useSetState<{
     fake: number[];
@@ -81,19 +83,19 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
     normal: [],
   });
 
-  const [judgeUser, setJudgeUser] = useState<string[]>([]);
+  const [judgeUser, setJudgeUser] = useState<string>('');
 
   return (
     <div className="card-content">
       <AuditHead ref={ref} onLoadData={setJudgeType} />
-      <Pagination judgeUser={judgeUser} setMaxId={setMaxId} />
+      <Pagination ref={pageRef} judgeUser={judgeUser} setMaxId={setMaxId} />
       <JudgePage
         judgeData={judgeData}
         setJudgeData={setJudgeData}
         judgeType={judgeType}
         data={imgs}
         onRefresh={() => {
-          refeshData();
+          pageRef?.current?.nextPage?.();
         }}
         isCheckPage
       />

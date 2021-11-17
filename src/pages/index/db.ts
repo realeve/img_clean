@@ -65,6 +65,7 @@ export interface IAuditItem {
   username: string;
   audit_flag: string;
   imageIdx: number;
+  check_ip?: string;
 }
 /**
  *   @database: { 生产指挥中心BI数据 }

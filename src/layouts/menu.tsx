@@ -6,7 +6,7 @@ export const menu = [
     icon: <HomeOutlined />,
   },
   {
-    title: '审核结果',
+    title: '二次审核',
     key: '/main/result',
     icon: <EyeOutlined />,
   },

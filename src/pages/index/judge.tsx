@@ -257,6 +257,15 @@ const JudgePage = ({
             确认提交
           </Button>
         )}
+        {judgeType == '1' && isCheckPage && (
+          <Button
+            size="large"
+            onClick={onRefresh}
+            style={{ marginTop: 10, marginLeft: 20, zIndex: 10 }}
+          >
+            下一页
+          </Button>
+        )}
       </Col>
       <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
         <div className={styles.list}>
@@ -303,6 +312,15 @@ const JudgePage = ({
             style={{ marginTop: 10, zIndex: 10 }}
           >
             确认提交
+          </Button>
+        )}
+        {judgeType == '0' && isCheckPage && (
+          <Button
+            size="large"
+            onClick={onRefresh}
+            style={{ marginTop: 10, marginLeft: 20, zIndex: 10 }}
+          >
+            下一页
           </Button>
         )}
       </Col>
