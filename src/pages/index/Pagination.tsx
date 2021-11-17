@@ -2,18 +2,30 @@ import { Pagination } from 'antd';
 import { useState, useEffect } from 'react';
 import * as db from './db';
 
-export default ({
+import { connect } from 'dva';
+import { ICommon } from '@/models/common';
+
+const PagPage = ({
   setMaxId,
   judgeUser,
+  curUser,
 }: {
   setMaxId: (e: number) => void;
   judgeUser: string[];
+  curUser: string;
 }) => {
   const [pages, setPages] = useState<{ pageNum: number; id: number }[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
-    db.getImageJudgePageIndex().then(setPages);
-  }, []);
+    if (curUser == '') {
+      db.getImageJudgePageIndex().then(setPages);
+      return;
+    }
+    if (window.location.href.includes('/main/result')) {
+      db.getImageJudgePageIndexByIp(curUser).then(setPages);
+    }
+  }, [curUser]);
+
   const onPageChange = (page: number) => {
     setCurrentPage(page);
     setMaxId(pages[page - 1].id);
@@ -41,3 +53,7 @@ export default ({
     </div>
   );
 };
+
+export default connect(({ common }: { common: ICommon }) => ({
+  curUser: common.curUser,
+}))(PagPage);

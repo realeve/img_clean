@@ -6,13 +6,13 @@ import JudgePage from './judge';
 import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 
-import AuditHead, { defaultImageSize } from './Head';
+import AuditHead from './Head';
 
 import { useSetState } from 'react-use';
 import Pagination from './Pagination';
 import * as R from 'ramda';
 
-function IndexPage({ ip }: { ip: string }) {
+function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
   const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
   const [maxId, setMaxId] = useState(0);
@@ -20,18 +20,33 @@ function IndexPage({ ip }: { ip: string }) {
   const [imgs, setImgs] = useState<IAuditItem[]>([]);
 
   const [dataLoading, setDataLoading] = useState(true);
+
   const refeshData = () => {
     if (ip.length === 0) {
       return;
     }
     setDataLoading(true);
     setImgs([]);
-    db.getImageJudge({ manual_flag: judgeType, max_id: maxId }).then((res) => {
+    if (curUser == '') {
+      db.getImageJudge({ manual_flag: judgeType, max_id: maxId }).then(
+        (res) => {
+          setImgs(res);
+          setDataLoading(false);
+        },
+      );
+      return;
+    }
+
+    db.getImageJudgeByIp({
+      manual_flag: judgeType,
+      max_id: maxId,
+      ip: curUser,
+    }).then((res) => {
       setImgs(res);
       setDataLoading(false);
     });
   };
-  useEffect(refeshData, [maxId]);
+  useEffect(refeshData, [maxId, curUser]);
 
   const ref = useRef(null);
 
@@ -83,4 +98,5 @@ function IndexPage({ ip }: { ip: string }) {
 
 export default connect(({ common }: { common: ICommon }) => ({
   ip: common.ip,
+  curUser: common.curUser,
 }))(IndexPage);

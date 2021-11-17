@@ -11,6 +11,7 @@ export interface ICommon {
   ip: string;
   showModel: boolean;
   imgHeight: number;
+  curUser: string;
 }
 const defaultState: ICommon = {
   version: {},
@@ -18,6 +19,7 @@ const defaultState: ICommon = {
   // 显示模板图
   showModel: false,
   imgHeight: defaultImageSize,
+  curUser: '',
 };
 
 // 获取ip

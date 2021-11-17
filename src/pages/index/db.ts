@@ -76,6 +76,20 @@ export const getImageJudge: (params: {
     }),
   );
 
+export const getImageJudgeByIp: (params: {
+  manual_flag: string;
+  max_id: number;
+  ip: string;
+}) => Promise<IAuditItem[]> = (params) =>
+  axios<IAuditItem>({
+    url: DEV ? '@/mock/1395_1b873dfb50.json' : '/1406/65071cf8aa.json',
+    params,
+  }).then((res) =>
+    res.data.map((item, i) => {
+      return { ...item, imageIdx: i + 1 };
+    }),
+  );
+
 /**
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 已判废结果分页索引 }
@@ -83,6 +97,18 @@ export const getImageJudge: (params: {
 export const getImageJudgePageIndex = () =>
   axios<{ pageNum: number; id: number }>({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1396/bf3f4dafb4.json',
+  }).then((res) => res.data);
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 指定人员判废结果 }
+ */
+export const getImageJudgePageIndexByIp = (ip: string) =>
+  axios<{ pageNum: number; id: number }>({
+    url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1405/3c6b921692.json',
+    params: {
+      ip,
+    },
   }).then((res) => res.data);
 
 export interface IUserInfo {
@@ -136,3 +162,14 @@ export const udpateUserInfo = (
     ? setImageJudgeUsers(param)
     : addImageJudgeUsers(param);
 };
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 判废人员列表 }
+ */
+export const getImageJudgeUsersList: () => Promise<
+  { id: number; ip: string; username: string }[]
+> = () =>
+  axios<{ id: number; ip: string; username: string }>({
+    url: DEV ? '@/mock/1404_079e04aa25.json' : '/1404/079e04aa25.json',
+  }).then((res) => [{ id: 0, ip: '', username: '所有人' }, ...res.data]);

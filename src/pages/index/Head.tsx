@@ -45,6 +45,7 @@ const Head = ({
   dispatch,
   imgHeight,
   refInstance,
+  curUser,
 }: IHeadInterface) => {
   const { data, loading, reFetch } = useFetch<TTaskNum>({
     param: {
@@ -120,6 +121,17 @@ const Head = ({
       setUserName(res.username);
     });
   }, [ip]);
+
+  const [judgeUsers, setJudgeUsers] = useState<
+    { id: number; ip: string; username: string }[]
+  >([]);
+
+  useEffect(() => {
+    if (!window.location.href.includes('/main/result')) {
+      return;
+    }
+    db.getImageJudgeUsersList().then(setJudgeUsers);
+  }, []);
 
   return (
     <Row className={styles.head}>
@@ -218,7 +230,7 @@ const Head = ({
           </div>
         </div>
       </Col>
-      <Col span={6}>
+      <Col span={12} style={{ marginTop: 10 }}>
         <div>
           显示模板图：
           <Switch
@@ -235,6 +247,37 @@ const Head = ({
           />
         </div>
       </Col>
+      {judgeUsers.length > 0 && (
+        <Col
+          span={12}
+          style={{ marginTop: 10, display: 'flex', justifyContent: 'flex-end' }}
+        >
+          <div>
+            查看判废人员：
+            <Radio.Group
+              defaultValue={0}
+              value={curUser}
+              buttonStyle="solid"
+              onChange={(e) => {
+                dispatch({
+                  type: 'common/setStore',
+                  payload: {
+                    curUser: e.target.value,
+                  },
+                });
+              }}
+            >
+              {judgeUsers.map((item) => {
+                return (
+                  <Radio.Button value={item.ip} key={String(item.id)}>
+                    {item.username}
+                  </Radio.Button>
+                );
+              })}
+            </Radio.Group>
+          </div>
+        </Col>
+      )}
     </Row>
   );
 };
@@ -243,6 +286,7 @@ const HeadPage = connect(({ common }: { common: ICommon }) => ({
   showModel: common.showModel,
   ip: common.ip,
   imgHeight: common.imgHeight,
+  curUser: common.curUser,
 }))(Head);
 
 export default forwardRef((props: IHeadInterface, ref) => (
