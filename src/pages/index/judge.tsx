@@ -136,6 +136,7 @@ const JudgePage = ({
   setJudgeData,
   judgeData,
   showModel = false,
+  isCheckPage = false,
 }: {
   data: IImageItem[];
   judgeType: '0' | '1';
@@ -145,24 +146,31 @@ const JudgePage = ({
   setJudgeData: (e: IJudgeData) => void;
   judgeData: IJudgeData;
   showModel?: boolean;
+  isCheckPage?: boolean;
 }) => {
   const submit = async () => {
     let success1 =
       judgeData.fake.length == 0
         ? true
-        : await setImageJudge({
-            ip,
-            audit_flag: 1,
-            _id: judgeData.fake,
-          });
+        : await setImageJudge(
+            {
+              ip,
+              audit_flag: 1,
+              _id: judgeData.fake,
+            },
+            isCheckPage,
+          );
     let success2 =
       judgeData.normal.length == 0
         ? true
-        : await setImageJudge({
-            ip,
-            audit_flag: 0,
-            _id: judgeData.normal,
-          });
+        : await setImageJudge(
+            {
+              ip,
+              audit_flag: 0,
+              _id: judgeData.normal,
+            },
+            isCheckPage,
+          );
     if (!success1 && !success2) {
       message.error('数据提交失败，请稍后重试');
       return;

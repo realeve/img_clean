@@ -17,50 +17,9 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
 
   const [maxId, setMaxId] = useState(0);
 
-  const [imgs, setImgs] = useState<IAuditItem[]>([]);
-
   const [dataLoading, setDataLoading] = useState(true);
 
-  const refeshData = () => {
-    if (ip.length === 0) {
-      return;
-    }
-    setDataLoading(true);
-    setImgs([]);
-    if (curUser == '') {
-      db.getImageJudge({ manual_flag: judgeType, max_id: maxId }).then(
-        (res) => {
-          setImgs(res);
-          setDataLoading(false);
-        },
-      );
-      return;
-    }
-
-    db.getImageJudgeByIp({
-      manual_flag: judgeType,
-      max_id: maxId,
-      ip: curUser,
-    }).then((res) => {
-      setImgs(res);
-      setDataLoading(false);
-    });
-  };
-  useEffect(refeshData, [maxId, curUser]);
-
-  const ref = useRef(null);
-
-  const [judgeData, setJudgeData] = useSetState<{
-    fake: number[];
-    normal: number[];
-  }>({
-    fake: [],
-    normal: [],
-  });
-
-  const [judgeUser, setJudgeUser] = useState<string[]>([]);
-
-  useEffect(() => {
+  const handleImgs = (imgs: IAuditItem[]) => {
     if (imgs.length === 0) {
       setJudgeData({ fake: [], normal: [] });
       return;
@@ -77,7 +36,52 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
     let users = imgs.map((item) => item.username);
     users = R.uniq(users);
     setJudgeUser(users);
-  }, [imgs]);
+  };
+
+  const [imgs, setImgs] = useState<IAuditItem[]>([]);
+
+  const refeshData = () => {
+    if (ip.length === 0) {
+      return;
+    }
+    setDataLoading(true);
+    setImgs([]);
+    handleImgs([]);
+    if (curUser == '') {
+      db.getImageJudge({ manual_flag: judgeType, max_id: maxId }).then(
+        (res) => {
+          setImgs(res);
+          setDataLoading(false);
+          handleImgs(res);
+        },
+      );
+      return;
+    }
+
+    db.getImageJudgeByIp({
+      manual_flag: judgeType,
+      max_id: maxId,
+      ip: curUser,
+    }).then((res) => {
+      setImgs(res);
+      setDataLoading(false);
+      handleImgs(res);
+    });
+  };
+
+  useEffect(refeshData, [maxId, curUser]);
+
+  const ref = useRef(null);
+
+  const [judgeData, setJudgeData] = useSetState<{
+    fake: number[];
+    normal: number[];
+  }>({
+    fake: [],
+    normal: [],
+  });
+
+  const [judgeUser, setJudgeUser] = useState<string[]>([]);
 
   return (
     <div className="card-content">
@@ -91,6 +95,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
         onRefresh={() => {
           refeshData();
         }}
+        isCheckPage
       />
     </div>
   );

@@ -49,6 +49,7 @@ const PagPage = ({
         onChange={onPageChange}
         pageSize={100}
         showSizeChanger={false}
+        showQuickJumper
       />
     </div>
   );

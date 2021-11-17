@@ -42,13 +42,20 @@ export const receiveImageJudge: (data: {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 更新数据清洗信息 }
  */
-export const setImageJudge: (params: {
-  audit_flag: number;
-  _id: number[];
-  ip: string;
-}) => Promise<boolean> = (params) =>
+export const setImageJudge: (
+  params: {
+    audit_flag: number;
+    _id: number[];
+    ip: string;
+  },
+  isCheckPage: boolean,
+) => Promise<boolean> = (params, isCheckPage) =>
   axios<TDbWrite>({
-    url: DEV ? _commonData : '/1393/10aa1bc9e4.json',
+    url: DEV
+      ? _commonData
+      : isCheckPage
+      ? '/1407/1461a10c5f.json'
+      : '/1393/10aa1bc9e4.json',
     params,
   }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);
 
