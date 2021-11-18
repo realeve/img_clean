@@ -29,10 +29,9 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
       fake: imgs
         .filter((item) => item.audit_flag == '2')
         .map((item) => item.id),
-      normal: [],
-      //   imgs
-      //     .filter((item) => item.audit_flag == '0')
-      //     .map((item) => item.id)
+      normal: imgs
+        .filter((item) => item.audit_flag == '3')
+        .map((item) => item.id),
     });
     let users = imgs.map((item) => item.username);
     users = R.uniq(users);

@@ -244,7 +244,7 @@ const JudgePage = ({
                   setImageJudge(
                     {
                       ip,
-                      audit_flag: 2,
+                      audit_flag: 3,
                       _id: [id],
                     },
                     isCheckPage,
