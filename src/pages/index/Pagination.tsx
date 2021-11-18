@@ -6,27 +6,30 @@ import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 
 import { forwardRef, useImperativeHandle } from 'react';
-
+export interface IPaginationPage {
+  setMaxId: (e: number) => void;
+  judgeUser: string;
+  curUser: string;
+  refInstance: any;
+  judgeType: 'difficult' | 'result';
+}
 const PagPage = ({
   setMaxId,
   judgeUser,
   curUser,
   refInstance,
-}: {
-  setMaxId: (e: number) => void;
-  judgeUser: string;
-  curUser: string;
-  refInstance: any;
-}) => {
+  judgeType,
+}: IPaginationPage) => {
   const [pages, setPages] = useState<{ pageNum: number; id: number }[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
+    let flags = judgeType == 'difficult' ? [2] : [0, 1];
     if (curUser == '') {
-      db.getImageJudgePageIndex().then(setPages);
+      db.getImageJudgePageIndex(flags).then(setPages);
       return;
     }
-    if (window.location.href.includes('/main/result')) {
-      db.getImageJudgePageIndexByIp(curUser).then(setPages);
+    if (judgeType == 'result') {
+      db.getImageJudgePageIndexByIp(curUser, flags).then(setPages);
     }
   }, [curUser]);
 
@@ -72,6 +75,6 @@ const PaginationPage = connect(({ common }: { common: ICommon }) => ({
   curUser: common.curUser,
 }))(PagPage);
 
-export default forwardRef((props, ref) => (
+export default forwardRef((props: IPaginationPage, ref) => (
   <PaginationPage {...props} refInstance={ref} />
 ));

@@ -10,4 +10,9 @@ export const menu = [
     key: '/main/result',
     icon: <EyeOutlined />,
   },
+  {
+    title: '困难样本',
+    key: '/main/result_difficult',
+    icon: <EyeOutlined />,
+  },
 ];

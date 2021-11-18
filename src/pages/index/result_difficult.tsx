@@ -27,11 +27,12 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
 
     setJudgeData({
       fake: imgs
-        .filter((item) => item.audit_flag == '1')
+        .filter((item) => item.audit_flag == '2')
         .map((item) => item.id),
-      normal: imgs
-        .filter((item) => item.audit_flag == '0')
-        .map((item) => item.id),
+      normal: [],
+      //   imgs
+      //     .filter((item) => item.audit_flag == '0')
+      //     .map((item) => item.id)
     });
     let users = imgs.map((item) => item.username);
     users = R.uniq(users);
@@ -52,7 +53,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
       db.getImageJudge({
         manual_flag: judgeType,
         max_id: maxId,
-        audit_flag: [0, 1],
+        audit_flag: [2],
       }).then((res) => {
         setImgs(res);
         setDataLoading(false);
@@ -65,7 +66,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
       manual_flag: judgeType,
       max_id: maxId,
       ip: curUser,
-      audit_flag: [0, 1],
+      audit_flag: [2],
     }).then((res) => {
       setImgs(res);
       setDataLoading(false);
@@ -92,7 +93,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
     <div className="card-content">
       <AuditHead ref={ref} onLoadData={setJudgeType} />
       <Pagination
-        judgeType="result"
+        judgeType="difficult"
         ref={pageRef}
         judgeUser={judgeUser}
         setMaxId={setMaxId}

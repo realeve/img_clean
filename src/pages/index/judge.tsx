@@ -29,11 +29,13 @@ export const ImageItem = ({
   onChange,
   showModel = true,
   imgHeight = defaultImageSize,
+  onHardSample,
 }: {
   item: IImageItem;
   imgHeight: number;
   onChange: () => void;
   showModel?: boolean;
+  onHardSample: () => void;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
@@ -84,6 +86,11 @@ export const ImageItem = ({
           />
         </div>
       )}
+      <div className={styles.difficult}>
+        <Button type="ghost" onClick={onHardSample}>
+          难
+        </Button>
+      </div>
       {/* <Animate key="0" transitionName="fade" transitionAppear> */}
       <div
         className={styles.detail}
@@ -233,6 +240,25 @@ const JudgePage = ({
                 }}
                 showModel={showModel}
                 imgHeight={imgHeight}
+                onHardSample={() => {
+                  setImageJudge(
+                    {
+                      ip,
+                      audit_flag: 2,
+                      _id: [id],
+                    },
+                    isCheckPage,
+                  ).then((success) => {
+                    if (!success) {
+                      return;
+                    }
+                    const fake = R.remove(i, 1, judgeData.fake);
+                    setJudgeData({
+                      fake,
+                      normal: judgeData.normal,
+                    });
+                  });
+                }}
               />
               // </LazyLoad>
             );
@@ -289,6 +315,25 @@ const JudgePage = ({
                   });
                 }}
                 imgHeight={imgHeight}
+                onHardSample={() => {
+                  setImageJudge(
+                    {
+                      ip,
+                      audit_flag: 2,
+                      _id: [id],
+                    },
+                    isCheckPage,
+                  ).then((success) => {
+                    if (!success) {
+                      return;
+                    }
+                    const normal = R.remove(i, 1, judgeData.normal);
+                    setJudgeData({
+                      normal,
+                      fake: judgeData.fake,
+                    });
+                  });
+                }}
               />
               // </LazyLoad>
             );

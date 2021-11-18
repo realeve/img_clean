@@ -74,10 +74,14 @@ export interface IAuditItem {
 export const getImageJudge: (params: {
   manual_flag: string;
   max_id: number;
+  audit_flag: number[];
 }) => Promise<IAuditItem[]> = (params) =>
   axios<IAuditItem>({
     url: DEV ? '@/mock/1395_1b873dfb50.json' : '/1395/1b873dfb50.json',
-    params,
+    params: {
+      audit_flag: [0, 1],
+      ...params,
+    },
   }).then((res) =>
     res.data.map((item, i) => {
       return { ...item, imageIdx: i + 1 };
@@ -88,10 +92,14 @@ export const getImageJudgeByIp: (params: {
   manual_flag: string;
   max_id: number;
   ip: string;
+  audit_flag: number[];
 }) => Promise<IAuditItem[]> = (params) =>
   axios<IAuditItem>({
     url: DEV ? '@/mock/1395_1b873dfb50.json' : '/1406/65071cf8aa.json',
-    params,
+    params: {
+      audit_flag: [0, 1],
+      ...params,
+    },
   }).then((res) =>
     res.data.map((item, i) => {
       return { ...item, imageIdx: i + 1 };
@@ -102,20 +110,22 @@ export const getImageJudgeByIp: (params: {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 已判废结果分页索引 }
  */
-export const getImageJudgePageIndex = () =>
+export const getImageJudgePageIndex = (audit_flag: number[]) =>
   axios<{ pageNum: number; id: number }>({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1396/bf3f4dafb4.json',
+    params: { audit_flag },
   }).then((res) => res.data);
 
 /**
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 指定人员判废结果 }
  */
-export const getImageJudgePageIndexByIp = (ip: string) =>
+export const getImageJudgePageIndexByIp = (ip: string, audit_flag: number[]) =>
   axios<{ pageNum: number; id: number }>({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1405/3c6b921692.json',
     params: {
       ip,
+      audit_flag,
     },
   }).then((res) => res.data);
 

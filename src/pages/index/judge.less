@@ -42,8 +42,34 @@
     }
     display: none;
   }
+  .difficult {
+    display: none;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    z-index: 5;
+    :global {
+      .ant-btn {
+        padding: 2px;
+        line-height: 1;
+        color: #fff;
+        width: 32px;
+        height: 32px;
+      }
+    }
+    &:hover {
+      :global {
+        .ant-btn {
+          background: rgb(51, 109, 243);
+        }
+      }
+    }
+  }
   &:hover {
     .act {
+      display: block;
+    }
+    .difficult {
       display: block;
     }
   }
