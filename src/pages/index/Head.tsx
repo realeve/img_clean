@@ -7,6 +7,7 @@ import {
   Button,
   message,
   Switch,
+  Modal,
 } from 'antd';
 import { DEV } from '@/utils/setting';
 import useFetch from '@/component/hooks/useFetch';
@@ -126,7 +127,14 @@ const Head = ({
     { id: number; ip: string; username: string }[]
   >([]);
 
+  const [show, setShow] = useState(false);
+
+  const [totalJudgeNum, setTotalJudgeNum] = useState<
+    { username: string; fake_nums: number }[]
+  >([]);
+
   useEffect(() => {
+    db.getImageJudgeNum().then(setTotalJudgeNum);
     if (!window.location.href.includes('/main/result')) {
       return;
     }
@@ -244,7 +252,16 @@ const Head = ({
                 },
               });
             }}
-          />
+          />{' '}
+          <Button
+            style={{ marginLeft: 20 }}
+            type="dashed"
+            onClick={() => {
+              setShow(true);
+            }}
+          >
+            判废量统计
+          </Button>
         </div>
       </Col>
       {judgeUsers.length > 0 && (
@@ -278,6 +295,29 @@ const Head = ({
           </div>
         </Col>
       )}
+
+      <Modal
+        title="判废量汇总"
+        visible={show}
+        onCancel={() => {
+          setShow(false);
+        }}
+        footer={null}
+        bodyStyle={{ padding: '20px 0' }}
+      >
+        <ul style={{ listStyle: 'auto', lineHeight: '30px' }}>
+          {totalJudgeNum.map((item) => (
+            <li>
+              <div style={{ display: 'flex' }}>
+                <div style={{ width: 100 }}>
+                  <b>{item.username}：</b>
+                </div>
+                {item.fake_nums}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Modal>
     </Row>
   );
 };

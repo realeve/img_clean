@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "username": "李宾",
+      "fake_nums": 222300
+    },
+    {
+      "username": "潘成",
+      "fake_nums": 16239
+    },
+    {
+      "username": "郑朝慧",
+      "fake_nums": 12700
+    },
+    {
+      "username": "机检大屏",
+      "fake_nums": 500
+    },
+    {
+      "username": "郑哲轩",
+      "fake_nums": 400
+    }
+  ],
+  "rows": 5,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["username", "fake_nums"],
+  "title": "完工量统计",
+  "time": "2861.802ms",
+  "serverTime": "2021-11-18 13:37:33",
+  "source": "数据来源：生产指挥中心BI数据",
+  "hash": "W/\"b829626d298fae5f67b247c66ac50066\""
+}

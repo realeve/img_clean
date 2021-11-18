@@ -191,3 +191,12 @@ export const getImageJudgeUsersList: () => Promise<
   axios<{ id: number; ip: string; username: string }>({
     url: DEV ? '@/mock/1404_079e04aa25.json' : '/1404/079e04aa25.json',
   }).then((res) => [{ id: 0, ip: '', username: '所有人' }, ...res.data]);
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 完工量统计 }
+ */
+export const getImageJudgeNum = () =>
+  axios<{ username: string; fake_nums: number }>({
+    url: DEV ? '@/mock/1408_71e7266837.json' : '/1408/71e7266837.json',
+  }).then((res) => res.data);
