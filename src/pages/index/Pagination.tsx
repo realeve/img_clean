@@ -23,7 +23,7 @@ const PagPage = ({
   const [pages, setPages] = useState<{ pageNum: number; id: number }[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
-    let flags = judgeType == 'difficult' ? [2] : [0, 1];
+    let flags = judgeType == 'difficult' ? [2, 3] : [0, 1];
     if (curUser == '') {
       db.getImageJudgePageIndex(flags).then(setPages);
       return;

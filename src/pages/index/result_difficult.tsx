@@ -52,7 +52,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
       db.getImageJudge({
         manual_flag: judgeType,
         max_id: maxId,
-        audit_flag: [2],
+        audit_flag: [2, 3],
       }).then((res) => {
         setImgs(res);
         setDataLoading(false);
@@ -65,7 +65,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
       manual_flag: judgeType,
       max_id: maxId,
       ip: curUser,
-      audit_flag: [2],
+      audit_flag: [2, 3],
     }).then((res) => {
       setImgs(res);
       setDataLoading(false);
