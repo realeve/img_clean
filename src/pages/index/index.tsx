@@ -26,6 +26,9 @@ function IndexPage({ ip }: { ip: string }) {
       setImgs(res);
       setDataLoading(false);
       let _id = res.map((item) => item.id);
+      if (_id.length == 0) {
+        return;
+      }
       db.receiveImageJudge({ ip, _id });
     });
   };

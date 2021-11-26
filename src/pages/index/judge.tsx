@@ -244,7 +244,7 @@ const JudgePage = ({
                   setImageJudge(
                     {
                       ip,
-                      audit_flag: judgeType == '0' ? 3 : 2,
+                      audit_flag: judgeType == '0' ? 2 : 3,
                       _id: [id],
                     },
                     isCheckPage,
@@ -319,7 +319,7 @@ const JudgePage = ({
                   setImageJudge(
                     {
                       ip,
-                      audit_flag: judgeType == '0' ? 3 : 2,
+                      audit_flag: judgeType == '0' ? 2 : 3,
                       _id: [id],
                     },
                     isCheckPage,
