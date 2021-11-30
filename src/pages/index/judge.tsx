@@ -155,6 +155,8 @@ const JudgePage = ({
   showModel?: boolean;
   isCheckPage?: boolean;
 }) => {
+  const needReverse = !isCheckPage && judgeType == '1';
+
   const submit = async () => {
     let success1 =
       judgeData.fake.length == 0
@@ -163,7 +165,7 @@ const JudgePage = ({
             {
               ip,
               audit_flag: 1,
-              _id: judgeData.fake,
+              _id: needReverse ? judgeData.normal : judgeData.fake,
             },
             isCheckPage,
           );
@@ -174,7 +176,7 @@ const JudgePage = ({
             {
               ip,
               audit_flag: 0,
-              _id: judgeData.normal,
+              _id: needReverse ? judgeData.fake : judgeData.normal,
             },
             isCheckPage,
           );
@@ -186,9 +188,25 @@ const JudgePage = ({
     onRefresh();
   };
 
-  const fakeWidth = judgeType == '0' ? 8 : 16;
+  const fakeWidth = 8; // judgeType == '0' ? 8 : 16;
 
-  // ,overflowY:'scroll',height:'80vh'
+  const removeFake = (i: number, id: number) => {
+    const fake = R.remove(i, 1, judgeData.fake);
+    const normal = R.append(id, judgeData.normal);
+    setJudgeData({
+      fake,
+      normal,
+    });
+  };
+
+  const removeNormal = (i: number, id: number) => {
+    const normal = R.remove(i, 1, judgeData.normal);
+    const fake = R.append(id, judgeData.fake);
+    setJudgeData({
+      fake,
+      normal,
+    });
+  };
 
   return (
     <Row gutter={16} style={{ position: 'relative' }}>
@@ -211,60 +229,146 @@ const JudgePage = ({
         确认提交
       </Button>
       <Col span={fakeWidth}>
-        <h1 className={styles.center}>实废（{judgeData.fake.length}）</h1>
+        <h1 className={styles.center}>
+          实废（
+          {judgeData[needReverse ? 'normal' : 'fake'].length}）
+        </h1>
         <div className={styles.center}>请点击下方你认为是误废的产品</div>
       </Col>
       <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
-        <h1 className={styles.center}>误废（{judgeData.normal.length}）</h1>
+        <h1 className={styles.center}>
+          误废（
+          {judgeData[needReverse ? 'fake' : 'normal'].length}）
+        </h1>
         <div className={styles.center}>请点击下方你认为是废票的产品</div>
       </Col>
-      <Col span={fakeWidth}>
-        <div className={styles.list}>
-          {judgeData.fake.map((id, i) => {
-            const item = data.find((item) => item.id === id) as IImageItem;
-            if (!item) {
-              return null;
-            }
-            return (
-              // <LazyLoad height={imgHeight}>
-              <ImageItem
-                item={item}
-                key={id}
-                onChange={() => {
-                  const fake = R.remove(i, 1, judgeData.fake);
-                  const normal = R.append(id, judgeData.normal);
-                  setJudgeData({
-                    fake,
-                    normal,
-                  });
-                }}
-                showModel={showModel}
-                imgHeight={imgHeight}
-                onHardSample={() => {
-                  setImageJudge(
-                    {
-                      ip,
-                      audit_flag: judgeType == '0' ? 2 : 3,
-                      _id: [id],
-                    },
-                    isCheckPage,
-                  ).then((success) => {
-                    if (!success) {
-                      return;
+      <Row>
+        <Col span={fakeWidth}>
+          <div className={styles.list}>
+            {judgeData[needReverse ? 'normal' : 'fake'].map((id, i) => {
+              const item = data.find((item) => item.id === id) as IImageItem;
+              if (!item) {
+                return null;
+              }
+              return (
+                // <LazyLoad height={imgHeight}>
+                <ImageItem
+                  item={item}
+                  key={id}
+                  onChange={() => {
+                    if (judgeType == '0') {
+                      removeFake(i, id);
+                    } else {
+                      removeNormal(i, id);
                     }
-                    const fake = R.remove(i, 1, judgeData.fake);
-                    setJudgeData({
-                      fake,
-                      normal: judgeData.normal,
+                  }}
+                  showModel={showModel}
+                  imgHeight={imgHeight}
+                  onHardSample={() => {
+                    setImageJudge(
+                      {
+                        ip,
+                        audit_flag: judgeType == '0' ? 2 : 3,
+                        _id: [id],
+                      },
+                      isCheckPage,
+                    ).then((success) => {
+                      if (!success) {
+                        return;
+                      }
+                      const fake = R.remove(i, 1, judgeData.fake);
+                      setJudgeData({
+                        fake,
+                        normal: judgeData.normal,
+                      });
                     });
-                  });
-                }}
-              />
-              // </LazyLoad>
-            );
-          })}
-        </div>
-        {judgeType == '1' && (
+                  }}
+                />
+                // </LazyLoad>
+              );
+            })}
+          </div>
+          {/* {judgeType == '1' && (
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => {
+                confirm({
+                  onOk: () => {
+                    submit();
+                  },
+                  title: '是否所有数据已经判废完成，确认提交？',
+                  okText: '提交入库',
+                  cancelText: '取消',
+                });
+              }}
+              style={{ marginTop: 10, zIndex: 10 }}
+            >
+              确认提交
+            </Button>
+          )}
+          {judgeType == '1' && isCheckPage && (
+            <Button
+              size="large"
+              onClick={onRefresh}
+              style={{ marginTop: 10, marginLeft: 20, zIndex: 10 }}
+            >
+              下一页
+            </Button>
+          )} */}
+        </Col>
+        <Col
+          span={24 - fakeWidth}
+          style={{
+            borderLeft: '9px solid #888',
+          }}
+        >
+          <div className={styles.list}>
+            {judgeData[needReverse ? 'fake' : 'normal'].map((id, i) => {
+              const item = data.find((item) => item.id === id) as IImageItem;
+              if (!item) {
+                return null;
+              }
+              return (
+                // <LazyLoad height={imgHeight}>
+                <ImageItem
+                  item={item}
+                  key={id}
+                  showModel={showModel}
+                  onChange={() => {
+                    if (judgeType == '1') {
+                      removeFake(i, id);
+                    } else {
+                      removeNormal(i, id);
+                    }
+                  }}
+                  imgHeight={imgHeight}
+                  onHardSample={() => {
+                    setImageJudge(
+                      {
+                        ip,
+                        audit_flag: judgeType == '0' ? 2 : 3,
+                        _id: [id],
+                      },
+                      isCheckPage,
+                    ).then((success) => {
+                      if (!success) {
+                        return;
+                      }
+                      const normal = R.remove(i, 1, judgeData.normal);
+                      setJudgeData({
+                        normal,
+                        fake: judgeData.fake,
+                      });
+                    });
+                  }}
+                />
+                // </LazyLoad>
+              );
+            })}
+          </div>
+          <Divider />
+
           <Button
             size="large"
             type="primary"
@@ -282,93 +386,18 @@ const JudgePage = ({
           >
             确认提交
           </Button>
-        )}
-        {judgeType == '1' && isCheckPage && (
-          <Button
-            size="large"
-            onClick={onRefresh}
-            style={{ marginTop: 10, marginLeft: 20, zIndex: 10 }}
-          >
-            下一页
-          </Button>
-        )}
-      </Col>
-      <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
-        <div className={styles.list}>
-          {judgeData.normal.map((id, i) => {
-            const item = data.find((item) => item.id === id) as IImageItem;
-            if (!item) {
-              return null;
-            }
-            return (
-              // <LazyLoad height={imgHeight}>
-              <ImageItem
-                item={item}
-                key={id}
-                showModel={showModel}
-                onChange={() => {
-                  const normal = R.remove(i, 1, judgeData.normal);
-                  const fake = R.append(id, judgeData.fake);
-                  setJudgeData({
-                    fake,
-                    normal,
-                  });
-                }}
-                imgHeight={imgHeight}
-                onHardSample={() => {
-                  setImageJudge(
-                    {
-                      ip,
-                      audit_flag: judgeType == '0' ? 2 : 3,
-                      _id: [id],
-                    },
-                    isCheckPage,
-                  ).then((success) => {
-                    if (!success) {
-                      return;
-                    }
-                    const normal = R.remove(i, 1, judgeData.normal);
-                    setJudgeData({
-                      normal,
-                      fake: judgeData.fake,
-                    });
-                  });
-                }}
-              />
-              // </LazyLoad>
-            );
-          })}
-        </div>
-        <Divider />
-        {judgeType == '0' && (
-          <Button
-            size="large"
-            type="primary"
-            onClick={() => {
-              confirm({
-                onOk: () => {
-                  submit();
-                },
-                title: '是否所有数据已经判废完成，确认提交？',
-                okText: '提交入库',
-                cancelText: '取消',
-              });
-            }}
-            style={{ marginTop: 10, zIndex: 10 }}
-          >
-            确认提交
-          </Button>
-        )}
-        {judgeType == '0' && isCheckPage && (
-          <Button
-            size="large"
-            onClick={onRefresh}
-            style={{ marginTop: 10, marginLeft: 20, zIndex: 10 }}
-          >
-            下一页
-          </Button>
-        )}
-      </Col>
+
+          {isCheckPage && (
+            <Button
+              size="large"
+              onClick={onRefresh}
+              style={{ marginTop: 10, marginLeft: 20, zIndex: 10 }}
+            >
+              下一页
+            </Button>
+          )}
+        </Col>
+      </Row>
     </Row>
   );
 };

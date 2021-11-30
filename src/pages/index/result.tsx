@@ -12,9 +12,15 @@ import { useSetState } from 'react-use';
 import Pagination from './Pagination';
 import * as R from 'ramda';
 
-function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
-  const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
-
+function IndexPage({
+  ip,
+  curUser,
+  judgeType,
+}: {
+  ip: string;
+  curUser: string;
+  judgeType: '0' | '1';
+}) {
   const [maxId, setMaxId] = useState(0);
 
   const [dataLoading, setDataLoading] = useState(true);
@@ -73,7 +79,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
     });
   };
 
-  useEffect(refeshData, [maxId, curUser]);
+  useEffect(refeshData, [maxId, curUser, judgeType]);
 
   const ref = useRef(null);
   const pageRef = useRef(null);
@@ -90,7 +96,7 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
 
   return (
     <div className="card-content">
-      <AuditHead ref={ref} onLoadData={setJudgeType} />
+      <AuditHead ref={ref} />
       <Pagination
         judgeType="result"
         ref={pageRef}
@@ -114,4 +120,5 @@ function IndexPage({ ip, curUser }: { ip: string; curUser: string }) {
 export default connect(({ common }: { common: ICommon }) => ({
   ip: common.ip,
   curUser: common.curUser,
+  judgeType: common.judgeType,
 }))(IndexPage);

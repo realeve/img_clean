@@ -15,7 +15,7 @@ import useFetch from '@/component/hooks/useFetch';
 import { useState, useEffect } from 'react';
 import styles from './index.less';
 
-import { saveImageSize, saveShowModel } from './lib';
+import { saveImageSize, saveShowModel, saveJudgeType } from './lib';
 
 import * as db from './db';
 
@@ -32,21 +32,22 @@ export const imgSize = [112, 128, 192, 224, 256, 384];
 export const defaultImageSize = 192;
 interface IHeadInterface {
   ip: string;
-  onLoadData: (e: '0' | '1') => void;
   showModel?: boolean;
   dispatch: Dispatch;
   imgHeight: number;
   refInstance?: any;
+  judgeType: '0' | '1';
+  curUser: string;
 }
 
 const Head = ({
   ip,
-  onLoadData,
   showModel = false,
   dispatch,
   imgHeight,
   refInstance,
   curUser,
+  judgeType,
 }: IHeadInterface) => {
   const { data, loading, reFetch } = useFetch<TTaskNum>({
     param: {
@@ -88,8 +89,6 @@ const Head = ({
     valid: () => ip.length > 0,
     callback: (e) => e.data?.[0] || { fake: 0, normal: 0 },
   });
-
-  const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
 
   useImperativeHandle(refInstance, () => ({
     refresh: () => {
@@ -141,6 +140,15 @@ const Head = ({
     db.getImageJudgeUsersList().then(setJudgeUsers);
   }, []);
 
+  const setJudgeType = (judgeType: '0' | '1') => {
+    dispatch({
+      type: 'common/setStore',
+      payload: {
+        judgeType,
+      },
+    });
+  };
+
   return (
     <Row className={styles.head}>
       <Col span={18}>
@@ -176,7 +184,7 @@ const Head = ({
           buttonStyle="solid"
           onChange={(e) => {
             setJudgeType(e.target.value);
-            onLoadData(e.target.value);
+            saveJudgeType(e.target.value);
           }}
           className={styles.action}
         >
@@ -327,6 +335,7 @@ const HeadPage = connect(({ common }: { common: ICommon }) => ({
   ip: common.ip,
   imgHeight: common.imgHeight,
   curUser: common.curUser,
+  judgeType: common.judgeType,
 }))(Head);
 
 export default forwardRef((props: IHeadInterface, ref) => (

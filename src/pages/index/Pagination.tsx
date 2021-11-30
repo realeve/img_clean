@@ -12,6 +12,7 @@ export interface IPaginationPage {
   curUser: string;
   refInstance: any;
   judgeType: 'difficult' | 'result';
+  manual_flag: '0' | '1';
 }
 const PagPage = ({
   setMaxId,
@@ -19,19 +20,20 @@ const PagPage = ({
   curUser,
   refInstance,
   judgeType,
+  manual_flag,
 }: IPaginationPage) => {
   const [pages, setPages] = useState<{ pageNum: number; id: number }[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     let flags = judgeType == 'difficult' ? [2, 3] : [0, 1];
     if (curUser == '') {
-      db.getImageJudgePageIndex(flags).then(setPages);
+      db.getImageJudgePageIndex(flags, manual_flag).then(setPages);
       return;
     }
     if (judgeType == 'result') {
-      db.getImageJudgePageIndexByIp(curUser, flags).then(setPages);
+      db.getImageJudgePageIndexByIp(curUser, flags, manual_flag).then(setPages);
     }
-  }, [curUser]);
+  }, [curUser, manual_flag]);
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
@@ -73,6 +75,7 @@ const PagPage = ({
 
 const PaginationPage = connect(({ common }: { common: ICommon }) => ({
   curUser: common.curUser,
+  manual_flag: common.judgeType,
 }))(PagPage);
 
 export default forwardRef((props: IPaginationPage, ref) => (

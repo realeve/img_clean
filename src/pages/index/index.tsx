@@ -7,12 +7,9 @@ import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 
 import AuditHead from './Head';
-
 import { useSetState } from 'react-use';
 
-function IndexPage({ ip }: { ip: string }) {
-  const [judgeType, setJudgeType] = useState<'0' | '1'>('0');
-
+function IndexPage({ ip, judgeType }: { ip: string; judgeType: '0' | '1' }) {
   const [imgs, setImgs] = useState<IImageItem[]>([]);
 
   const [dataLoading, setDataLoading] = useState(true);
@@ -55,7 +52,7 @@ function IndexPage({ ip }: { ip: string }) {
 
   return (
     <div className="card-content">
-      <AuditHead ref={ref} onLoadData={setJudgeType} />
+      <AuditHead ref={ref} />
       <JudgePage
         judgeData={judgeData}
         setJudgeData={setJudgeData}
@@ -75,4 +72,5 @@ function IndexPage({ ip }: { ip: string }) {
 
 export default connect(({ common }: { common: ICommon }) => ({
   ip: common.ip,
+  judgeType: common.judgeType,
 }))(IndexPage);

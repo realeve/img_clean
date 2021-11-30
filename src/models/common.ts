@@ -1,7 +1,7 @@
 import { history } from 'umi';
 import { setStore, getVersion } from '@/utils/lib';
 import { axios } from '@/utils/axios';
-import { getShowModel, getImageSize } from '@/pages/index/lib';
+import { getShowModel, getImageSize, getJudgeType } from '@/pages/index/lib';
 import { defaultImageSize } from '@/pages/index/Head';
 
 const namespace = 'common';
@@ -12,6 +12,7 @@ export interface ICommon {
   showModel: boolean;
   imgHeight: number;
   curUser: string;
+  judgeType: '0' | '1';
 }
 const defaultState: ICommon = {
   version: {},
@@ -20,6 +21,7 @@ const defaultState: ICommon = {
   showModel: false,
   imgHeight: defaultImageSize,
   curUser: '',
+  judgeType: '0',
 };
 
 // 获取ip
@@ -49,6 +51,7 @@ export default {
       // authIP(ip);
       let showModel = getShowModel();
       let imgHeight = getImageSize();
+      let judgeType = getJudgeType();
       yield put({
         type: 'setStore',
         payload: {
@@ -56,6 +59,7 @@ export default {
           ip,
           showModel,
           imgHeight,
+          judgeType,
         },
       });
     }, // 获取版本信息

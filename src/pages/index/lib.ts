@@ -68,3 +68,10 @@ export const getShowModel = () => {
 export const saveShowModel = (showModel = false) => {
   window.localStorage.setItem(key + 'showModel', showModel ? '1' : '0');
 };
+
+export const saveJudgeType = (judgetype: string) => {
+  window.localStorage.setItem(key + 'judgetype', String(judgetype));
+};
+
+export const getJudgeType = () =>
+  (window.localStorage.getItem(key + 'judgetype') || '0') as '0' | '1';

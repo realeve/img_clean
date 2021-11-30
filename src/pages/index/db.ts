@@ -110,22 +110,30 @@ export const getImageJudgeByIp: (params: {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 已判废结果分页索引 }
  */
-export const getImageJudgePageIndex = (audit_flag: number[]) =>
+export const getImageJudgePageIndex = (
+  audit_flag: number[],
+  manual_flag = '0',
+) =>
   axios<{ pageNum: number; id: number }>({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1396/bf3f4dafb4.json',
-    params: { audit_flag },
+    params: { audit_flag, manual_flag },
   }).then((res) => res.data);
 
 /**
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 指定人员判废结果 }
  */
-export const getImageJudgePageIndexByIp = (ip: string, audit_flag: number[]) =>
+export const getImageJudgePageIndexByIp = (
+  ip: string,
+  audit_flag: number[],
+  manual_flag = '0',
+) =>
   axios<{ pageNum: number; id: number }>({
     url: DEV ? '@/mock/1396_bf3f4dafb4.json' : '/1405/3c6b921692.json',
     params: {
       ip,
       audit_flag,
+      manual_flag,
     },
   }).then((res) => res.data);
 
