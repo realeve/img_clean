@@ -159,7 +159,7 @@ const JudgePage = ({
 
   const submit = async () => {
     let success1 =
-      judgeData.fake.length == 0
+      (needReverse ? judgeData.normal : judgeData.fake).length == 0
         ? true
         : await setImageJudge(
             {
@@ -170,7 +170,7 @@ const JudgePage = ({
             isCheckPage,
           );
     let success2 =
-      judgeData.normal.length == 0
+      (needReverse ? judgeData.fake : judgeData.normal).length == 0
         ? true
         : await setImageJudge(
             {
@@ -256,7 +256,7 @@ const JudgePage = ({
                   item={item}
                   key={id}
                   onChange={() => {
-                    if (judgeType == '0') {
+                    if (!needReverse) {
                       removeFake(i, id);
                     } else {
                       removeNormal(i, id);
@@ -336,7 +336,7 @@ const JudgePage = ({
                   key={id}
                   showModel={showModel}
                   onChange={() => {
-                    if (judgeType == '1') {
+                    if (needReverse) {
                       removeFake(i, id);
                     } else {
                       removeNormal(i, id);
