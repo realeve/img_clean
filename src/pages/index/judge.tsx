@@ -236,10 +236,26 @@ const JudgePage = ({
         <div className={styles.center}>请点击下方你认为是误废的产品</div>
       </Col>
       <Col span={24 - fakeWidth} style={{ borderLeft: '9px solid #888' }}>
-        <h1 className={styles.center}>
-          误废（
-          {judgeData[needReverse ? 'fake' : 'normal'].length}）
-        </h1>
+        <Button
+          type="default"
+          onClick={() => {
+            let normal = R.clone(judgeData['normal']);
+            let fake = R.clone(judgeData['fake']);
+            setJudgeData({
+              normal: [...normal, ...fake],
+              fake: [],
+            });
+          }}
+        >
+          全部移动
+        </Button>
+
+        <div>
+          <h1 className={styles.center}>
+            误废（
+            {judgeData[needReverse ? 'fake' : 'normal'].length}）
+          </h1>
+        </div>
         <div className={styles.center}>请点击下方你认为是废票的产品</div>
       </Col>
       <Row>
@@ -382,7 +398,7 @@ const JudgePage = ({
                 cancelText: '取消',
               });
             }}
-            style={{ marginTop: 10, zIndex: 10 }}
+            style={{ marginTop: 10, marginLeft: 10, zIndex: 10 }}
           >
             确认提交
           </Button>
