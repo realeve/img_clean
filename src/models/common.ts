@@ -13,6 +13,7 @@ export interface ICommon {
   imgHeight: number;
   curUser: string;
   judgeType: '0' | '1';
+  light: boolean;
 }
 const defaultState: ICommon = {
   version: {},
@@ -22,6 +23,7 @@ const defaultState: ICommon = {
   imgHeight: defaultImageSize,
   curUser: '',
   judgeType: '0',
+  light: false,
 };
 
 // 获取ip

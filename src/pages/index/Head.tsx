@@ -149,6 +149,8 @@ const Head = ({
     });
   };
 
+  const [light, setLight] = useState(false);
+
   return (
     <Row className={styles.head}>
       <Col span={18}>
@@ -178,19 +180,42 @@ const Head = ({
         </div>
       </Col>
       <Col span={6}>
-        <Radio.Group
-          defaultValue="1"
-          value={judgeType}
-          buttonStyle="solid"
-          onChange={(e) => {
-            setJudgeType(e.target.value);
-            saveJudgeType(e.target.value);
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
           }}
-          className={styles.action}
         >
-          <Radio.Button value="1">加载实废</Radio.Button>
-          <Radio.Button value="0">加载误废</Radio.Button>
-        </Radio.Group>
+          <div style={{ marginRight: 10 }}>
+            图片增亮：
+            <Switch
+              checked={light}
+              onChange={(e) => {
+                setLight(e);
+                dispatch({
+                  type: 'common/setStore',
+                  payload: {
+                    light: e,
+                  },
+                });
+              }}
+            />
+          </div>
+          <Radio.Group
+            defaultValue="1"
+            value={judgeType}
+            buttonStyle="solid"
+            onChange={(e) => {
+              setJudgeType(e.target.value);
+              saveJudgeType(e.target.value);
+            }}
+            className={styles.action}
+          >
+            <Radio.Button value="1">加载实废</Radio.Button>
+            <Radio.Button value="0">加载误废</Radio.Button>
+          </Radio.Group>
+        </div>
       </Col>
       <Col span={12} style={{ marginTop: 10 }}>
         图片默认大小(像素)：

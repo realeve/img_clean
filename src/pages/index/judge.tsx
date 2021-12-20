@@ -30,12 +30,14 @@ export const ImageItem = ({
   showModel = true,
   imgHeight = defaultImageSize,
   onHardSample,
+  light = false,
 }: {
   item: IImageItem;
   imgHeight: number;
   onChange: () => void;
   showModel?: boolean;
   onHardSample: () => void;
+  light?: boolean;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
@@ -94,7 +96,7 @@ export const ImageItem = ({
       {/* <Animate key="0" transitionName="fade" transitionAppear> */}
       <div
         className={styles.detail}
-        style={{ height: imgHeight }}
+        style={{ height: imgHeight, filter: `brightness(${light ? 2.5 : 1})` }}
         onClick={() => {
           onChange();
         }}
@@ -144,6 +146,7 @@ const JudgePage = ({
   judgeData,
   showModel = false,
   isCheckPage = false,
+  light = false,
 }: {
   data: IImageItem[];
   judgeType: '0' | '1';
@@ -154,6 +157,7 @@ const JudgePage = ({
   judgeData: IJudgeData;
   showModel?: boolean;
   isCheckPage?: boolean;
+  light?: boolean;
 }) => {
   const needReverse = !isCheckPage && judgeType == '1';
 
@@ -242,12 +246,12 @@ const JudgePage = ({
             let normal = R.clone(judgeData['normal']);
             let fake = R.clone(judgeData['fake']);
             setJudgeData({
-              normal: [...normal, ...fake],
-              fake: [],
+              normal: fake,
+              fake: normal,
             });
           }}
         >
-          全部移动
+          交换数据
         </Button>
 
         <div>
@@ -278,6 +282,7 @@ const JudgePage = ({
                       removeNormal(i, id);
                     }
                   }}
+                  light={light}
                   showModel={showModel}
                   imgHeight={imgHeight}
                   onHardSample={() => {
@@ -350,6 +355,7 @@ const JudgePage = ({
                 <ImageItem
                   item={item}
                   key={id}
+                  light={light}
                   showModel={showModel}
                   onChange={() => {
                     if (needReverse) {
@@ -422,4 +428,5 @@ export default connect(({ common }: { common: ICommon }) => ({
   showModel: common.showModel,
   ip: common.ip,
   imgHeight: common.imgHeight,
+  light: common.light,
 }))(JudgePage);
