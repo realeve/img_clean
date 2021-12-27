@@ -96,7 +96,7 @@ export const ImageItem = ({
       {/* <Animate key="0" transitionName="fade" transitionAppear> */}
       <div
         className={styles.detail}
-        style={{ height: imgHeight, filter: `brightness(${light ? 2.5 : 1})` }}
+        style={{ height: imgHeight, filter: `brightness(${light ? 2 : 1})` }}
         onClick={() => {
           onChange();
         }}
