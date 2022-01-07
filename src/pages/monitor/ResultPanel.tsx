@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Modal } from 'antd';
+import { Tabs, Modal, Skeleton } from 'antd';
 import * as db from './db';
 import { IImageItem } from './db';
 import styles from './ResultPanel.less';
@@ -72,19 +72,22 @@ export default ({
             tab={`${titles[item]}(${state[item].length})`}
             key={titles[item]}
           >
-            <ul className={styles.panel}>
-              {state[item].map((subItem: IImageItem) => (
-                <li key={subItem.id} className="animated zoomIn">
-                  <div className={styles.wrap}>
-                    <img src={`${subItem.image}`} />
-                  </div>
-                  {/* <div className={styles.desc}>
+            <Skeleton active loading={loading}>
+              <ul className={styles.panel}>
+                {state[item].map((subItem: IImageItem) => (
+                  <li key={subItem.id} className="animated zoomIn">
+                    <div className={styles.wrap}>
+                      <img src={`${subItem.image}`} />
+                    </div>
+                    {/* <div className={styles.desc}>
                             {subItem.probability}
                         </div> */}
-                  <div className={styles.dot}>{subItem.probability}%</div>
-                </li>
-              ))}
-            </ul>
+                    <div className={styles.dot}>{subItem.probability}%</div>
+                    <div className={styles.dotLeft}>{subItem.id}</div>
+                  </li>
+                ))}
+              </ul>
+            </Skeleton>
           </TabPane>
         ))}
       </Tabs>

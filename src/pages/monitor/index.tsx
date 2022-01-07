@@ -58,9 +58,10 @@ export default () => {
         dataSource={data}
         loading={loading}
         pagination={{
-          pageSize: 20,
+          pageSize: 12,
         }}
       >
+        <Column title="#" dataIndex="idx" key="idx" />
         <Column
           title="车号"
           dataIndex="cart"

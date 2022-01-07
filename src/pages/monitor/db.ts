@@ -10,6 +10,7 @@ export interface ICartItem {
   fake_img: string;
   total_img: string;
   acc: number;
+  idx: number | '';
 }
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -20,7 +21,11 @@ export const getCarts = (params: { tstart: string; tend: string }) =>
     url: DEV ? '@/mock/1430_d55a6e3d81.json' : '/1430/d55a6e3d81.json',
     params,
   }).then((res) =>
-    res.data.map((item) => ({ ...item, acc: Number(item.acc) })),
+    res.data.map((item, i) => ({
+      ...item,
+      idx: i || '',
+      acc: Number(item.acc),
+    })),
   );
 
 export interface IImageItem {
