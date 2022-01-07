@@ -15,4 +15,9 @@ export const menu = [
     key: '/main/result_difficult',
     icon: <EyeOutlined />,
   },
+  {
+    title: '数据监测',
+    key: '/monitor',
+    icon: <EyeOutlined />,
+  },
 ];

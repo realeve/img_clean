@@ -15,6 +15,11 @@ export const routes = [
         component: '@/pages/index/result_difficult',
         title: '困难样本',
       },
+      {
+        path: '/monitor',
+        component: '@/pages/monitor/index',
+        title: '数据监测',
+      },
     ],
   },
 ];
