@@ -130,3 +130,12 @@ export const getImageCount = () =>
   axios<{ ai_leak: string; human_leak: string }>({
     url: DEV ? '@/mock/1434_07d35b6b5a.json' : '/1434/07d35b6b5a.json',
   }).then((res) => res.data[0]);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { 判废结果汇总 }
+ */
+export const getJudgeResult = () =>
+  axios<{ total: string; human: string; ai: string }>({
+    url: DEV ? '@/mock/1435_cb72af5f40.json' : '/1435/cb72af5f40.json',
+  }).then((res) => res.data[0]);

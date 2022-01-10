@@ -14,10 +14,15 @@ import * as R from 'ramda';
 const Header = forwardRef((_, ref) => {
   const [taskList, setTaskList] = useState({ human_leak: '0', ai_leak: '0' });
   const [loading, setLoading] = useState(false);
-
+  const [state, setState] = useState({
+    total: '0',
+    ai: '0',
+    human: '0',
+  });
   const refresh = async () => {
     setLoading(true);
     await db.getImageCount().then(setTaskList);
+    await db.getJudgeResult().then(setState);
     setLoading(false);
   };
   useEffect(() => {
@@ -39,6 +44,18 @@ const Header = forwardRef((_, ref) => {
           paragraph={{ rows: 1, width: 300 }}
         >
           实废：{taskList.ai_leak}, 误废：{taskList.human_leak}
+        </Skeleton>
+      </div>
+      <div className={styles.item}>
+        <div style={{ width: 200 }}>已判废结果：</div>
+        <Skeleton
+          title={false}
+          active
+          loading={loading}
+          paragraph={{ rows: 1, width: 300 }}
+        >
+          与人工保持一致：{state.human}, 与AI保持一致：{state.ai}，总数：
+          {state.total}
         </Skeleton>
       </div>
       <ImageSize />

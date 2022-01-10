@@ -1,0 +1,18 @@
+{
+  "data": [
+    {
+      "total": "2517",
+      "human": "140",
+      "ai": "2377"
+    }
+  ],
+  "rows": 1,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["total", "human", "ai"],
+  "title": "判废结果汇总",
+  "time": "344.053ms",
+  "serverTime": "2022-01-10 17:38:46",
+  "source": "数据来源：图像核查判废数据记录",
+  "hash": "W/\"36c846baee6f5a8c1c57c3b0c693cfa5\""
+}
