@@ -15,7 +15,7 @@ import useFetch from '@/component/hooks/useFetch';
 import { useState, useEffect } from 'react';
 import styles from './index.less';
 
-import { saveImageSize, saveShowModel, saveJudgeType } from './lib';
+import { saveShowModel, saveJudgeType } from './lib';
 
 import * as db from './db';
 
@@ -25,11 +25,12 @@ import { connect } from 'dva';
 import { ICommon } from '@/models/common';
 import { Dispatch } from 'redux';
 
+import ImageSize from '@/component/ImageSize';
+
 type TTaskNum = { manual_flag: number; img_num: number };
 
 export const originSize = 112;
-export const imgSize = [112, 128, 192, 224, 256, 384];
-export const defaultImageSize = 192;
+
 interface IHeadInterface {
   ip: string;
   showModel?: boolean;
@@ -44,7 +45,6 @@ const Head = ({
   ip,
   showModel = false,
   dispatch,
-  imgHeight,
   refInstance,
   curUser,
   judgeType,
@@ -96,15 +96,6 @@ const Head = ({
       reFetch();
     },
   }));
-
-  const updateImgHeight = (imgHeight: number) => {
-    dispatch({
-      type: 'common/setStore',
-      payload: {
-        imgHeight,
-      },
-    });
-  };
 
   const [userInfoMode, setUserInfoMode] = useState<'add' | 'update'>('add');
   const [userName, setUserName] = useState('');
@@ -217,26 +208,7 @@ const Head = ({
           </Radio.Group>
         </div>
       </Col>
-      <Col span={12} style={{ marginTop: 10 }}>
-        图片默认大小(像素)：
-        <Radio.Group
-          defaultValue={defaultImageSize}
-          value={imgHeight}
-          buttonStyle="solid"
-          onChange={(e) => {
-            updateImgHeight(e.target.value);
-            saveImageSize(e.target.value);
-          }}
-        >
-          {imgSize.map((item) => {
-            return (
-              <Radio.Button value={item} key={String(item)}>
-                {item}
-              </Radio.Button>
-            );
-          })}
-        </Radio.Group>
-      </Col>
+      <ImageSize />
       <Col className={styles.action} span={12}>
         <div>
           <div>本机IP地址：{ip}</div>
@@ -358,7 +330,6 @@ const Head = ({
 const HeadPage = connect(({ common }: { common: ICommon }) => ({
   showModel: common.showModel,
   ip: common.ip,
-  imgHeight: common.imgHeight,
   curUser: common.curUser,
   judgeType: common.judgeType,
 }))(Head);

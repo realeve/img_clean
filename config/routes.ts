@@ -20,6 +20,11 @@ export const routes = [
         component: '@/pages/monitor/index',
         title: '数据监测',
       },
+      {
+        path: '/monitor/judge',
+        component: '@/pages/monitor/judge',
+        title: '数据监测判废',
+      },
     ],
   },
 ];

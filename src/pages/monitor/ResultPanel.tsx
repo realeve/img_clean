@@ -79,9 +79,6 @@ export default ({
                     <div className={styles.wrap}>
                       <img src={`${subItem.image}`} />
                     </div>
-                    {/* <div className={styles.desc}>
-                            {subItem.probability}
-                        </div> */}
                     <div className={styles.dot}>{subItem.probability}%</div>
                     <div className={styles.dotLeft}>{subItem.id}</div>
                   </li>

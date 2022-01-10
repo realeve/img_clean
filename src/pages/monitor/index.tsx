@@ -114,23 +114,19 @@ export default () => {
           key="id"
           render={(text, record: ICartItem) =>
             record.id > '0' ? (
-              <span>
-                <Button
-                  type="dashed"
-                  size="small"
-                  onClick={() => {
-                    setCartinfo({
-                      id: record.id,
-                      cartnumber: record.cart,
-                    });
-                    setShow(true);
-                  }}
-                >
-                  查看
-                </Button>
-                <Divider type="vertical" />
-                <a href="#">数据判废</a>
-              </span>
+              <Button
+                type="dashed"
+                size="small"
+                onClick={() => {
+                  setCartinfo({
+                    id: record.id,
+                    cartnumber: record.cart,
+                  });
+                  setShow(true);
+                }}
+              >
+                查看图片
+              </Button>
             ) : (
               <span>{data.length - 1} 万</span>
             )
