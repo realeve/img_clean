@@ -34,11 +34,13 @@ export interface IImageItem {
   probability: number;
   human_result: number;
   ai_result: number;
+  img_order: number;
 }
 
 const handleImageResult = (res) =>
-  res.data.map((item) => ({
+  res.data.map((item, idx) => ({
     ...item,
+    img_order: idx + 1,
     probability: Number(Number(item.probability * 100).toFixed(1)),
   }));
 /**
@@ -71,6 +73,8 @@ export interface IJudgeImageItem {
   probability: number;
   image: string;
   id: string;
+  ai_result: number;
+  img_order: number;
 }
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -84,7 +88,13 @@ export const getImagesNeedJudge = (ip: string) =>
       blob: 'image',
       blob_type: 'jpg',
     },
-  }).then(handleImageResult);
+  }).then((res) => {
+    res.data = res.data.sort(
+      (a: IImageItem, b: IImageItem) => a.probability - b.probability,
+    );
+    res.data = res.data.sort((a, b) => a.ai_result - b.ai_result);
+    return handleImageResult(res);
+  });
 
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -95,10 +105,12 @@ export const judgeImages: (params: {
   _id: string[];
   verify_result: number;
 }) => Promise<boolean> = (params) =>
-  axios<TDbWrite>({
-    url: DEV ? _commonData : '/1433/3bb138de33.json',
-    params,
-  }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);
+  params._id.length > 0
+    ? axios<TDbWrite>({
+        url: DEV ? _commonData : '/1433/3bb138de33.json',
+        params,
+      }).then(({ data: [{ affected_rows }] }) => affected_rows > 0)
+    : Promise.resolve(true);
 
 /**
  * 领用一组图片
