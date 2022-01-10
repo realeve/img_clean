@@ -36,24 +36,24 @@ const Header = forwardRef((_, ref) => {
   return (
     <div className="head">
       <div className={styles.item}>
-        <div style={{ width: 200 }}>待判废数据：</div>
         <Skeleton
           title={false}
           active
           loading={loading}
           paragraph={{ rows: 1, width: 300 }}
         >
+          <span style={{ width: 200, fontWeight: 'bold' }}>待判废数据：</span>
           实废：{taskList.ai_leak}, 误废：{taskList.human_leak}
         </Skeleton>
       </div>
       <div className={styles.item}>
-        <div style={{ width: 200 }}>已判废结果：</div>
         <Skeleton
           title={false}
           active
           loading={loading}
           paragraph={{ rows: 1, width: 300 }}
         >
+          <span style={{ width: 200, fontWeight: 'bold' }}>已判废结果：</span>
           与人工保持一致：{state.human}, 与AI保持一致：{state.ai}，总数：
           {state.total}
         </Skeleton>
