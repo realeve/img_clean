@@ -163,6 +163,7 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
       normal: [],
     });
     refresh();
+    onRefresh();
   };
 
   const SubmitBtn = ({ absolute = false }) => (
