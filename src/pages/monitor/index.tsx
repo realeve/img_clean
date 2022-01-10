@@ -10,15 +10,26 @@ import ResultPanel from './ResultPanel';
 const dateFormat = 'YYYYMMDD';
 const Column = Table.Column;
 
+const getYesterday = () => {
+  return moment()
+    .subtract(moment().format('E') == 1 ? 4 : 2, 'days')
+    .format(dateFormat);
+};
+
 export default () => {
   const [state, setState] = useState({
-    tstart: moment().format(dateFormat),
-    tend: moment().format(dateFormat),
+    tstart: '',
+    tend: '',
   });
   const [data, setData] = useState<ICartItem[]>([]);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
+    db.getCartsDateRange().then(setState);
+  }, []);
+  useEffect(() => {
+    if (state.tstart == '') {
+      return;
+    }
     setLoading(true);
     db.getCarts(state)
       .then(setData)
@@ -102,7 +113,7 @@ export default () => {
           title="操作"
           key="id"
           render={(text, record: ICartItem) =>
-            record.id > '0' && (
+            record.id > '0' ? (
               <span>
                 <Button
                   type="dashed"
@@ -120,6 +131,8 @@ export default () => {
                 <Divider type="vertical" />
                 <a href="#">数据判废</a>
               </span>
+            ) : (
+              <span>{data.length - 1} 万</span>
             )
           }
         />

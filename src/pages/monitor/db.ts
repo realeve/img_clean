@@ -53,3 +53,15 @@ export const getDetail = (cart_id: string) =>
       probability: Number(Number(item.probability * 100).toFixed(1)),
     })),
   );
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { 最近判废日期 }
+ */
+export const getCartsDateRange = () =>
+  axios<{
+    tstart: string;
+    tend: string;
+  }>({
+    url: DEV ? '@/mock/1431_d913255582.json' : '/1431/d913255582.json',
+  }).then((res) => res.data[0]);
