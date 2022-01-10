@@ -11,7 +11,7 @@ import { ICommon } from '@/models/common';
 import { forwardRef, useImperativeHandle } from 'react';
 import * as R from 'ramda';
 
-const Header = forwardRef((_, ref) => {
+const Header = forwardRef(({ ip }: { ip: string }, ref) => {
   const [taskList, setTaskList] = useState({ human_leak: '0', ai_leak: '0' });
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
@@ -21,8 +21,8 @@ const Header = forwardRef((_, ref) => {
   });
   const refresh = async () => {
     setLoading(true);
-    await db.getImageCount().then(setTaskList);
-    await db.getJudgeResult().then(setState);
+    await db.getImageCount(ip).then(setTaskList);
+    await db.getJudgeResult(ip).then(setState);
     setLoading(false);
   };
   useEffect(() => {
@@ -232,19 +232,22 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
 };
 
 const Judge = connect(({ common }: { common: ICommon }) => ({
-  ip: common.ip,
   imgHeight: common.imgHeight,
 }))(JudgeComponent);
 
-export default () => {
+const JudgePage = ({ ip }: { ip: string }) => {
   const ref = useRef(null);
   const onRefresh = () => {
     ref?.current?.refresh?.();
   };
   return (
     <div className="card-content">
-      <Header ref={ref} />
-      <Judge onRefresh={onRefresh} />
+      <Header ip={ip} ref={ref} />
+      <Judge ip={ip} onRefresh={onRefresh} />
     </div>
   );
 };
+
+export default connect(({ common }: { common: ICommon }) => ({
+  ip: common.ip,
+}))(JudgePage);

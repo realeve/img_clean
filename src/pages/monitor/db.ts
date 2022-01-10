@@ -1,5 +1,7 @@
 import { axios, IAxiosState, DEV, _commonData, TDbWrite } from '@/utils/axios';
 
+const admin1 = '10.8.60.203';
+
 export interface ICartItem {
   id: string;
   cart: string;
@@ -82,7 +84,11 @@ export interface IJudgeImageItem {
  */
 export const getImagesNeedJudge = (ip: string) =>
   axios<IImageItem>({
-    url: DEV ? '@/mock/1432_b7e5eb2fe4.json' : '/1432/b7e5eb2fe4.json',
+    url: DEV
+      ? '@/mock/1432_b7e5eb2fe4.json'
+      : ip == admin1
+      ? '/1432/b7e5eb2fe4.json'
+      : '/1436/b7e5eb2fe4.json',
     params: {
       ip,
       blob: 'image',
@@ -107,7 +113,11 @@ export const judgeImages: (params: {
 }) => Promise<boolean> = (params) =>
   params._id.length > 0
     ? axios<TDbWrite>({
-        url: DEV ? _commonData : '/1433/3bb138de33.json',
+        url: DEV
+          ? _commonData
+          : params.ip == admin1
+          ? '/1433/3bb138de33.json'
+          : '1437/3bb138de33.json',
         params,
       }).then(({ data: [{ affected_rows }] }) => affected_rows > 0)
     : Promise.resolve(true);
@@ -126,16 +136,24 @@ export const receiveImageJudgeTask: (params: {
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 待判废数量 }
  */
-export const getImageCount = () =>
+export const getImageCount = (ip: string) =>
   axios<{ ai_leak: string; human_leak: string }>({
-    url: DEV ? '@/mock/1434_07d35b6b5a.json' : '/1434/07d35b6b5a.json',
+    url: DEV
+      ? '@/mock/1434_07d35b6b5a.json'
+      : ip == admin1
+      ? '/1434/07d35b6b5a.json'
+      : '/1438/07d35b6b5a.json',
   }).then((res) => res.data[0]);
 
 /**
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 判废结果汇总 }
  */
-export const getJudgeResult = () =>
+export const getJudgeResult = (ip: string) =>
   axios<{ total: string; human: string; ai: string }>({
-    url: DEV ? '@/mock/1435_cb72af5f40.json' : '/1435/cb72af5f40.json',
+    url: DEV
+      ? '@/mock/1435_cb72af5f40.json'
+      : ip == admin1
+      ? '/1435/cb72af5f40.json'
+      : '/1439/cb72af5f40.json',
   }).then((res) => res.data[0]);
