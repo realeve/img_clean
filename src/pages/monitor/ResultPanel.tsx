@@ -46,8 +46,12 @@ export default ({
     db.getDetail(cartinfo.id)
       .then((res) => {
         const detail = {
-          leak_ai: res.filter((item) => item.human_result > item.ai_result),
-          leak_human: res.filter((item) => item.human_result < item.ai_result),
+          leak_ai: res
+            .filter((item) => item.human_result > item.ai_result)
+            .sort((b, a) => a.verify_result - b.verify_result),
+          leak_human: res
+            .filter((item) => item.human_result < item.ai_result)
+            .sort((b, a) => a.verify_result - b.verify_result),
           fake: res.filter((item) => item.human_result == item.ai_result),
         };
         setState(detail);
@@ -57,6 +61,7 @@ export default ({
       });
   }, [cartinfo, show]);
 
+  const [tabKey, setTabKey] = useState('leak_ai');
   return (
     <Modal
       bodyStyle={{ padding: '0 12px 12px 12px' }}
@@ -66,11 +71,22 @@ export default ({
       footer={null}
       width={1210}
     >
-      <Tabs defaultActiveKey={titles.leak_ai}>
+      {tabKey != 'fake' && (
+        <div className={styles.info}>
+          二次审核 误废：
+          {state[tabKey].filter((a) => a.verify_result == '0').length} / 实废：
+          {state[tabKey].filter((a) => a.verify_result == '1').length}
+        </div>
+      )}
+      <Tabs defaultActiveKey={tabKey} accessKey={tabKey} onTabClick={setTabKey}>
         {Object.keys(state).map((item) => (
           <TabPane
-            tab={`${titles[item]}(${state[item].length})`}
-            key={titles[item]}
+            tab={
+              <div>
+                {titles[item]}({state[item].length})
+              </div>
+            }
+            key={item}
           >
             <Skeleton active loading={loading}>
               <ul className={styles.panel}>
@@ -81,6 +97,17 @@ export default ({
                     </div>
                     <div className={styles.dot}>{subItem.probability}%</div>
                     <div className={styles.dotLeft}>{subItem.id}</div>
+                    {subItem.verify_result && (
+                      <div
+                        className={
+                          subItem.verify_result == '1'
+                            ? styles.dotRightFake
+                            : styles.dotRightNormal
+                        }
+                      >
+                        {subItem.verify_result == '1' ? '废' : '误'}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

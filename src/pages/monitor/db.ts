@@ -37,6 +37,7 @@ export interface IImageItem {
   human_result: number;
   ai_result: number;
   img_order: number;
+  verify_result: string | null;
 }
 
 const handleImageResult = (res) =>

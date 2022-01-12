@@ -1,3 +1,10 @@
+.info {
+  position: absolute;
+  right: 20px;
+  top: 65px;
+  font-size: 16px;
+}
+
 .panel {
   list-style: none;
   padding-inline-start: 0;
@@ -8,6 +15,7 @@
   flex-wrap: wrap;
   height: 600px;
   overflow-y: scroll;
+
   li {
     width: 224px;
     height: 224px;
@@ -60,8 +68,26 @@
       bottom: 0;
       background: #3022ee;
       .dotBg;
+      display: none;
+    }
+    &:hover {
+      .dotLeft {
+        display: block;
+      }
     }
 
+    .dotRightFake {
+      right: 0;
+      bottom: 0;
+      background: #ee2222;
+      .dotBg;
+    }
+    .dotRightNormal {
+      right: 0;
+      bottom: 0;
+      background: #2b7219;
+      .dotBg;
+    }
     // @title-height: 60px;
 
     // &:hover {

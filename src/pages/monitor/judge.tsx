@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as db from './db';
 import { IJudgeImageItem } from './db';
 import styles from './judge.less';
-import { Skeleton, Row, Col, Button, message } from 'antd';
+import { Skeleton, Row, Col, Button, message, Switch } from 'antd';
 
 import ImageSize from '@/component/ImageSize';
 import { connect } from 'dva';
@@ -117,6 +117,7 @@ interface IJudgePageProps {
   onRefresh: () => void;
 }
 const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
+  const [leftSide, setLeftSide] = useState(true);
   const [taskList, setTaskList] = useState<{
     fake: IJudgeImageItem[];
     normal: IJudgeImageItem[];
@@ -125,9 +126,18 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
     normal: [],
   });
 
+  useEffect(() => {
+    let item = parseInt(window.localStorage.getItem('leftside') || '0');
+    setLeftSide(Boolean(item));
+  }, []);
+
   const refresh = () => {
     db.getImagesNeedJudge(ip).then((fake: IJudgeImageItem[]) => {
-      setTaskList({ fake, normal: [] });
+      if (leftSide) {
+        setTaskList({ fake, normal: [] });
+      } else {
+        setTaskList({ fake: [], normal: fake });
+      }
       db.judgeImages({
         ip,
         verify_result: -1,
@@ -181,6 +191,20 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
 
   return (
     <Row style={{ marginTop: 20 }} className={styles.judgePage}>
+      <Col span={24}>
+        <div>
+          数据初始载入：
+          <Switch
+            onChange={(e) => {
+              setLeftSide(e);
+              window.localStorage.setItem('leftside', e ? '1' : '0');
+            }}
+            checked={leftSide}
+            checkedChildren="左侧"
+            unCheckedChildren="右侧"
+          />
+        </div>
+      </Col>
       <Col
         span={fakeWidth}
         className={styles.rightLine}
@@ -192,6 +216,19 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
       <Col span={24 - fakeWidth} style={{ textAlign: 'center' }}>
         <h3>误废({taskList.normal.length})</h3>
         <p>（点击你认为是实废的图像）</p>
+        <Button
+          type="default"
+          onClick={() => {
+            let normal = R.clone(taskList['normal']);
+            let fake = R.clone(taskList['fake']);
+            setTaskList({
+              normal: fake,
+              fake: normal,
+            });
+          }}
+        >
+          交换数据
+        </Button>
         <SubmitBtn />
       </Col>
 
