@@ -229,10 +229,13 @@ export const handleData: <T extends IAxiosState>({
 export const handleUrl = (option) => {
   if (
     option.url &&
-    (option.url[0] === '.' || option.url.slice(0, 6) === '/mock/')
+    (option.url[0] === '.' || option.url.slice(0, 7) === '@/mock/')
   ) {
     option.url =
-      window.location.origin + option.url.slice(option.url[0] === '.' ? 1 : 0);
+      window.location.origin +
+      option.url.slice(
+        option.url[0] === '.' ? 1 : option.url[0] === '@' ? 1 : 0,
+      );
   }
   return option;
 };

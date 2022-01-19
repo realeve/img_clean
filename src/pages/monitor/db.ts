@@ -7,12 +7,19 @@ export interface ICartItem {
   cart: string;
   check_date: string;
   leak_normal_img: string;
+  leak_normal_fake_img: string;
+  leak_normal_normal_img: string;
   normal_img: string;
   err_fake_img: string;
+  err_fake_fake_img: string;
+  err_fake_normal_img: string;
   fake_img: string;
   total_img: string;
   acc: number;
+  acc_fix: number;
   idx: number | '';
+  head: string;
+  judge_date: string;
 }
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -38,6 +45,8 @@ export interface IImageItem {
   ai_result: number;
   img_order: number;
   verify_result: string | null;
+  ex_codenum: string;
+  format_pos: string;
 }
 
 const handleImageResult = (res) =>

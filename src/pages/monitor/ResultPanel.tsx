@@ -96,7 +96,10 @@ export default ({
                       <img src={`${subItem.image}`} />
                     </div>
                     <div className={styles.dot}>{subItem.probability}%</div>
-                    <div className={styles.dotLeft}>{subItem.id}</div>
+                    <div className={styles.dotLeft}>
+                      id:{subItem.id}, 号码:{subItem.ex_codenum}, 开位:
+                      {subItem.format_pos}
+                    </div>
                     {subItem.verify_result && (
                       <div
                         className={
