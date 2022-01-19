@@ -16,6 +16,130 @@ const getYesterday = () => {
     .format(dateFormat);
 };
 
+const columns = [
+  {
+    title: '#',
+    dataIndex: 'idx',
+    key: 'idx',
+  },
+  {
+    title: '车号',
+    dataIndex: 'cart',
+    key: '车号',
+    render: (text, record: ICartItem) =>
+      record.id == '0' ? (
+        text
+      ) : (
+        <span>
+          <a target="_blank" href={imageSearchUrl + text}>
+            {text}
+          </a>
+        </span>
+      ),
+  },
+  {
+    title: '判废时间',
+    dataIndex: 'judge_date',
+    key: '判废时间',
+  },
+  {
+    title: '冠号',
+    key: '冠号',
+    dataIndex: 'head',
+  },
+  {
+    title: '人工误废',
+    children: [
+      {
+        title: 'AI漏检',
+        children: [
+          {
+            title: '审核实废',
+            key: '审核实废',
+            dataIndex: 'leak_normal_fake_img',
+            render: (text) => <span>{Number(text).toFixed(1)}</span>,
+          },
+          {
+            title: '审核误判',
+            key: '审核误判',
+            dataIndex: 'leak_normal_normal_img',
+            render: (text) => <span>{Number(text).toFixed(1)}</span>,
+          },
+          {
+            title: '合计',
+            key: '合计',
+            dataIndex: 'leak_normal_img',
+            render: (text) => <span>{Number(text).toFixed(1)}</span>,
+          },
+        ],
+      },
+      {
+        title: '共同检出误废',
+        key: '共同检出误废',
+        dataIndex: 'normal_img',
+        render: (text) => <span>{Number(text).toFixed(1)}</span>,
+      },
+    ],
+  },
+  {
+    title: '人工实废',
+    children: [
+      {
+        title: 'AI误检',
+        children: [
+          {
+            title: '审核实废',
+            key: '审核实废',
+            dataIndex: 'err_fake_fake_img',
+            render: (text) => <span>{Number(text).toFixed(1)}</span>,
+          },
+          {
+            title: '审核误判',
+            key: '审核误判',
+            dataIndex: 'err_fake_normal_img',
+            render: (text) => <span>{Number(text).toFixed(1)}</span>,
+          },
+          {
+            title: '合计',
+            key: '合计',
+            dataIndex: 'err_fake_img',
+            render: (text) => <span>{Number(text).toFixed(1)}</span>,
+          },
+        ],
+      },
+      {
+        title: '共同检出实废',
+        key: '共同检出实废',
+        dataIndex: 'fake_img',
+        render: (text) => <span>{Number(text).toFixed(1)}</span>,
+      },
+    ],
+  },
+  {
+    title: '图片总数',
+    key: '图片总数',
+    dataIndex: 'total_img',
+    render: (text) => <span>{Number(text).toFixed(1)}</span>,
+  },
+  {
+    title: '准确率',
+    children: [
+      {
+        title: '图核判废',
+        key: '图核判废',
+        dataIndex: 'acc',
+        render: (text) => <span>{Number(text).toFixed(2)}%</span>,
+      },
+      {
+        title: '二次审核',
+        key: '二次审核',
+        dataIndex: 'acc_fix',
+        render: (text) => <span>{Number(text).toFixed(2)}%</span>,
+      },
+    ],
+  },
+];
+
 export default () => {
   const [state, setState] = useState({
     tstart: '',
@@ -71,116 +195,34 @@ export default () => {
         pagination={{
           pageSize: 12,
         }}
-      >
-        <Column title="#" dataIndex="idx" key="idx" />
-        <Column
-          title="车号"
-          dataIndex="cart"
-          key="车号"
-          render={(text, record: ICartItem) =>
-            record.id == '0' ? (
-              text
-            ) : (
-              <span>
-                <a target="_blank" href={imageSearchUrl + text}>
-                  {text}
-                </a>
-              </span>
-            )
-          }
-        />
-        <Column title="判废时间" dataIndex="judge_date" key="判废时间" />
-        <Column title="冠号" dataIndex="head" key="冠号" />
-        <Column
-          title="AI漏检"
-          dataIndex="leak_normal_img"
-          key="AI漏检"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="AI漏检(审核实废)"
-          dataIndex="leak_normal_fake_img"
-          key="AI漏检1"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="AI漏检(审核误判)"
-          dataIndex="leak_normal_normal_img"
-          key="AI漏检2"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="共同检出误废"
-          dataIndex="normal_img"
-          key="共同检出误废"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="AI误检"
-          dataIndex="err_fake_img"
-          key="AI误检"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="AI误检(审核实废)"
-          dataIndex="err_fake_fake_img"
-          key="AI误检1"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="AI误检(审核误判)"
-          dataIndex="err_fake_normal_img"
-          key="AI误检2"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="共同检出实废"
-          dataIndex="fake_img"
-          key="共同检出实废"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="图片总数"
-          dataIndex="total_img"
-          key="图片总数"
-          render={(text) => <span>{Number(text).toFixed(1)}</span>}
-        />
-        <Column
-          title="准确率"
-          dataIndex="acc"
-          key="准确率"
-          render={(text) => <span>{text}%</span>}
-        />
-        <Column
-          title="准确率(二次审核)"
-          dataIndex="acc_fix"
-          key="准确率2"
-          render={(text) => <span>{Number(text).toFixed(2)}%</span>}
-        />
-        <Column
-          title="操作"
-          key="id"
-          render={(text, record: ICartItem) =>
-            record.id > '0' ? (
-              <Button
-                type="dashed"
-                size="small"
-                onClick={() => {
-                  setCartinfo({
-                    id: record.id,
-                    cartnumber: record.cart,
-                  });
-                  setShow(true);
-                }}
-              >
-                查看图片
-              </Button>
-            ) : (
-              <span>{data.length - 1} 万</span>
-            )
-          }
-        />
-      </Table>
+        bordered
+        columns={[
+          ...columns,
+          {
+            title: '操作',
+            key: '操作',
+            dataIndex: 'id',
+            render: (text, record: ICartItem) =>
+              record.id > '0' ? (
+                <Button
+                  type="dashed"
+                  size="small"
+                  onClick={() => {
+                    setCartinfo({
+                      id: record.id,
+                      cartnumber: record.cart,
+                    });
+                    setShow(true);
+                  }}
+                >
+                  查看图片
+                </Button>
+              ) : (
+                <span>{data.length - 1} 万</span>
+              ),
+          },
+        ]}
+      />
     </div>
   );
 };
