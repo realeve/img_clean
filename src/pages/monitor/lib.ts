@@ -23,8 +23,6 @@ export const handleData = (e) => {
   data = data.map((item, idx) => {
     currentIndex += 1;
 
-    let isCurrentKiloNotEnd =
-      idx < data.length - 1 && item.kilo == data[idx + 1].kilo;
     // 翻页
     if (item.kilo != prevKilo) {
       currentIndex += 3; // 3行千位头
@@ -37,7 +35,7 @@ export const handleData = (e) => {
         currentIndex += needAppend;
         data[idx - 1].appendLine = R.range(0, needAppend);
       } else {
-        if (isCurrentKiloNotEnd) {
+        if (prevIndex % LINES_PER_PAGE) {
           currentIndex += 1;
           data[idx - 1].appendLine = R.range(0, 1);
         }
@@ -45,6 +43,9 @@ export const handleData = (e) => {
 
       prevKilo = item.kilo;
     }
+
+    let isCurrentKiloNotEnd =
+      idx < data.length - 1 && item.kilo == data[idx + 1].kilo;
 
     if (isCurrentKiloNotEnd) {
       item.isEmpty = currentIndex % LINES_PER_PAGE == 0;
