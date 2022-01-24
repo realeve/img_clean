@@ -54,6 +54,7 @@ export const handleData = (e) => {
     if (item.isEmpty) {
       currentIndex += 1;
     }
+    item.pageNo = Math.ceil(item.index / LINES_PER_PAGE);
 
     switch (item.client_no) {
       case '10':

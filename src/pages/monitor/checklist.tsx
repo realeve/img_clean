@@ -125,7 +125,8 @@ const KiloContent = ({
             <>
               <tr key={idx}>
                 <td>
-                  {tr.index}/{tr.pageNo}
+                  {/* {tr.index} */}
+                  {idx + 1}
                 </td>
                 <td>[{tr.format_pos.padStart(2, '0')}开]</td>
                 <td>{tr.gz}</td>
@@ -140,9 +141,6 @@ const KiloContent = ({
                 ))}
             </>
           ))}
-          {/* {!data[data.length - 1].appendLine && (
-                        <tr style={{ border: 'none' }} />
-                    )} */}
         </tbody>
       </table>
     </div>
