@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
 import useFetch from '@/component/hooks/useFetch';
 import { Skeleton, Empty, Button } from 'antd';
 import { Link } from 'umi';
@@ -6,6 +6,7 @@ import styles from './checklist.less';
 import * as lib from '@/utils/lib';
 import * as R from 'ramda';
 import { useTitle } from 'react-use';
+import { IFakeItem, handleData } from './lib';
 
 interface ICheckList {
   match: {
@@ -14,8 +15,6 @@ interface ICheckList {
     };
   };
 }
-
-const LINES_PER_PAGE = 36;
 
 const HeadLine = ({
   title,
@@ -141,9 +140,9 @@ const KiloContent = ({
                 ))}
             </>
           ))}
-          {!data[data.length - 1].appendLine && (
-            <tr style={{ border: 'none' }} />
-          )}
+          {/* {!data[data.length - 1].appendLine && (
+                        <tr style={{ border: 'none' }} />
+                    )} */}
         </tbody>
       </table>
     </div>
@@ -156,82 +155,6 @@ const PageContent = ({ data, head }: { data: IFakeItem[]; head: string }) => {
   ));
 };
 
-const handleData = (e) => {
-  let data = R.clone(e.data) as IFakeItem[];
-  let prevKilo = '0';
-  let addLines = 0;
-  let removeLines = 0;
-  data = data.map((item, idx) => {
-    let index = idx + 1;
-    let paddingLine = 4 + addLines; // 表头占4行
-
-    item.index =
-      index + (Number(item.kilo) + 1) * 4 - 1 + paddingLine - removeLines;
-
-    // 翻页
-    if (item.kilo != prevKilo) {
-      let prevIndex = data[idx - 1].index;
-
-      // 只剩一行时，不添加新行
-      if (prevIndex % LINES_PER_PAGE == 1) {
-        data[idx - 2].isEmpty = false;
-        removeLines += 1;
-      }
-
-      // 出现跨页
-      if (prevIndex % LINES_PER_PAGE >= LINES_PER_PAGE - 4) {
-        let needAppend = LINES_PER_PAGE - (prevIndex % LINES_PER_PAGE) + 1;
-        data[idx - 1].appendLine = R.range(0, needAppend);
-        addLines += needAppend;
-        item.index += addLines;
-        removeLines += needAppend;
-      }
-      prevKilo = item.kilo;
-    }
-
-    let pageNo = Math.ceil(item.index / LINES_PER_PAGE);
-    item.pageNo = pageNo;
-    let append = pageNo - 1;
-    item.index = item.index + append;
-
-    item.isEmpty = item.index % LINES_PER_PAGE == 0;
-
-    switch (item.client_no) {
-      case '10':
-        item.desc = 'Z';
-        break;
-      case '15':
-        item.desc = 'S';
-        break;
-      case '14':
-      case '16':
-      case '17':
-        item.desc = 'B';
-        break;
-      default:
-        item.desc = '';
-        break;
-    }
-
-    return item;
-  });
-  return {
-    ...e,
-    data,
-  };
-};
-interface IFakeItem {
-  format_pos: string;
-  gz: string;
-  kilo: string;
-  hundred: string;
-  client_no: string;
-  desc: string;
-  index: number;
-  isEmpty: boolean;
-  pageNo: number;
-  appendLine: number[];
-}
 const CheckList = ({
   match: {
     params: { cart },
