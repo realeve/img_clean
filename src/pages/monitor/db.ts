@@ -167,3 +167,15 @@ export const getJudgeResult = (ip: string) =>
       ? '/1435/cb72af5f40.json'
       : '/1439/cb72af5f40.json',
   }).then((res) => res.data[0]);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { AI判废补充剔废单 }
+ */
+export const getJudgeDetail: (cart: string) => Promise<IAxiosState> = (cart) =>
+  axios({
+    url: DEV ? '@/mock/1444_4c99b981d8.json' : '/1444/4c99b981d8.json',
+    params: {
+      cart,
+    },
+  });

@@ -6,7 +6,18 @@ import { Link } from 'umi';
 
 const { Header, Content } = Layout;
 
-const LayoutWrapper = ({ children }: { children?: React.ReactNode }) => {
+const LayoutWrapper = ({
+  children,
+  location: { pathname },
+}: {
+  children?: React.ReactNode;
+  location: { pathname: string };
+}) => {
+  // 剔废单
+  if (pathname.includes('/monitor/checklist')) {
+    return children;
+  }
+
   return (
     <Layout className="layout">
       <Header>

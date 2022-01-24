@@ -25,6 +25,11 @@ export const routes = [
         component: '@/pages/monitor/judge',
         title: '数据监测判废',
       },
+      {
+        path: '/monitor/checklist/:cart',
+        component: '@/pages/monitor/checklist',
+        title: '数据监测判废',
+      },
     ],
   },
 ];

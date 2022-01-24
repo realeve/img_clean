@@ -1,0 +1,412 @@
+{
+  "data": [
+    {
+      "format_pos": "2",
+      "gz": "C83W21",
+      "kilo": "0",
+      "hundred": "507",
+      "client_no": "141"
+    },
+    {
+      "format_pos": "3",
+      "gz": "C83W22",
+      "kilo": "0",
+      "hundred": "178",
+      "client_no": "141"
+    },
+    {
+      "format_pos": "7",
+      "gz": "C83W26",
+      "kilo": "0",
+      "hundred": "533",
+      "client_no": "141"
+    },
+    {
+      "format_pos": "11",
+      "gz": "C83W30",
+      "kilo": "0",
+      "hundred": "734",
+      "client_no": "104"
+    },
+    {
+      "format_pos": "23",
+      "gz": "C83W42",
+      "kilo": "0",
+      "hundred": "057",
+      "client_no": "173"
+    },
+    {
+      "format_pos": "23",
+      "gz": "C83W42",
+      "kilo": "0",
+      "hundred": "361",
+      "client_no": "173"
+    },
+    {
+      "format_pos": "24",
+      "gz": "C83W43",
+      "kilo": "0",
+      "hundred": "246",
+      "client_no": "173"
+    },
+    {
+      "format_pos": "25",
+      "gz": "C83W44",
+      "kilo": "1",
+      "hundred": "067",
+      "client_no": "143"
+    },
+    {
+      "format_pos": "33",
+      "gz": "C83W52",
+      "kilo": "1",
+      "hundred": "996",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "5",
+      "gz": "C83W24",
+      "kilo": "2",
+      "hundred": "948",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "6",
+      "gz": "C83W25",
+      "kilo": "2",
+      "hundred": "127",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "8",
+      "gz": "C83W27",
+      "kilo": "2",
+      "hundred": "225",
+      "client_no": "172"
+    },
+    {
+      "format_pos": "8",
+      "gz": "C83W27",
+      "kilo": "2",
+      "hundred": "362",
+      "client_no": "172"
+    },
+    {
+      "format_pos": "9",
+      "gz": "C83W28",
+      "kilo": "2",
+      "hundred": "556",
+      "client_no": "104"
+    },
+    {
+      "format_pos": "9",
+      "gz": "C83W28",
+      "kilo": "2",
+      "hundred": "690",
+      "client_no": "154"
+    },
+    {
+      "format_pos": "14",
+      "gz": "C83W33",
+      "kilo": "2",
+      "hundred": "358",
+      "client_no": "104"
+    },
+    {
+      "format_pos": "22",
+      "gz": "C83W41",
+      "kilo": "2",
+      "hundred": "445",
+      "client_no": "173"
+    },
+    {
+      "format_pos": "22",
+      "gz": "C83W41",
+      "kilo": "2",
+      "hundred": "577",
+      "client_no": "102"
+    },
+    {
+      "format_pos": "35",
+      "gz": "C83W54",
+      "kilo": "2",
+      "hundred": "144",
+      "client_no": "144"
+    },
+    {
+      "format_pos": "6",
+      "gz": "C83W25",
+      "kilo": "3",
+      "hundred": "972",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "8",
+      "gz": "C83W27",
+      "kilo": "3",
+      "hundred": "161",
+      "client_no": "154"
+    },
+    {
+      "format_pos": "17",
+      "gz": "C83W36",
+      "kilo": "3",
+      "hundred": "161",
+      "client_no": "103"
+    },
+    {
+      "format_pos": "32",
+      "gz": "C83W51",
+      "kilo": "3",
+      "hundred": "103",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "4",
+      "gz": "C83W23",
+      "kilo": "4",
+      "hundred": "234",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "19",
+      "gz": "C83W38",
+      "kilo": "4",
+      "hundred": "663",
+      "client_no": "143"
+    },
+    {
+      "format_pos": "23",
+      "gz": "C83W42",
+      "kilo": "4",
+      "hundred": "681",
+      "client_no": "173"
+    },
+    {
+      "format_pos": "29",
+      "gz": "C83W48",
+      "kilo": "4",
+      "hundred": "869",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "33",
+      "gz": "C83W52",
+      "kilo": "4",
+      "hundred": "819",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "33",
+      "gz": "C83W52",
+      "kilo": "4",
+      "hundred": "821",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "1",
+      "gz": "C83W20",
+      "kilo": "5",
+      "hundred": "492",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "17",
+      "gz": "C83W36",
+      "kilo": "5",
+      "hundred": "738",
+      "client_no": "103"
+    },
+    {
+      "format_pos": "22",
+      "gz": "C83W41",
+      "kilo": "5",
+      "hundred": "098",
+      "client_no": "102"
+    },
+    {
+      "format_pos": "22",
+      "gz": "C83W41",
+      "kilo": "5",
+      "hundred": "397",
+      "client_no": "173"
+    },
+    {
+      "format_pos": "29",
+      "gz": "C83W48",
+      "kilo": "5",
+      "hundred": "252",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "21",
+      "gz": "C83W40",
+      "kilo": "6",
+      "hundred": "928",
+      "client_no": "142"
+    },
+    {
+      "format_pos": "34",
+      "gz": "C83W53",
+      "kilo": "6",
+      "hundred": "219",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "35",
+      "gz": "C83W54",
+      "kilo": "6",
+      "hundred": "255",
+      "client_no": "144"
+    },
+    {
+      "format_pos": "2",
+      "gz": "C83W21",
+      "kilo": "7",
+      "hundred": "575",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "3",
+      "gz": "C83W22",
+      "kilo": "7",
+      "hundred": "694",
+      "client_no": "141"
+    },
+    {
+      "format_pos": "8",
+      "gz": "C83W27",
+      "kilo": "7",
+      "hundred": "090",
+      "client_no": "172"
+    },
+    {
+      "format_pos": "25",
+      "gz": "C83W44",
+      "kilo": "7",
+      "hundred": "762",
+      "client_no": "102"
+    },
+    {
+      "format_pos": "29",
+      "gz": "C83W48",
+      "kilo": "7",
+      "hundred": "747",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "30",
+      "gz": "C83W49",
+      "kilo": "7",
+      "hundred": "747",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "32",
+      "gz": "C83W51",
+      "kilo": "7",
+      "hundred": "988",
+      "client_no": "144"
+    },
+    {
+      "format_pos": "34",
+      "gz": "C83W53",
+      "kilo": "7",
+      "hundred": "996",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "3",
+      "gz": "C83W22",
+      "kilo": "8",
+      "hundred": "512",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "2",
+      "gz": "C83W21",
+      "kilo": "9",
+      "hundred": "648",
+      "client_no": "105"
+    },
+    {
+      "format_pos": "8",
+      "gz": "C83W27",
+      "kilo": "9",
+      "hundred": "782",
+      "client_no": "104"
+    },
+    {
+      "format_pos": "11",
+      "gz": "C83W30",
+      "kilo": "9",
+      "hundred": "862",
+      "client_no": "142"
+    },
+    {
+      "format_pos": "12",
+      "gz": "C83W31",
+      "kilo": "9",
+      "hundred": "756",
+      "client_no": "104"
+    },
+    {
+      "format_pos": "13",
+      "gz": "C83W32",
+      "kilo": "9",
+      "hundred": "739",
+      "client_no": "142"
+    },
+    {
+      "format_pos": "14",
+      "gz": "C83W33",
+      "kilo": "9",
+      "hundred": "960",
+      "client_no": "142"
+    },
+    {
+      "format_pos": "15",
+      "gz": "C83W34",
+      "kilo": "9",
+      "hundred": "782",
+      "client_no": "104"
+    },
+    {
+      "format_pos": "26",
+      "gz": "C83W45",
+      "kilo": "9",
+      "hundred": "801",
+      "client_no": "102"
+    },
+    {
+      "format_pos": "28",
+      "gz": "C83W47",
+      "kilo": "9",
+      "hundred": "886",
+      "client_no": "102"
+    },
+    {
+      "format_pos": "34",
+      "gz": "C83W53",
+      "kilo": "9",
+      "hundred": "067",
+      "client_no": "101"
+    },
+    {
+      "format_pos": "35",
+      "gz": "C83W54",
+      "kilo": "9",
+      "hundred": "375",
+      "client_no": "101"
+    }
+  ],
+  "rows": 57,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["format_pos", "gz", "kilo", "hundred", "client_no"],
+  "title": "AI判废补充剔废单",
+  "time": "283.81ms",
+  "serverTime": "2022-01-19 21:03:12",
+  "source": "数据来源：图像核查判废数据记录",
+  "hash": "W/\"e252c4f2612701a2733f96228e7f3e5c\""
+}

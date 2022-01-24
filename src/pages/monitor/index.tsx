@@ -48,7 +48,7 @@ const columns = [
     dataIndex: 'head',
   },
   {
-    title: '人工误废',
+    title: 'AI误废',
     children: [
       {
         title: 'AI漏检',
@@ -82,7 +82,7 @@ const columns = [
     ],
   },
   {
-    title: '人工实废',
+    title: 'AI实废',
     children: [
       {
         title: 'AI误检',
