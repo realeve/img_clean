@@ -160,11 +160,13 @@ const handleData = (e) => {
   let data = R.clone(e.data) as IFakeItem[];
   let prevKilo = '0';
   let addLines = 0;
+  let removeLines = 0;
   data = data.map((item, idx) => {
     let index = idx + 1;
     let paddingLine = 4 + addLines; // 表头占4行
 
-    item.index = index + (Number(item.kilo) + 1) * 4 - 1 + paddingLine;
+    item.index =
+      index + (Number(item.kilo) + 1) * 4 - 1 + paddingLine - removeLines;
 
     // 翻页
     if (item.kilo != prevKilo) {
@@ -173,14 +175,16 @@ const handleData = (e) => {
       // 只剩一行时，不添加新行
       if (prevIndex % LINES_PER_PAGE == 1) {
         data[idx - 2].isEmpty = false;
+        removeLines += 1;
       }
 
       // 出现跨页
       if (prevIndex % LINES_PER_PAGE >= LINES_PER_PAGE - 4) {
-        let needAppend = LINES_PER_PAGE - (prevIndex % LINES_PER_PAGE);
+        let needAppend = LINES_PER_PAGE - (prevIndex % LINES_PER_PAGE) + 1;
         data[idx - 1].appendLine = R.range(0, needAppend);
         addLines += needAppend;
         item.index += addLines;
+        removeLines += needAppend;
       }
       prevKilo = item.kilo;
     }
