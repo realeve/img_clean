@@ -1,39 +1,46 @@
+@pageWidth: 400px;
+@lineHeight: 29px;
 .checklist {
   display: flex;
   flex-direction: column;
-  width: 480px;
-  margin: 20px;
+  width: @pageWidth;
   .header {
     display: flex;
     flex-direction: column;
-    width: 480px;
+    width: @pageWidth;
     .mainTitle {
       width: 100%;
       text-align: center;
       font-weight: bolder;
       font-size: 20px;
+      height: 2 * @lineHeight;
+      line-height: 2 * @lineHeight;
     }
     .line,
     .wideLine {
       display: flex;
       flex: 1;
       .title {
-        width: 100px;
+        width: 70px;
         text-align: right;
-        padding-right: 15px;
+        padding-right: 5px;
         font-weight: bold;
       }
       text-align: center;
+    }
+    .line {
+      height: @lineHeight;
     }
   }
   .kilopage {
     .header {
       background: #c0c0c0;
-      padding: 5px 0;
+      height: @lineHeight;
       font-weight: bold;
       display: flex;
       flex-direction: row;
       justify-content: center;
+      align-items: center;
       span {
         margin: 0 10px;
       }
@@ -41,19 +48,24 @@
     .checkuser {
       display: flex;
       flex-direction: row;
-      padding: 5px 0;
+      height: @lineHeight;
       .item {
         flex: 1;
       }
     }
     .content {
       width: 100%;
-      border: 1px solid #c0c0c0;
-      margin-bottom: 10px;
-
+      border-top: 1px solid #c0c0c0;
+      margin-bottom: @lineHeight;
+      thead {
+        height: @lineHeight;
+      }
       tr {
         width: 100%;
         display: flex;
+        height: @lineHeight;
+        border-right: 1px solid #c0c0c0;
+        border-left: 1px solid #c0c0c0;
         td {
           flex: 1;
           text-align: center;

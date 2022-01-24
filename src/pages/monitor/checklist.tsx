@@ -5,6 +5,7 @@ import { Link } from 'umi';
 import styles from './checklist.less';
 import * as lib from '@/utils/lib';
 import * as R from 'ramda';
+import { useTitle } from 'react-use';
 
 interface ICheckList {
   match: {
@@ -13,6 +14,8 @@ interface ICheckList {
     };
   };
 }
+
+const LINES_PER_PAGE = 36;
 
 const HeadLine = ({
   title,
@@ -61,8 +64,8 @@ const PageHeader = ({
         <div className={styles.mainTitle}>AI判废补充剔废单</div>
         {data && (
           <div className={styles.wideLine}>
-            <HeadLine title="图像判废时间">{data.data[0].judge_date}</HeadLine>
-            <HeadLine title="AI判废时间">{data.data[0].rec_date}</HeadLine>
+            <HeadLine title="图核判废">{data.data[0].judge_date}</HeadLine>
+            <HeadLine title="AI判废">{data.data[0].rec_date}</HeadLine>
           </div>
         )}
         <div className={styles.wideLine}>
@@ -78,23 +81,25 @@ const PageHeader = ({
   );
 };
 
-let a = {
-  format_pos: '10',
-  gz: 'C88W54',
-  kilo: '0',
-  hundred: '110',
-  client_no: '104',
-};
-
 const KiloContent = ({
   data,
   kilo,
   head,
 }: {
   data: IFakeItem[];
-  kilo: string;
+  kilo: number;
   head: string;
 }) => {
+  const TableHeader = () => (
+    <tr>
+      <td>序号</td>
+      <td>开位</td>
+      <td>冠号</td>
+      <td>百位</td>
+      <td>描述</td>
+      <td>剔废</td>
+    </tr>
+  );
   return (
     <div className={styles.kilopage}>
       <div className={styles.header}>
@@ -109,26 +114,26 @@ const KiloContent = ({
         <div className={styles.item}></div>
       </div>
       <table className={styles.content}>
-        <thead>
-          <tr>
-            <td>序号</td>
-            <td>开位</td>
-            <td>冠号</td>
-            <td>百位</td>
-            <td>描述</td>
-            <td>剔废</td>
-          </tr>
-        </thead>
         <tbody>
+          <TableHeader />
           {data.map((tr, idx) => (
-            <tr key={idx}>
-              <td>{idx + 1}</td>
-              <td>[{tr.format_pos.padStart(2, '0')}开]</td>
-              <td>{tr.gz}</td>
-              <td>{tr.hundred}</td>
-              <td>{tr.desc}</td>
-              <td> </td>
-            </tr>
+            <>
+              <tr key={idx}>
+                <td>
+                  {tr.index}/{tr.pageNo}
+                </td>
+                <td>[{tr.format_pos.padStart(2, '0')}开]</td>
+                <td>{tr.gz}</td>
+                <td>{tr.hundred}</td>
+                <td>{tr.desc}</td>
+                <td> </td>
+              </tr>
+              {tr.isEmpty && <TableHeader key={idx + 'empty'} />}
+              {tr.appendLine &&
+                tr.appendLine.map((item) => (
+                  <tr key={item + 'append'} style={{ border: 'none' }} />
+                ))}
+            </>
           ))}
         </tbody>
       </table>
@@ -137,12 +142,65 @@ const KiloContent = ({
 };
 const PageContent = ({ data, head }: { data: IFakeItem[]; head: string }) => {
   let list = R.groupBy(R.prop('kilo'), data);
-  console.log(list);
   return Object.keys(list).map((kilo) => (
-    <KiloContent head={head} key={kilo} data={list[kilo]} kilo={kilo} />
+    <KiloContent head={head} key={kilo} data={list[kilo]} kilo={Number(kilo)} />
   ));
 };
 
+const handleData = (e) => {
+  let data = R.clone(e.data) as IFakeItem[];
+  let prevKilo = '0';
+  let addLines = 0;
+  data = data.map((item, idx) => {
+    let index = idx + 1;
+    let paddingLine = 5 + addLines; // 表头占5行
+
+    item.index = index + (Number(item.kilo) + 1) * 4 - 1 + paddingLine;
+
+    // 翻页
+    if (item.kilo != prevKilo) {
+      let prevIndex = data[idx - 1].index;
+      // 出现跨页
+      if (prevIndex % LINES_PER_PAGE >= LINES_PER_PAGE - 4) {
+        let needAppend = LINES_PER_PAGE - (prevIndex % LINES_PER_PAGE) - 1;
+        data[idx - 1].appendLine = R.range(0, needAppend);
+        addLines += needAppend;
+        item.index += addLines;
+      }
+      prevKilo = item.kilo;
+    }
+
+    let pageNo = Math.ceil(item.index / LINES_PER_PAGE);
+    item.pageNo = pageNo;
+    let append = pageNo - 1;
+    item.index = item.index + append;
+
+    item.isEmpty = item.index % LINES_PER_PAGE == 0;
+
+    switch (item.client_no) {
+      case '10':
+        item.desc = 'Z';
+        break;
+      case '15':
+        item.desc = 'S';
+        break;
+      case '14':
+      case '16':
+      case '17':
+        item.desc = 'B';
+        break;
+      default:
+        item.desc = '';
+        break;
+    }
+
+    return item;
+  });
+  return {
+    ...e,
+    data,
+  };
+};
 interface IFakeItem {
   format_pos: string;
   gz: string;
@@ -150,6 +208,10 @@ interface IFakeItem {
   hundred: string;
   client_no: string;
   desc: string;
+  index: number;
+  isEmpty: boolean;
+  pageNo: number;
+  appendLine: number[];
 }
 const CheckList = ({
   match: {
@@ -166,32 +228,10 @@ const CheckList = ({
       if (!e) {
         return e;
       }
-      let data = R.clone(e.data) as IFakeItem[];
-      data = data.map((item) => {
-        let client = item.client_no.slice(0, 2);
-        item.desc = '';
-
-        switch (client) {
-          case '10':
-            item.desc = 'Z';
-            break;
-          case '15':
-            item.desc = 'S';
-            break;
-          case '14':
-          case '16':
-          case '17':
-            item.desc = 'B';
-        }
-
-        return item;
-      });
-      return {
-        ...e,
-        data,
-      };
+      return handleData(e);
     },
   });
+  useTitle('数据监测判废 ———— ' + cart);
 
   return (
     <Skeleton loading={loading}>
