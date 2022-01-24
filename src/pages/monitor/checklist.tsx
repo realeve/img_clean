@@ -20,12 +20,14 @@ const LINES_PER_PAGE = 36;
 const HeadLine = ({
   title,
   children,
+  style = {},
 }: {
   title: string;
   children: ReactNode;
+  style: React.CSSProperties;
 }) => {
   return (
-    <div className={styles.line}>
+    <div className={styles.line} style={style}>
       <div className={styles.title}>{title}</div>
       <span>{children}</span>
     </div>
@@ -62,18 +64,22 @@ const PageHeader = ({
     <Skeleton loading={loading}>
       <div className={styles.header}>
         <div className={styles.mainTitle}>AI判废补充剔废单</div>
-        {data && (
+        {/* {data && (
           <div className={styles.wideLine}>
             <HeadLine title="图核判废">{data.data[0].judge_date}</HeadLine>
             <HeadLine title="AI判废">{data.data[0].rec_date}</HeadLine>
           </div>
-        )}
+        )} */}
         <div className={styles.wideLine}>
-          <HeadLine title="打印时间">{lib.now()}</HeadLine>
+          <HeadLine title="打印时间" style={{ flex: 1.3 }}>
+            {lib.now()}
+          </HeadLine>
           <HeadLine title="票面开数">{picNum}</HeadLine>
         </div>
         <div className={styles.wideLine}>
-          <HeadLine title="车号">{cart}</HeadLine>
+          <HeadLine title="车号" style={{ flex: 1.3 }}>
+            {cart}
+          </HeadLine>
           {data && <HeadLine title="冠号">{data.data[0].head}</HeadLine>}
         </div>
       </div>
@@ -135,6 +141,9 @@ const KiloContent = ({
                 ))}
             </>
           ))}
+          {!data[data.length - 1].appendLine && (
+            <tr style={{ border: 'none' }} />
+          )}
         </tbody>
       </table>
     </div>
@@ -153,16 +162,22 @@ const handleData = (e) => {
   let addLines = 0;
   data = data.map((item, idx) => {
     let index = idx + 1;
-    let paddingLine = 5 + addLines; // 表头占5行
+    let paddingLine = 4 + addLines; // 表头占4行
 
     item.index = index + (Number(item.kilo) + 1) * 4 - 1 + paddingLine;
 
     // 翻页
     if (item.kilo != prevKilo) {
       let prevIndex = data[idx - 1].index;
+
+      // 只剩一行时，不添加新行
+      if (prevIndex % LINES_PER_PAGE == 1) {
+        data[idx - 2].isEmpty = false;
+      }
+
       // 出现跨页
       if (prevIndex % LINES_PER_PAGE >= LINES_PER_PAGE - 4) {
-        let needAppend = LINES_PER_PAGE - (prevIndex % LINES_PER_PAGE) - 1;
+        let needAppend = LINES_PER_PAGE - (prevIndex % LINES_PER_PAGE);
         data[idx - 1].appendLine = R.range(0, needAppend);
         addLines += needAppend;
         item.index += addLines;
