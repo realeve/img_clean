@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import useFetch from '@/component/hooks/useFetch';
 import { Skeleton, Empty, Button } from 'antd';
 import { Link } from 'umi';
@@ -146,8 +146,32 @@ const KiloContent = ({
     </div>
   );
 };
-const PageContent = ({ data, head }: { data: IFakeItem[]; head: string }) => {
+const PageContent = ({
+  data,
+  hash,
+  head,
+}: {
+  hash: string;
+  data: IFakeItem[];
+  head: string;
+}) => {
   let list = R.groupBy(R.prop('kilo'), data);
+  const [state, setState] = useState(false);
+  useEffect(() => {
+    if (!head || !hash) {
+      return;
+    }
+
+    let timeid = window.setTimeout(() => {
+      window.print();
+    }, 800);
+
+    return () => {
+      window.clearTimeout(timeid);
+    };
+  }, [hash, head]);
+
+  console.log(state);
   return Object.keys(list).map((kilo) => (
     <KiloContent head={head} key={kilo} data={list[kilo]} kilo={Number(kilo)} />
   ));
@@ -199,7 +223,7 @@ const CheckList = ({
             打印号单
           </Button>
           <PageHeader cart={cart} picNum={data.rows} onComplete={setHead} />
-          <PageContent data={data.data} head={head} />
+          <PageContent data={data.data} hash={data.hash} head={head} />
         </div>
       )}
     </Skeleton>

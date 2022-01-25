@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from '@/component/DatePicker';
 import moment from 'moment';
-import { Button, Table, Divider } from 'antd';
+import { Button, Table } from 'antd';
 import * as db from './db';
 import { ICartItem } from './db';
 import { imageSearchUrl } from '@/utils/setting';
 import ResultPanel from './ResultPanel';
-import { history } from 'umi';
 
 const dateFormat = 'YYYYMMDD';
 const Column = Table.Column;
@@ -219,18 +218,18 @@ export default () => {
                   >
                     查看图片
                   </Button>
-                  <Button
-                    type={record.judge_result == '1' ? 'primary' : 'link'}
-                    size="small"
-                    onClick={() => {
-                      let route =
-                        record.judge_result == '0' ? 'judge' : 'checklist';
-                      history.push(`/monitor/${route}/${record.cart}`);
-                    }}
+                  <a
+                    href={`/monitor/${
+                      record.judge_result == '0' ? 'judge' : 'checklist'
+                    }/${record.cart}`}
+                    target="_blank"
+                    className={`ant-btn ant-btn-${
+                      record.judge_result == '1' ? 'primary' : 'link'
+                    } ant-btn-sm`}
                     style={{ marginLeft: 10 }}
                   >
                     {record.judge_result == '0' ? '判废' : '打单'}
-                  </Button>
+                  </a>
                 </>
               ) : (
                 <span>{data.length - 1} 万</span>
