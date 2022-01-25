@@ -94,7 +94,7 @@ export interface IJudgeImageItem {
  *   @desc:     { 领用一组判废图片 }
  */
 export const getImagesNeedJudge = (ip: string, cart: string | undefined) => {
-  let url = ip == admin1 ? '/1432/b7e5eb2fe4.json' : '/1436/b7e5eb2fe4.json';
+  let url = '/1432/b7e5eb2fe4.json'; //  '/1436/b7e5eb2fe4.json';
 
   if (cart) {
     url = '1448/a0808c7e99';
@@ -127,11 +127,7 @@ export const judgeImages: (params: {
 }) => Promise<boolean> = (params) =>
   params._id.length > 0
     ? axios<TDbWrite>({
-        url: DEV
-          ? _commonData
-          : params.ip == admin1
-          ? '/1433/3bb138de33.json'
-          : '1437/3bb138de33.json',
+        url: DEV ? _commonData : '/1433/3bb138de33.json', // '1437/3bb138de33.json',
         params,
       }).then(({ data: [{ affected_rows }] }) => affected_rows > 0)
     : Promise.resolve(true);
@@ -151,7 +147,7 @@ export const receiveImageJudgeTask: (params: {
  *   @desc:     { 待判废数量 }
  */
 export const getImageCount = (ip: string, cart: string | undefined) => {
-  let url = ip == admin1 ? '/1434/07d35b6b5a.json' : '/1438/07d35b6b5a.json';
+  let url = '/1434/07d35b6b5a.json'; //  ip == admin1 ?  : '/1438/07d35b6b5a.json';
 
   if (cart) {
     url = '/1446/483314b6e8';
