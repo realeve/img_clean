@@ -27,6 +27,14 @@ const Header = forwardRef(
         let total = Number(res.ai_leak) + Number(res.human_leak);
         if (total == 0 && cart) {
           db.updateCarts(cart);
+
+          let timeid = window.setTimeout(() => {
+            window.close();
+          }, 800);
+
+          return () => {
+            window.clearTimeout(timeid);
+          };
         }
       });
       await db.getJudgeResult(ip, cart).then(setState);
