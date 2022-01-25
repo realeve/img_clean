@@ -6,6 +6,7 @@ import * as db from './db';
 import { ICartItem } from './db';
 import { imageSearchUrl } from '@/utils/setting';
 import ResultPanel from './ResultPanel';
+import { history } from 'umi';
 
 const dateFormat = 'YYYYMMDD';
 const Column = Table.Column;
@@ -204,19 +205,33 @@ export default () => {
             dataIndex: 'id',
             render: (text, record: ICartItem) =>
               record.id > '0' ? (
-                <Button
-                  type="dashed"
-                  size="small"
-                  onClick={() => {
-                    setCartinfo({
-                      id: record.id,
-                      cartnumber: record.cart,
-                    });
-                    setShow(true);
-                  }}
-                >
-                  查看图片
-                </Button>
+                <>
+                  <Button
+                    type="dashed"
+                    size="small"
+                    onClick={() => {
+                      setCartinfo({
+                        id: record.id,
+                        cartnumber: record.cart,
+                      });
+                      setShow(true);
+                    }}
+                  >
+                    查看图片
+                  </Button>
+                  <Button
+                    type={record.judge_result == '1' ? 'primary' : 'link'}
+                    size="small"
+                    onClick={() => {
+                      let route =
+                        record.judge_result == '0' ? 'judge' : 'checklist';
+                      history.push(`/monitor/${route}/${record.cart}`);
+                    }}
+                    style={{ marginLeft: 10 }}
+                  >
+                    {record.judge_result == '0' ? '判废' : '打单'}
+                  </Button>
+                </>
               ) : (
                 <span>{data.length - 1} 万</span>
               ),

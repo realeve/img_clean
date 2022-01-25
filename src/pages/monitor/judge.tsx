@@ -11,57 +11,69 @@ import { ICommon } from '@/models/common';
 import { forwardRef, useImperativeHandle } from 'react';
 import * as R from 'ramda';
 
-const Header = forwardRef(({ ip }: { ip: string }, ref) => {
-  const [taskList, setTaskList] = useState({ human_leak: '0', ai_leak: '0' });
-  const [loading, setLoading] = useState(false);
-  const [state, setState] = useState({
-    total: '0',
-    ai: '0',
-    human: '0',
-  });
-  const refresh = async () => {
-    setLoading(true);
-    await db.getImageCount(ip).then(setTaskList);
-    await db.getJudgeResult(ip).then(setState);
-    setLoading(false);
-  };
-  useEffect(() => {
-    refresh();
-  }, []);
+const Header = forwardRef(
+  ({ ip, cart }: { ip: string; cart: string | undefined }, ref) => {
+    const [taskList, setTaskList] = useState({ human_leak: '0', ai_leak: '0' });
+    const [loading, setLoading] = useState(false);
+    const [state, setState] = useState({
+      total: '0',
+      ai: '0',
+      human: '0',
+    });
+    const refresh = async () => {
+      setLoading(true);
+      await db.getImageCount(ip, cart).then((res) => {
+        setTaskList(res);
+        let total = Number(res.ai_leak) + Number(res.human_leak);
+        if (total == 0 && cart) {
+          db.updateCarts(cart);
+        }
+      });
+      await db.getJudgeResult(ip, cart).then(setState);
+      setLoading(false);
+    };
+    useEffect(() => {
+      refresh();
+    }, []);
 
-  useImperativeHandle(ref, () => ({
-    refresh,
-  }));
+    useImperativeHandle(ref, () => ({
+      refresh,
+    }));
 
-  return (
-    <div className="head">
-      <div className={styles.item}>
-        <Skeleton
-          title={false}
-          active
-          loading={loading}
-          paragraph={{ rows: 1, width: 300 }}
-        >
-          <span style={{ width: 200, fontWeight: 'bold' }}>待判废数据：</span>
-          实废：{taskList.ai_leak}, 误废：{taskList.human_leak}
-        </Skeleton>
+    return (
+      <div className="head">
+        <div className={styles.item}>
+          <Skeleton
+            title={false}
+            active
+            loading={loading}
+            paragraph={{ rows: 1, width: 300 }}
+          >
+            <span style={{ width: 200, fontWeight: 'bold' }}>
+              {cart} 待判废数据：
+            </span>
+            实废：{taskList.ai_leak}, 误废：{taskList.human_leak}
+          </Skeleton>
+        </div>
+        <div className={styles.item}>
+          <Skeleton
+            title={false}
+            active
+            loading={loading}
+            paragraph={{ rows: 1, width: 300 }}
+          >
+            <span style={{ width: 200, fontWeight: 'bold' }}>
+              {cart} 已判废结果：
+            </span>
+            与人工保持一致：{state.human}, 与AI保持一致：{state.ai}，总数：
+            {state.total}
+          </Skeleton>
+        </div>
+        <ImageSize />
       </div>
-      <div className={styles.item}>
-        <Skeleton
-          title={false}
-          active
-          loading={loading}
-          paragraph={{ rows: 1, width: 300 }}
-        >
-          <span style={{ width: 200, fontWeight: 'bold' }}>已判废结果：</span>
-          与人工保持一致：{state.human}, 与AI保持一致：{state.ai}，总数：
-          {state.total}
-        </Skeleton>
-      </div>
-      <ImageSize />
-    </div>
-  );
-});
+    );
+  },
+);
 
 const ImageItem = ({
   data,
@@ -115,8 +127,14 @@ interface IJudgePageProps {
   imgHeight: number;
   ip: string;
   onRefresh: () => void;
+  cart: string | undefined;
 }
-const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
+const JudgeComponent = ({
+  imgHeight,
+  ip,
+  onRefresh,
+  cart,
+}: IJudgePageProps) => {
   const [leftSide, setLeftSide] = useState(true);
   const [taskList, setTaskList] = useState<{
     fake: IJudgeImageItem[];
@@ -132,7 +150,7 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
   }, []);
 
   const refresh = () => {
-    db.getImagesNeedJudge(ip).then((fake: IJudgeImageItem[]) => {
+    db.getImagesNeedJudge(ip, cart).then((fake: IJudgeImageItem[]) => {
       if (leftSide) {
         setTaskList({ fake, normal: [] });
       } else {
@@ -150,7 +168,7 @@ const JudgeComponent = ({ imgHeight, ip, onRefresh }: IJudgePageProps) => {
       return;
     }
     refresh();
-  }, [ip]);
+  }, [ip, cart]);
 
   const submit = async () => {
     let fake = await db.judgeImages({
@@ -272,15 +290,25 @@ const Judge = connect(({ common }: { common: ICommon }) => ({
   imgHeight: common.imgHeight,
 }))(JudgeComponent);
 
-const JudgePage = ({ ip }: { ip: string }) => {
+const JudgePage = ({
+  ip,
+  match: { params },
+}: {
+  match: {
+    params: {
+      cart: string;
+    };
+  };
+  ip: string;
+}) => {
   const ref = useRef(null);
   const onRefresh = () => {
     ref?.current?.refresh?.();
   };
   return (
     <div className="card-content">
-      <Header ip={ip} ref={ref} />
-      <Judge ip={ip} onRefresh={onRefresh} />
+      <Header ip={ip} ref={ref} cart={params.cart} />
+      <Judge ip={ip} onRefresh={onRefresh} cart={params.cart} />
     </div>
   );
 };

@@ -182,7 +182,6 @@ const CheckList = ({
         >
           <Button type="primary">
             <Link to="/monitor/judge" style={{ color: '#fff' }}>
-              {' '}
               前往判废页面
             </Link>
           </Button>
@@ -190,6 +189,15 @@ const CheckList = ({
       )}
       {data && data.rows > 0 && (
         <div className={styles.checklist}>
+          <Button
+            type="primary"
+            className={styles.noprint}
+            onClick={() => {
+              window.print();
+            }}
+          >
+            打印号单
+          </Button>
           <PageHeader cart={cart} picNum={data.rows} onComplete={setHead} />
           <PageContent data={data.data} head={head} />
         </div>

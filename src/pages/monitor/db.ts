@@ -20,6 +20,7 @@ export interface ICartItem {
   idx: number | '';
   head: string;
   judge_date: string;
+  judge_result: string;
 }
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -92,17 +93,19 @@ export interface IJudgeImageItem {
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 领用一组判废图片 }
  */
-export const getImagesNeedJudge = (ip: string) =>
-  axios<IImageItem>({
-    url: DEV
-      ? '@/mock/1432_b7e5eb2fe4.json'
-      : ip == admin1
-      ? '/1432/b7e5eb2fe4.json'
-      : '/1436/b7e5eb2fe4.json',
+export const getImagesNeedJudge = (ip: string, cart: string | undefined) => {
+  let url = ip == admin1 ? '/1432/b7e5eb2fe4.json' : '/1436/b7e5eb2fe4.json';
+
+  if (cart) {
+    url = '1448/a0808c7e99';
+  }
+  return axios<IImageItem>({
+    url: DEV ? '@/mock/1432_b7e5eb2fe4.json' : url,
     params: {
       ip,
       blob: 'image',
       blob_type: 'jpg',
+      cart,
     },
   }).then((res) => {
     res.data = res.data.sort(
@@ -111,6 +114,7 @@ export const getImagesNeedJudge = (ip: string) =>
     res.data = res.data.sort((a, b) => a.ai_result - b.ai_result);
     return handleImageResult(res);
   });
+};
 
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -146,27 +150,34 @@ export const receiveImageJudgeTask: (params: {
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 待判废数量 }
  */
-export const getImageCount = (ip: string) =>
-  axios<{ ai_leak: string; human_leak: string }>({
-    url: DEV
-      ? '@/mock/1434_07d35b6b5a.json'
-      : ip == admin1
-      ? '/1434/07d35b6b5a.json'
-      : '/1438/07d35b6b5a.json',
+export const getImageCount = (ip: string, cart: string | undefined) => {
+  let url = ip == admin1 ? '/1434/07d35b6b5a.json' : '/1438/07d35b6b5a.json';
+
+  if (cart) {
+    url = '/1446/483314b6e8';
+  }
+
+  return axios<{ ai_leak: string; human_leak: string }>({
+    url: DEV ? '@/mock/1434_07d35b6b5a.json' : url,
+    params: { cart },
   }).then((res) => res.data[0]);
+};
 
 /**
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 判废结果汇总 }
  */
-export const getJudgeResult = (ip: string) =>
-  axios<{ total: string; human: string; ai: string }>({
-    url: DEV
-      ? '@/mock/1435_cb72af5f40.json'
-      : ip == admin1
-      ? '/1435/cb72af5f40.json'
-      : '/1439/cb72af5f40.json',
+export const getJudgeResult = (ip: string, cart: string | undefined) => {
+  let url = ip == admin1 ? '/1435/cb72af5f40.json' : '/1439/cb72af5f40.json';
+
+  if (cart) {
+    url = '/1447/28b333c216';
+  }
+  return axios<{ total: string; human: string; ai: string }>({
+    url: DEV ? '@/mock/1435_cb72af5f40.json' : url,
+    params: { cart },
   }).then((res) => res.data[0]);
+};
 
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -179,3 +190,15 @@ export const getJudgeDetail: (cart: string) => Promise<IAxiosState> = (cart) =>
       cart,
     },
   });
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { 更新判废状态 }
+ */
+export const updateCarts = (cart: string) =>
+  axios<{ affected_rows: number }>({
+    url: DEV ? _commonData : '/1449/91798a1be1.json',
+    params: {
+      cart,
+    },
+  }).then((res) => res.data[0].affected_rows > 0);
