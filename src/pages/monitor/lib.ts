@@ -55,23 +55,36 @@ export const handleData = (e) => {
       currentIndex += 1;
     }
     item.pageNo = Math.ceil(item.index / LINES_PER_PAGE);
-
+    let descWord = '';
     switch (item.client_no) {
       case '10':
-        item.desc = 'Z';
+        descWord = '(Z)';
+        item.desc = '正面';
         break;
       case '15':
-        item.desc = 'S';
+      case '12':
+        descWord = '(S)';
+        item.desc = '丝印';
         break;
       case '14':
+        item.desc = '背面';
       case '16':
+        item.desc = '红外';
       case '17':
-        item.desc = 'B';
+        item.desc = '背荧';
+        descWord = '(B)';
+        break;
+      case '13':
+        item.desc = '透视';
+        descWord = '(T)';
         break;
       default:
         item.desc = '';
+        descWord = '';
         break;
     }
+
+    item.hundred = item.hundred + descWord;
 
     return item;
   });
