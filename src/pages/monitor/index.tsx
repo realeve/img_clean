@@ -6,6 +6,8 @@ import * as db from './db';
 import { ICartItem } from './db';
 import { imageSearchUrl } from '@/utils/setting';
 import ResultPanel from './ResultPanel';
+import useFetch from '@/component/hooks/useFetch';
+import { DEV, IAxiosState } from '@/utils/axios';
 
 const dateFormat = 'YYYYMMDD';
 const Column = Table.Column;
@@ -145,22 +147,26 @@ export default () => {
     tstart: '',
     tend: '',
   });
-  const [data, setData] = useState<ICartItem[]>([]);
-  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     db.getCartsDateRange().then(setState);
   }, []);
-  useEffect(() => {
-    if (!/\d{8}/.test(state.tstart)) {
-      return;
-    }
-    setLoading(true);
-    db.getCarts(state)
-      .then(setData)
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [state]);
+
+  const { data, loading } = useFetch({
+    valid: () => /\d{8}/.test(state.tstart),
+    param: {
+      url: DEV ? '@/mock/1430_d55a6e3d81.json' : '/1430/d55a6e3d81.json',
+      params: {
+        ...state,
+      },
+    },
+    callback: (res: IAxiosState<ICartItem>) =>
+      res.data.map((item, i) => ({
+        ...item,
+        idx: i || '',
+        acc: Number(item.acc),
+      })),
+  });
 
   const [show, setShow] = useState(false);
   const [cartinfo, setCartinfo] = useState({
