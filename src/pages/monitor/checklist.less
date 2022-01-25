@@ -70,6 +70,20 @@
       thead {
         height: @lineHeight;
       }
+      tbody {
+        position: relative;
+      }
+      .appendKilo {
+        position: absolute;
+        left: @pageWidth;
+        margin-top: -@lineHeight;
+        height: @lineHeight;
+        line-height: @lineHeight;
+        width: @pageWidth / 5;
+        font-weight: bold;
+        text-align: center;
+        background: #bbb;
+      }
       tr {
         width: 100%;
         display: flex;

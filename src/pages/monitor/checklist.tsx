@@ -12,6 +12,8 @@ interface ICheckList {
   location: { query: { cart: string } };
 }
 
+const NEED_PRINT = true;
+
 const HeadLine = ({
   title,
   children,
@@ -91,15 +93,18 @@ const KiloContent = ({
   kilo: number;
   head: string;
 }) => {
-  const TableHeader = () => (
-    <tr>
-      <td>序号</td>
-      <td>开位</td>
-      <td>冠号</td>
-      <td>百位</td>
-      <td>描述</td>
-      <td>剔废</td>
-    </tr>
+  const TableHeader = ({ kilo = false }: { kilo?: string | boolean }) => (
+    <>
+      <tr>
+        <td>序号</td>
+        <td>开位</td>
+        <td>冠号</td>
+        <td>百位</td>
+        <td>描述</td>
+        <td>剔废</td>
+      </tr>
+      {kilo && <div className={styles.appendKilo}>第 {kilo} 千</div>}
+    </>
   );
   return (
     <div className={styles.kilopage}>
@@ -130,7 +135,7 @@ const KiloContent = ({
                 <td>{tr.desc}</td>
                 <td> </td>
               </tr>
-              {tr.isEmpty && <TableHeader key={idx + 'empty'} />}
+              {tr.isEmpty && <TableHeader key={idx + 'empty'} kilo={tr.kilo} />}
               {tr.appendLine &&
                 tr.appendLine.map((item) => (
                   <tr key={item + 'append'} style={{ border: 'none' }} />
@@ -142,6 +147,7 @@ const KiloContent = ({
     </div>
   );
 };
+
 const PageContent = ({
   data,
   hash,
@@ -159,7 +165,7 @@ const PageContent = ({
     }
 
     let timeid = window.setTimeout(() => {
-      window.print();
+      NEED_PRINT && window.print();
     }, 800);
 
     return () => {
@@ -191,7 +197,7 @@ const CheckList = ({
       return handleData(e);
     },
   });
-  useTitle('数据监测判废 ———— ' + cart);
+  useTitle(`AI判废补充剔废单          车号: ${cart}        冠号: ${head}`);
 
   return (
     <Skeleton loading={loading}>

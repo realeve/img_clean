@@ -28,7 +28,7 @@ export const routes = [
       {
         path: '/monitor/checklist',
         component: '@/pages/monitor/checklist',
-        title: '数据监测判废',
+        title: 'AI判废补充剔废单',
       },
     ],
   },

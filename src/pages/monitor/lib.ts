@@ -62,14 +62,21 @@ export const handleData = (e) => {
         item.desc = '正面';
         break;
       case '15':
+        descWord = '(S)';
+        item.desc = '丝印';
+        break;
       case '12':
         descWord = '(S)';
         item.desc = '丝印';
         break;
       case '14':
         item.desc = '背面';
+        descWord = '(B)';
+        break;
       case '16':
-        item.desc = '红外';
+        item.desc = '背红';
+        descWord = '(B)';
+        break;
       case '17':
         item.desc = '背荧';
         descWord = '(B)';
