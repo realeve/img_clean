@@ -221,7 +221,7 @@ export default () => {
                   <a
                     href={`/monitor/${
                       record.judge_result == '0' ? 'judge' : 'checklist'
-                    }/${record.cart}`}
+                    }?cart=${record.cart}`}
                     target="_blank"
                     className={`ant-btn ant-btn-${
                       record.judge_result == '1' ? 'primary' : 'link'

@@ -135,7 +135,7 @@ const JudgeComponent = ({
   onRefresh,
   cart,
 }: IJudgePageProps) => {
-  const [leftSide, setLeftSide] = useState(true);
+  const [rightSide, setRightSide] = useState(true);
   const [taskList, setTaskList] = useState<{
     fake: IJudgeImageItem[];
     normal: IJudgeImageItem[];
@@ -145,13 +145,13 @@ const JudgeComponent = ({
   });
 
   useEffect(() => {
-    let item = parseInt(window.localStorage.getItem('leftside') || '0');
-    setLeftSide(Boolean(item));
+    let item = parseInt(window.localStorage.getItem('rightSide') || '0');
+    setRightSide(Boolean(item));
   }, []);
 
   const refresh = () => {
     db.getImagesNeedJudge(ip, cart).then((fake: IJudgeImageItem[]) => {
-      if (leftSide) {
+      if (!rightSide) {
         setTaskList({ fake, normal: [] });
       } else {
         setTaskList({ fake: [], normal: fake });
@@ -214,24 +214,27 @@ const JudgeComponent = ({
           数据初始载入：
           <Switch
             onChange={(e) => {
-              setLeftSide(e);
-              window.localStorage.setItem('leftside', e ? '1' : '0');
+              setRightSide(e);
+              window.localStorage.setItem('rightSide', e ? '1' : '0');
             }}
-            checked={leftSide}
-            checkedChildren="左侧"
-            unCheckedChildren="右侧"
+            checked={rightSide}
+            unCheckedChildren="左侧"
+            checkedChildren="右侧"
           />
         </div>
       </Col>
       <Col
-        span={fakeWidth}
+        span={!rightSide ? fakeWidth : 24 - fakeWidth}
         className={styles.rightLine}
         style={{ textAlign: 'center' }}
       >
         <h3>实废({taskList.fake.length})</h3>
         <p>(点击你认为是误废的图像)</p>
       </Col>
-      <Col span={24 - fakeWidth} style={{ textAlign: 'center' }}>
+      <Col
+        span={rightSide ? fakeWidth : 24 - fakeWidth}
+        style={{ textAlign: 'center' }}
+      >
         <h3>误废({taskList.normal.length})</h3>
         <p>（点击你认为是实废的图像）</p>
         <Button
@@ -250,7 +253,10 @@ const JudgeComponent = ({
         <SubmitBtn />
       </Col>
 
-      <Col span={fakeWidth} className={styles.rightLine}>
+      <Col
+        span={!rightSide ? fakeWidth : 24 - fakeWidth}
+        className={styles.rightLine}
+      >
         <ImageList
           onChange={(idx) => {
             let item = R.nth(idx)(taskList.fake) as IJudgeImageItem;
@@ -265,7 +271,7 @@ const JudgeComponent = ({
           imgHeight={imgHeight}
         />
       </Col>
-      <Col span={24 - fakeWidth}>
+      <Col span={rightSide ? fakeWidth : 24 - fakeWidth}>
         <ImageList
           onChange={(idx) => {
             let item = R.nth(idx)(taskList.normal) as IJudgeImageItem;
@@ -292,14 +298,10 @@ const Judge = connect(({ common }: { common: ICommon }) => ({
 
 const JudgePage = ({
   ip,
-  match: { params },
+  location: { query },
 }: {
-  match: {
-    params: {
-      cart: string;
-    };
-  };
   ip: string;
+  location: { query: {} };
 }) => {
   const ref = useRef(null);
   const onRefresh = () => {
@@ -307,8 +309,8 @@ const JudgePage = ({
   };
   return (
     <div className="card-content">
-      <Header ip={ip} ref={ref} cart={params.cart} />
-      <Judge ip={ip} onRefresh={onRefresh} cart={params.cart} />
+      <Header ip={ip} ref={ref} cart={query.cart} />
+      <Judge ip={ip} onRefresh={onRefresh} cart={query.cart} />
     </div>
   );
 };

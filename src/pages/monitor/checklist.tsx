@@ -9,11 +9,7 @@ import { useTitle } from 'react-use';
 import { IFakeItem, handleData } from './lib';
 
 interface ICheckList {
-  match: {
-    params: {
-      cart: string;
-    };
-  };
+  location: { query: { cart: string } };
 }
 
 const HeadLine = ({
@@ -178,8 +174,8 @@ const PageContent = ({
 };
 
 const CheckList = ({
-  match: {
-    params: { cart },
+  location: {
+    query: { cart },
   },
 }: ICheckList) => {
   const [head, setHead] = useState('');
