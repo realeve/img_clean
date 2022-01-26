@@ -164,7 +164,7 @@ export const getImageCount = (ip: string, cart: string | undefined) => {
  *   @desc:     { 判废结果汇总 }
  */
 export const getJudgeResult = (ip: string, cart: string | undefined) => {
-  let url = ip == admin1 ? '/1435/cb72af5f40.json' : '/1439/cb72af5f40.json';
+  let url = '/1435/cb72af5f40.json'; // ip == admin1 ? '/1435/cb72af5f40.json' : '/1439/cb72af5f40.json';
 
   if (cart) {
     url = '/1447/28b333c216';
