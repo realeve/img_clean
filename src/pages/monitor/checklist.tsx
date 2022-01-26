@@ -197,6 +197,7 @@ const CheckList = ({
       return handleData(e);
     },
   });
+
   useTitle(`AI判废补充剔废单          车号: ${cart}        冠号: ${head}`);
 
   return (

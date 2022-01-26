@@ -16,15 +16,19 @@ const LINES_PER_PAGE = 36;
 
 export const handleData = (e) => {
   let data = R.clone(e.data) as IFakeItem[];
-  let prevKilo = '0';
+  if (data.length === 0) {
+    return e;
+  }
+
+  let prevKilo = data[0].kilo;
+
   let addLines = 7;
   let currentIndex = addLines;
-
   data = data.map((item, idx) => {
     currentIndex += 1;
-
+    let i = 0;
     // 翻页
-    if (item.kilo != prevKilo) {
+    if (item.kilo != prevKilo && idx) {
       currentIndex += 3; // 3行千位头
 
       // 上一组的索引
@@ -54,8 +58,10 @@ export const handleData = (e) => {
     if (item.isEmpty) {
       currentIndex += 1;
     }
+
     item.pageNo = Math.ceil(item.index / LINES_PER_PAGE);
     let descWord = '';
+
     switch (item.client_no) {
       case '10':
         descWord = '(Z)';
@@ -92,9 +98,9 @@ export const handleData = (e) => {
     }
 
     item.hundred = item.hundred + descWord;
-
     return item;
   });
+
   return {
     ...e,
     data,
