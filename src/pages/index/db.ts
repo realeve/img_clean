@@ -207,4 +207,6 @@ export const getImageJudgeUsersList: () => Promise<
 export const getImageJudgeNum = () =>
   axios<{ username: string; fake_nums: number }>({
     url: DEV ? '@/mock/1408_71e7266837.json' : '/1408/71e7266837.json',
-  }).then((res) => res.data);
+  })
+    .then((res) => res.data)
+    .catch((e) => []);

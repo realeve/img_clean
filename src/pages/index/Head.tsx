@@ -314,8 +314,8 @@ const Head = ({
               window.localStorage.setItem('rightSide', e ? '1' : '0');
             }}
             checked={rightSide}
-            unCheckedChildren="左侧"
-            checkedChildren="右侧"
+            checkedChildren="左侧"
+            unCheckedChildren="右侧"
           />
         </div>
       </Col>

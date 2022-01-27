@@ -54,7 +54,7 @@ function IndexPage({ ip, judgeType }: { ip: string; judgeType: '0' | '1' }) {
       fake: !rightSide ? ids : [],
       normal: rightSide ? ids : [],
     });
-  }, [imgs]);
+  }, [imgs, rightSide]);
 
   return (
     <div className="card-content">
