@@ -141,6 +141,11 @@ const Head = ({
   };
 
   const [light, setLight] = useState(false);
+  const [rightSide, setRightSide] = useState(true);
+  useEffect(() => {
+    let item = parseInt(window.localStorage.getItem('rightSide') || '0');
+    setRightSide(Boolean(item));
+  }, []);
 
   return (
     <Row className={styles.head}>
@@ -300,7 +305,20 @@ const Head = ({
           </div>
         </Col>
       )}
-
+      <Col span={24}>
+        <div>
+          数据初始载入：
+          <Switch
+            onChange={(e) => {
+              setRightSide(e);
+              window.localStorage.setItem('rightSide', e ? '1' : '0');
+            }}
+            checked={rightSide}
+            unCheckedChildren="左侧"
+            checkedChildren="右侧"
+          />
+        </div>
+      </Col>
       <Modal
         title="判废量汇总"
         visible={show}

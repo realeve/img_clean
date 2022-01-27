@@ -161,6 +161,12 @@ const JudgePage = ({
 }) => {
   const needReverse = !isCheckPage && judgeType == '1';
 
+  const [rightSide, setRightSide] = useState(true);
+  useEffect(() => {
+    let item = parseInt(window.localStorage.getItem('rightSide') || '0');
+    setRightSide(Boolean(item));
+  }, []);
+
   const submit = async () => {
     let success1 =
       (needReverse ? judgeData.normal : judgeData.fake).length == 0
@@ -192,7 +198,7 @@ const JudgePage = ({
     onRefresh();
   };
 
-  const fakeWidth = 8; // judgeType == '0' ? 8 : 16;
+  const fakeWidth = rightSide ? 8 : 16;
 
   const removeFake = (i: number, id: number) => {
     const fake = R.remove(i, 1, judgeData.fake);

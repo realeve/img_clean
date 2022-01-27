@@ -38,6 +38,12 @@ function IndexPage({ ip, judgeType }: { ip: string; judgeType: '0' | '1' }) {
     normal: [],
   });
 
+  const [rightSide, setRightSide] = useState(true);
+  useEffect(() => {
+    let item = parseInt(window.localStorage.getItem('rightSide') || '0');
+    setRightSide(Boolean(item));
+  }, []);
+
   useEffect(() => {
     if (imgs.length === 0) {
       setJudgeData({ fake: [], normal: [] });
@@ -45,8 +51,8 @@ function IndexPage({ ip, judgeType }: { ip: string; judgeType: '0' | '1' }) {
     }
     const ids = imgs.map((item) => item.id);
     setJudgeData({
-      fake: judgeType === '1' ? ids : [],
-      normal: judgeType === '0' ? ids : [],
+      fake: !rightSide ? ids : [],
+      normal: rightSide ? ids : [],
     });
   }, [imgs]);
 
