@@ -198,7 +198,7 @@ const JudgePage = ({
     onRefresh();
   };
 
-  const fakeWidth = !rightSide ? 8 : 16;
+  const fakeWidth = judgeType == '1' && !rightSide ? 8 : 16;
 
   const removeFake = (i: number, id: number) => {
     const fake = R.remove(i, 1, judgeData.fake);
