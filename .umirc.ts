@@ -8,7 +8,7 @@ export default defineConfig({
   },
   hash: true,
   exportStatic: { htmlSuffix: false },
-  // mfsu: {},
+  mfsu: {},
   routes,
   targets: {
     chrome: 70,

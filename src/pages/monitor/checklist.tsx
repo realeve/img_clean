@@ -7,6 +7,7 @@ import * as lib from '@/utils/lib';
 import * as R from 'ramda';
 import { useTitle } from 'react-use';
 import { IFakeItem, handleData } from './lib';
+import { DEV } from '@/utils/axios';
 
 interface ICheckList {
   location: { query: { cart: string } };
@@ -187,7 +188,7 @@ const CheckList = ({
   const [head, setHead] = useState('');
   const { data, loading } = useFetch<IFakeItem>({
     param: {
-      url: '1444/4c99b981d8',
+      url: DEV ? '@/mock/1444_4c99b981d8.json' : '1444/4c99b981d8',
       params: { cart },
     },
     callback: (e) => {
