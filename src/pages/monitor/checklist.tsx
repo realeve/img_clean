@@ -43,7 +43,7 @@ const PageHeader = ({
 }) => {
   const { data, loading } = useFetch({
     param: {
-      url: '1445/186285a6ce',
+      url: DEV ? '@/mock/1445_186285a6ce.json' : '1445/186285a6ce',
       params: { cart },
     },
     callback: (e) => {
@@ -124,8 +124,8 @@ const KiloContent = ({
         <tbody>
           <TableHeader />
           {data.map((tr, idx) => (
-            <>
-              <tr key={idx}>
+            <React.Fragment key={idx + '_row'}>
+              <tr>
                 <td>
                   {/* {tr.index} */}
                   {idx + 1}
@@ -136,12 +136,12 @@ const KiloContent = ({
                 <td>{tr.desc}</td>
                 <td> </td>
               </tr>
-              {tr.isEmpty && <TableHeader key={idx + 'empty'} kilo={tr.kilo} />}
+              {tr.isEmpty && <TableHeader kilo={tr.kilo} />}
               {tr.appendLine &&
-                tr.appendLine.map((item) => (
-                  <tr key={item + 'append'} style={{ border: 'none' }} />
+                tr.appendLine.map((item, i) => (
+                  <tr key={`${item}_append_${i}`} style={{ border: 'none' }} />
                 ))}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>
@@ -159,7 +159,7 @@ const PageContent = ({
   head: string;
 }) => {
   let list = R.groupBy(R.prop('kilo'), data);
-  const [state, setState] = useState(false);
+
   useEffect(() => {
     if (!head || !hash) {
       return;
@@ -174,7 +174,6 @@ const PageContent = ({
     };
   }, [hash, head]);
 
-  console.log(state);
   return Object.keys(list).map((kilo) => (
     <KiloContent head={head} key={kilo} data={list[kilo]} kilo={Number(kilo)} />
   ));
