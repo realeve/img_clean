@@ -77,7 +77,7 @@
       }
       .appendKilo {
         position: absolute;
-        left: @pageOffset + @pageWidth;
+        left: @pageWidth;
         margin-top: -@lineHeight;
         height: @lineHeight;
         line-height: @lineHeight;
@@ -85,6 +85,11 @@
         font-weight: bold;
         text-align: center;
         background: #bbb;
+      }
+      @media print {
+        .appendKilo {
+          left: @pageOffset + @pageWidth;
+        }
       }
       tr {
         width: 100%;
