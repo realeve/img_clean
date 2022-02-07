@@ -62,7 +62,7 @@ const handleImageResult = (res) =>
  */
 export const getDetail = (cart_id: string) =>
   axios<IImageItem>({
-    url: '/1429/723ecb6c39.json',
+    url: DEV ? '@/mock/1429_723ecb6c39.json' : '/1429/723ecb6c39.json',
     params: {
       cart_id,
       blob: 'image',
