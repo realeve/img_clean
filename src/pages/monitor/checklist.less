@@ -1,13 +1,14 @@
 @pageWidth: 360px;
 @lineHeight: 29.045px;
+@pageOffset: 180px;
 .checklist {
   display: flex;
   flex-direction: column;
   width: @pageWidth;
-  margin: 0 auto;
+  margin-left: @pageOffset;
   .noprint {
     position: fixed;
-    right: @pageWidth;
+    left: 50 + @pageOffset + @pageWidth;
     top: 15px;
   }
   @media print {
@@ -76,7 +77,7 @@
       }
       .appendKilo {
         position: absolute;
-        left: @pageWidth;
+        left: @pageOffset + @pageWidth;
         margin-top: -@lineHeight;
         height: @lineHeight;
         line-height: @lineHeight;
