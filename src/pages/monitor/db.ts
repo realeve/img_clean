@@ -55,6 +55,7 @@ export interface IAnalyImageItem extends IImageItem {
   kilo: string;
   cart_id: string;
   verify_result: number;
+  verify_result2: number;
 }
 
 const handleImageResult = (res) =>
@@ -157,7 +158,23 @@ export const judgeImages: (params: {
 }) => Promise<boolean> = (params) =>
   params._id.length > 0
     ? axios<TDbWrite>({
-        url: DEV ? _commonData : '/1433/3bb138de33.json', // '1437/3bb138de33.json',
+        url: DEV ? _commonData : '/1433/3bb138de33.json',
+        params,
+      }).then(({ data: [{ affected_rows }] }) => affected_rows > 0)
+    : Promise.resolve(true);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { 更新一组图片状态为临时判废 }
+ */
+export const analysisImageJudge: (params: {
+  ip: string;
+  _id: string[];
+  verify_result: number;
+}) => Promise<boolean> = (params) =>
+  params._id.length > 0
+    ? axios<TDbWrite>({
+        url: DEV ? _commonData : '1437/3bb138de33.json',
         params,
       }).then(({ data: [{ affected_rows }] }) => affected_rows > 0)
     : Promise.resolve(true);
