@@ -21,8 +21,8 @@ export const menu = [
     icon: <EyeOutlined />,
   },
   {
-    title: '试运行数据判废',
-    key: '/monitor/judge',
+    title: '实物审核',
+    key: '/monitor/analysis',
     icon: <EyeOutlined />,
   },
 ];

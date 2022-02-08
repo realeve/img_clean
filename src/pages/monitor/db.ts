@@ -1,4 +1,5 @@
 import { axios, IAxiosState, DEV, _commonData, TDbWrite } from '@/utils/axios';
+import * as R from 'ramda';
 
 const admin1 = '10.8.60.203';
 
@@ -50,12 +51,19 @@ export interface IImageItem {
   format_pos: string;
 }
 
+export interface IAnalyImageItem extends IImageItem {
+  kilo: string;
+  cart_id: string;
+  verify_result: number;
+}
+
 const handleImageResult = (res) =>
   res.data.map((item, idx) => ({
     ...item,
     img_order: idx + 1,
     probability: Number(Number(item.probability * 100).toFixed(1)),
   }));
+
 /**
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 判废结果查询 }
@@ -69,6 +77,28 @@ export const getDetail = (cart_id: string) =>
       blob_type: 'jpg',
     },
   }).then(handleImageResult);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { 图像核查实废审核数据查询 }
+ */
+export const getBanknoteDetail = (cart: string) =>
+  axios<IImageItem>({
+    url: DEV ? '@/mock/1450_42dad0ac9b.json' : '/1450/42dad0ac9b.json',
+    params: {
+      cart,
+      blob: 'image',
+      blob_type: 'jpg',
+    },
+  }).then((res) => {
+    let data = handleImageResult(res) as IAnalyImageItem[];
+    data = data.map((item) => {
+      item.kilo = item.ex_codenum.substring(6, 7);
+      return item;
+    });
+
+    return R.groupBy(R.prop('kilo'), data);
+  });
 
 /**
  *   @database: { 图像核查判废数据记录 }

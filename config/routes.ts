@@ -30,6 +30,11 @@ export const routes = [
         component: '@/pages/monitor/checklist',
         title: 'AI判废补充剔废单',
       },
+      {
+        path: '/monitor/analysis',
+        component: '@/pages/monitor/analysis',
+        title: '实物审核',
+      },
     ],
   },
 ];
