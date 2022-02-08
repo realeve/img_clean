@@ -103,6 +103,20 @@ export const getBanknoteDetail = (cart: string) =>
 
 /**
  *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { AI与人工漏判查询 }
+ */
+export const getLeakDetail = (params: { cart: string; ex_codenum: string }) =>
+  axios<IAnalyImageItem>({
+    url: DEV ? '@/mock/1451_a97c46c023.json' : '/1451/a97c46c023.json',
+    params: {
+      ...params,
+      blob: 'image',
+      blob_type: 'jpg',
+    },
+  }).then(handleImageResult);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 最近判废日期 }
  */
 export const getCartsDateRange = () =>

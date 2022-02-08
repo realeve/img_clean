@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './analysis.less';
 import classnames from 'classnames';
-import { Input, message, Radio } from 'antd';
+import { Input, message, Radio, Button, Modal, Empty } from 'antd';
 import { rules } from '@/utils/lib';
 
-import { getBanknoteDetail, IAnalyImageItem, analysisImageJudge } from './db';
+import {
+  getBanknoteDetail,
+  IAnalyImageItem,
+  analysisImageJudge,
+  getLeakDetail,
+} from './db';
 
 import ImageSize from '@/component/ImageSize';
 import { connect } from 'dva';
@@ -24,6 +29,68 @@ const JudgeResult = ({ title, type }: { title: string; type: number }) => (
   >
     {title}:{fakeType[type]}
   </span>
+);
+
+const ImageItem = ({
+  imgHeight,
+  data,
+  style = {},
+}: {
+  imgHeight: number;
+  data: IAnalyImageItem;
+  style?: React.CSSProperties;
+}) => (
+  <div
+    className={styles.imgItem}
+    style={{ height: imgHeight, width: imgHeight, ...style }}
+  >
+    <img src={data.image} alt={data.ex_codenum} />
+    <div className={styles.dot}>{data.probability}%</div>
+    <div className={styles.dotLeft}>
+      <JudgeResult title="人工" type={data.human_result} />
+      <JudgeResult title="AI" type={data.ai_result} />
+      {typeof data.verify_result == 'string' && (
+        <JudgeResult title="审核" type={data.verify_result} />
+      )}
+      {typeof data.verify_result2 == 'string' && (
+        <JudgeResult title="实物" type={data.verify_result2} />
+      )}
+    </div>
+  </div>
+);
+
+const ActionButtons = ({
+  value,
+  ids,
+  ip,
+}: {
+  value: number;
+  ids: string[];
+  ip: string;
+}) => (
+  <div className={styles.action}>
+    <Radio.Group
+      defaultValue={value}
+      buttonStyle="solid"
+      onChange={(e) => {
+        let verify_result = e.target.value;
+        analysisImageJudge({
+          verify_result,
+          _id: ids,
+          ip,
+        }).then((success) => {
+          if (!success) {
+            message.error('数据更新失败，请刷新重试');
+          }
+          message.success('更新成功');
+        });
+      }}
+      size="large"
+    >
+      <Radio.Button value="0">误废</Radio.Button>
+      <Radio.Button value="1">实废</Radio.Button>
+    </Radio.Group>
+  </div>
 );
 
 const KiloContent = ({
@@ -71,47 +138,14 @@ const KiloContent = ({
               })}
             >
               {list[code].map((item) => (
-                <div
-                  className={styles.item}
-                  style={{ height: imgHeight, width: imgHeight }}
-                  key={item.id}
-                >
-                  <img src={item.image} alt={item.ex_codenum} />
-                  <div className={styles.dot}>{item.probability}%</div>
-                  <div className={styles.dotLeft}>
-                    <JudgeResult title="人工" type={item.human_result} />
-                    <JudgeResult title="AI" type={item.ai_result} />
-                    <JudgeResult title="审核" type={item.verify_result} />
-                    {typeof item.verify_result2 == 'string' && (
-                      <JudgeResult title="实物" type={item.verify_result2} />
-                    )}
-                  </div>
-                </div>
+                <ImageItem key={item.id} imgHeight={imgHeight} data={item} />
               ))}
             </div>
-            <div className={styles.action}>
-              <Radio.Group
-                defaultValue={list[code][0].verify_result2}
-                buttonStyle="solid"
-                onChange={(e) => {
-                  let verify_result = e.target.value;
-                  let _id = list[code].map((item) => item.id);
-                  analysisImageJudge({
-                    verify_result,
-                    _id,
-                    ip,
-                  }).then((success) => {
-                    if (!success) {
-                      message.error('数据更新失败，请刷新重试');
-                    }
-                  });
-                }}
-                size="large"
-              >
-                <Radio.Button value="0">误废</Radio.Button>
-                <Radio.Button value="1">实废</Radio.Button>
-              </Radio.Group>
-            </div>
+            <ActionButtons
+              ip={ip}
+              value={list[code][0].verify_result2}
+              ids={list[code].map((item) => item.id)}
+            />
           </div>
         ))}
       </div>
@@ -120,7 +154,7 @@ const KiloContent = ({
 };
 
 const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
-  const [cart, setCart] = useState('2175G399');
+  const [cart, setCart] = useState('');
   const [result, setResult] = useState<TAnanyResult>({});
   const [loading, setLoading] = useState(false);
   const onSearch = async () => {
@@ -136,6 +170,18 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
     message.success('数据加载完毕');
   };
 
+  const [show, setShow] = useState(false);
+  const [code, setCode] = useState('');
+  const [codeDetail, setCodeDetail] = useState<IAnalyImageItem[]>([]);
+  const [loading2, setLoading2] = useState(false);
+  const onSearchCode = async () => {
+    if (code.length != 10) {
+      message.error('请输入有效的号码信息');
+      return;
+    }
+    setCodeDetail([]);
+    getLeakDetail({ cart, ex_codenum: code }).then(setCodeDetail).finally();
+  };
   return (
     <div className={classnames(styles.analysis, 'card-content')}>
       <ImageSize />
@@ -152,11 +198,66 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
           placeholder="请在此输入车号"
         />
       </div>
+      <Modal
+        bodyStyle={{ padding: '0 12px 12px 12px', minHeight: 600 }}
+        title={`【${cart}】AI与人工共同漏判图像查询`}
+        visible={show}
+        onCancel={() => setShow(false)}
+        footer={null}
+        width={1000}
+      >
+        <div className={styles.input} style={{ marginBottom: 10 }}>
+          <label>印码号：</label>
+          <Input.Search
+            value={code}
+            loading={loading2}
+            onChange={(e) => {
+              setCode(e.target.value.toUpperCase().trim());
+            }}
+            onPressEnter={onSearchCode}
+            onSearch={onSearchCode}
+            placeholder="请在此输入车号"
+          />
+        </div>
+        <div className={styles.content}>
+          {loading2 && '数据查询中'}
+          {!loading2 && codeDetail.length == 0 && code.length == 10 && (
+            <Empty
+              style={{ marginTop: 30 }}
+              description="当前印码号机检系统未检出，未参与判废，可能是印码漏检或号码输入错误。"
+            ></Empty>
+          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {codeDetail.map((item) => (
+              <ImageItem
+                key={item.id}
+                imgHeight={imgHeight}
+                data={item}
+                style={{ margin: 5 }}
+              />
+            ))}
+          </div>
+          <ActionButtons
+            ip={ip}
+            value={codeDetail[0]?.verify_result2}
+            ids={codeDetail.map((item) => item.id)}
+          />
+        </div>
+      </Modal>
       {cart.length > 0 && (
         <div className={styles.result}>
           <div className={styles.title}>
             车号<span>{cart}</span>AI与人工不一致图像
           </div>
+          <Button
+            type="primary"
+            style={{ position: 'absolute', right: 10, top: 10 }}
+            onClick={() => {
+              setShow(true);
+            }}
+          >
+            漏检图像
+          </Button>
           {Object.keys(result).map((kilo) => (
             <KiloContent
               key={kilo}
