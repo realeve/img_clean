@@ -22,6 +22,8 @@ export interface ICartItem {
   head: string;
   judge_date: string;
   judge_result: string;
+  opennum: string;
+  opennum_combine: string;
 }
 /**
  *   @database: { 图像核查判废数据记录 }
