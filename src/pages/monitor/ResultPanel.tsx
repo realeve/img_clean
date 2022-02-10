@@ -125,6 +125,11 @@ export default ({
                         }
                       >
                         实物{subItem.verify_result2 == '1' ? '废' : '误'}
+                        {['auto_lock_leak', 'auto_lock'].includes(
+                          subItem.verify_ip2,
+                        )
+                          ? '(不计)'
+                          : ''}
                       </div>
                     )}
                   </li>
