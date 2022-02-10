@@ -22,8 +22,8 @@ export interface ICartItem {
   head: string;
   judge_date: string;
   judge_result: string;
-  opennum: string;
-  opennum_combine: string;
+  // opennum: string;
+  // opennum_combine: string;
 }
 /**
  *   @database: { 图像核查判废数据记录 }
@@ -261,3 +261,20 @@ export const updateCarts = (cart: string) =>
       cart,
     },
   }).then((res) => res.data[0].affected_rows > 0);
+
+export interface IAiLeakItem {
+  ex_codenum: string;
+  format_pos: string;
+  kilo: string;
+}
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { AI漏检图像号码列表 }
+ */
+export const getAiLeakDetail = (cart: string) =>
+  axios<IAiLeakItem>({
+    url: DEV ? '@/mock/1454_15298207e5.json' : '/1454/15298207e5.json',
+    params: {
+      cart,
+    },
+  }).then((res) => res.data);

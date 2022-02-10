@@ -140,21 +140,21 @@ const columns = [
       },
     ],
   },
-  {
-    title: '开包量',
-    children: [
-      {
-        title: '图核判废',
-        key: '图核判废',
-        dataIndex: 'opennum',
-      },
-      {
-        title: '二次审核',
-        key: '二次审核',
-        dataIndex: 'opennum_combine',
-      },
-    ],
-  },
+  // {
+  //   title: '开包量',
+  //   children: [
+  //     {
+  //       title: '图核判废',
+  //       key: '图核判废',
+  //       dataIndex: 'opennum',
+  //     },
+  //     {
+  //       title: '二次审核',
+  //       key: '二次审核',
+  //       dataIndex: 'opennum_combine',
+  //     },
+  //   ],
+  // },
 ];
 
 export default () => {

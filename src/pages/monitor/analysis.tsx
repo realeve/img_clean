@@ -9,6 +9,8 @@ import {
   IAnalyImageItem,
   analysisImageJudge,
   getLeakDetail,
+  getAiLeakDetail,
+  IAiLeakItem,
 } from './db';
 
 import ImageSize from '@/component/ImageSize';
@@ -162,13 +164,17 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
       message.error('请输入有效的车号信息');
       return;
     }
+    setAileak([]);
     setLoading(true);
+    getAiLeakDetail(cart).then(setAileak);
     let data = await getBanknoteDetail(cart).finally(() => {
       setLoading(false);
     });
     setResult(data);
     message.success('数据加载完毕');
   };
+
+  const [aileak, setAileak] = useState<IAiLeakItem[]>([]);
 
   const [show, setShow] = useState(false);
   const [code, setCode] = useState('');
@@ -180,8 +186,9 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
       return;
     }
     setCodeDetail([]);
-    getLeakDetail({ cart, ex_codenum: code }).then(setCodeDetail).finally();
+    getLeakDetail({ cart, ex_codenum: code }).then(setCodeDetail);
   };
+
   return (
     <div className={classnames(styles.analysis, 'card-content')}>
       <ImageSize />
@@ -198,6 +205,31 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
           placeholder="请在此输入车号"
         />
       </div>
+
+      <div>
+        <div style={{ marginTop: 20, textAlign: 'center', width: 250 }}>
+          本万产品AI漏检号码列表 {aileak.length == 0 && <b>本万无漏检</b>}
+        </div>
+        {aileak.length > 0 && (
+          <ol>
+            <li style={{ fontWeight: 'bold' }}>
+              <div>号码</div>
+              <div>千位</div>
+              <div>开位</div>
+            </li>
+          </ol>
+        )}
+        <ol>
+          {aileak.map((item) => (
+            <li key={item.ex_codenum}>
+              <div>{item.ex_codenum}</div>
+              <div>{item.kilo}</div>
+              <div>{item.format_pos}</div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
       <Modal
         bodyStyle={{ padding: '0 12px 12px 12px', minHeight: 600 }}
         title={`【${cart}】AI与人工共同漏判图像查询`}
@@ -256,7 +288,7 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
               setShow(true);
             }}
           >
-            漏检图像
+            共同漏检图像
           </Button>
           {Object.keys(result).map((kilo) => (
             <KiloContent
