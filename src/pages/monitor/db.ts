@@ -51,6 +51,8 @@ export interface IImageItem {
   verify_result: string | null;
   ex_codenum: string;
   format_pos: string;
+  verify_result2: string;
+  verify_ip2: string;
 }
 
 export interface IAnalyImageItem extends IImageItem {

@@ -76,6 +76,10 @@ export default ({
           二次审核 误废：
           {state[tabKey].filter((a) => a.verify_result == '0').length} / 实废：
           {state[tabKey].filter((a) => a.verify_result == '1').length}
+          <br />
+          实物审核 误废：
+          {state[tabKey].filter((a) => a.verify_result2 == '0').length} / 实废：
+          {state[tabKey].filter((a) => a.verify_result2 == '1').length}
         </div>
       )}
       <Tabs defaultActiveKey={tabKey} accessKey={tabKey} onTabClick={setTabKey}>
@@ -108,7 +112,19 @@ export default ({
                             : styles.dotRightNormal
                         }
                       >
-                        {subItem.verify_result == '1' ? '废' : '误'}
+                        审核{subItem.verify_result == '1' ? '废' : '误'}
+                      </div>
+                    )}
+
+                    {['0', '1'].includes(subItem.verify_result2) && (
+                      <div
+                        className={
+                          subItem.verify_result2 == '1'
+                            ? styles.dotLeftFake
+                            : styles.dotLeftNormal
+                        }
+                      >
+                        实物{subItem.verify_result2 == '1' ? '废' : '误'}
                       </div>
                     )}
                   </li>
