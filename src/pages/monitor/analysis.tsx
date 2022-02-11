@@ -54,7 +54,7 @@ const ImageItem = ({
       {typeof data.verify_result == 'string' && (
         <JudgeResult title="审核" type={data.verify_result} />
       )}
-      {typeof data.verify_result2 == 'string' && (
+      {data.verify_result2 > '-1' && (
         <JudgeResult title="实物" type={data.verify_result2} />
       )}
     </div>
@@ -292,7 +292,7 @@ const AnanyPage = ({ imgHeight, ip }: { imgHeight: number; ip: string }) => {
           </Button>
           {Object.keys(result).map((kilo) => (
             <KiloContent
-              key={kilo}
+              key={result[kilo][0].ex_codenum}
               data={result[kilo]}
               kilo={Number(kilo)}
               imgHeight={imgHeight}
