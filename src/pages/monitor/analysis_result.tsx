@@ -9,7 +9,7 @@ import { columns as tableColumns } from './index';
 const columns = [
   ...tableColumns,
   {
-    title: '不计废',
+    title: '* 不计废',
     key: 'ignore_img',
     dataIndex: 'ignore_img',
     render: (text) => <span>{Number(text).toFixed(1)}</span>,
@@ -37,6 +37,11 @@ export default () => {
 
   return (
     <div className="card-content">
+      <h3>实物审核数据汇总</h3>
+      <div>
+        <b>* 不计废图像数量：</b>
+        如果一开产品存在人工及AI同时判为实废，产品将在实物剔废单中，如果同一开位出现人工或AI漏检，为方便分析，该图像不计入作废分析中。
+      </div>
       <ResultPanel show={show} setShow={setShow} cartinfo={cartinfo} />
       <Table
         dataSource={data}
