@@ -22,7 +22,19 @@ export const menu = [
   },
   {
     title: '实物审核',
-    key: '/monitor/analysis',
     icon: <EyeOutlined />,
+    key: 'real',
+    data: [
+      {
+        title: '实物审核',
+        key: '/monitor/analysis',
+        icon: <EyeOutlined />,
+      },
+      {
+        title: '实物审核结果',
+        key: '/monitor/analysis/result',
+        icon: <EyeOutlined />,
+      },
+    ],
   },
 ];

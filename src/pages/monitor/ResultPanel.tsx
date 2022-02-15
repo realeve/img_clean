@@ -78,8 +78,33 @@ export default ({
           {state[tabKey].filter((a) => a.verify_result == '1').length}
           <br />
           实物审核 误废：
-          {state[tabKey].filter((a) => a.verify_result2 == '0').length} / 实废：
-          {state[tabKey].filter((a) => a.verify_result2 == '1').length}
+          {
+            state[tabKey].filter(
+              (a) =>
+                a.verify_result2 == '0' &&
+                ['auto_lock_leak', 'auto_lock', 'auto_lock_verify'].includes(
+                  a.verify_ip2,
+                ),
+            ).length
+          }{' '}
+          / 实废：
+          {
+            state[tabKey].filter(
+              (a) =>
+                a.verify_result2 == '1' &&
+                ['auto_lock_leak', 'auto_lock', 'auto_lock_verify'].includes(
+                  a.verify_ip2,
+                ),
+            ).length
+          }{' '}
+          / 不计废:
+          {
+            state[tabKey].filter((a) =>
+              ['auto_lock_leak', 'auto_lock', 'auto_lock_verify'].includes(
+                a.verify_ip2,
+              ),
+            ).length
+          }
         </div>
       )}
       <Tabs defaultActiveKey={tabKey} accessKey={tabKey} onTabClick={setTabKey}>

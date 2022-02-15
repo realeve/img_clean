@@ -10,15 +10,8 @@ import useFetch from '@/component/hooks/useFetch';
 import { DEV, IAxiosState } from '@/utils/axios';
 
 const dateFormat = 'YYYYMMDD';
-// const Column = Table.Column;
 
-// const getYesterday = () => {
-//   return moment()
-//     .subtract(moment().format('E') == 1 ? 3 : 1, 'days')
-//     .format(dateFormat);
-// };
-
-const columns = [
+export const columns = [
   {
     title: '#',
     dataIndex: 'idx',

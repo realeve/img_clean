@@ -35,6 +35,11 @@ export const routes = [
         component: '@/pages/monitor/analysis',
         title: '实物审核',
       },
+      {
+        path: '/monitor/analysis/result',
+        component: '@/pages/monitor/analysis_result',
+        title: '实物审核',
+      },
     ],
   },
 ];

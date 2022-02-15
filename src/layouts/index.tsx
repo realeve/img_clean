@@ -29,6 +29,21 @@ const LayoutWrapper = ({
           style={{ width: '100%' }}
         >
           {menuData.map((item) => {
+            if (Array.isArray(item?.data)) {
+              return (
+                <Menu.SubMenu
+                  title={item.title}
+                  icon={item.icon}
+                  key={item.key}
+                >
+                  {item.data.map((subItem) => (
+                    <Menu.Item key={subItem.key} icon={subItem.icon}>
+                      <Link to={subItem.key}>{subItem.title}</Link>
+                    </Menu.Item>
+                  ))}
+                </Menu.SubMenu>
+              );
+            }
             return (
               <Menu.Item key={item.key} icon={item.icon}>
                 <Link to={item.key}>{item.title}</Link>
