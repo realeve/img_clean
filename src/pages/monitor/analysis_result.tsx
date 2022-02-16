@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Button, Table } from 'antd';
+import { Button, Table, Tooltip } from 'antd';
 import { ICartItem } from './db';
 import ResultPanel from './ResultPanel';
 import useFetch from '@/component/hooks/useFetch';
 import { DEV, IAxiosState } from '@/utils/axios';
 import { imageSearchUrl } from '@/utils/setting';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const columns = [
   {
@@ -44,7 +45,22 @@ const columns = [
         title: 'AI漏检',
         children: [
           {
-            title: <span style={{ color: 'red' }}>AI漏检</span>,
+            title: (
+              <span style={{ color: 'red' }}>
+                <Tooltip
+                  title={
+                    <div>
+                      以实物审核为标准统计AI最终漏检。同时满足以下条件：
+                      <br />
+                      人工判实废、AI判误废、实物判实废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />{' '}
+                </Tooltip>
+                AI漏检
+              </span>
+            ),
             key: '审核实废',
             dataIndex: 'leak_normal_fake_img',
             render: (text, record) => (
@@ -54,7 +70,22 @@ const columns = [
             ),
           },
           {
-            title: '人工误判',
+            title: (
+              <span>
+                <Tooltip
+                  title={
+                    <div>
+                      以实物审核为标准统计图核人工判为实废的图像中误判部分。同时满足以下条件：
+                      <br />
+                      人工判实废、AI判误废、实物判误废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />{' '}
+                </Tooltip>
+                人工误判
+              </span>
+            ),
             key: '审核误判',
             dataIndex: 'leak_normal_normal_img',
             render: (text) => <span>{Number(text).toFixed(1)}</span>,
@@ -82,7 +113,22 @@ const columns = [
         title: 'AI误检',
         children: [
           {
-            title: <span style={{ color: 'red' }}>人工漏检</span>,
+            title: (
+              <span style={{ color: 'red' }}>
+                <Tooltip
+                  title={
+                    <div>
+                      以实物审核为标准统计人工最终漏检。同时满足以下条件：
+                      <br />
+                      人工判误废、AI判实废、实物判实废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />{' '}
+                </Tooltip>
+                人工漏检
+              </span>
+            ),
             key: '审核实废',
             dataIndex: 'err_fake_fake_img',
             render: (text, record) => (
@@ -92,7 +138,22 @@ const columns = [
             ),
           },
           {
-            title: 'AI误判',
+            title: (
+              <span>
+                <Tooltip
+                  title={
+                    <div>
+                      以实物审核为标准统计AI最终误检。同时满足以下条件：
+                      <br />
+                      人工判误废、AI判实废、实物判误废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />{' '}
+                </Tooltip>
+                AI误判
+              </span>
+            ),
             key: '审核误判',
             dataIndex: 'err_fake_normal_img',
             render: (text) => <span>{Number(text).toFixed(1)}</span>,
@@ -126,13 +187,43 @@ const columns = [
         title: 'AI准确率',
         children: [
           {
-            title: '图核判废',
+            title: (
+              <span>
+                <Tooltip
+                  title={
+                    <div>
+                      以图像核查为标准计算AI初次判废准确率。
+                      <br />
+                      准确率 = 100-(AI漏检+AI误判)*100/总条数
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />{' '}
+                </Tooltip>
+                图核判废
+              </span>
+            ),
             key: '图核判废',
             dataIndex: 'acc',
             render: (text) => <span>{Number(text).toFixed(2)}%</span>,
           },
           {
-            title: <span style={{ color: 'red' }}>实物审核</span>,
+            title: (
+              <span style={{ color: 'red' }}>
+                <Tooltip
+                  title={
+                    <div>
+                      以实物审核为标准计算AI判废系统最终判废准确率。
+                      <br />
+                      AI判废准确率 = 100-(AI漏检+AI误判)*100/(总条数-不计废)
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />{' '}
+                </Tooltip>
+                实物审核
+              </span>
+            ),
             key: '实物审核',
             dataIndex: 'acc_fix',
             render: (text, record) => (
@@ -144,7 +235,22 @@ const columns = [
         ],
       },
       {
-        title: <span style={{ color: 'red' }}>人工准确率</span>,
+        title: (
+          <span style={{ color: 'red' }}>
+            <Tooltip
+              title={
+                <div>
+                  以实物审核为标准计算人工最终判废准确率。
+                  <br />
+                  人工判废准确率 = 100-(人工漏检+人工误判)*100/(总条数-不计废)
+                </div>
+              }
+            >
+              <QuestionCircleOutlined />{' '}
+            </Tooltip>
+            人工准确率
+          </span>
+        ),
         key: '人工判废',
         dataIndex: 'accHuman',
         render: (text, record) => (
@@ -156,7 +262,11 @@ const columns = [
     ],
   },
   {
-    title: '* 不计废',
+    title: (
+      <Tooltip title="如果一开产品存在人工及AI同时判为实废，产品将在实物剔废单中，如果同一开位出现人工或AI漏检，为方便分析，该图像不计入作废分析中。">
+        <QuestionCircleOutlined /> <span>不计废</span>
+      </Tooltip>
+    ),
     key: 'ignore_img',
     dataIndex: 'ignore_img',
     render: (text) => <span>{Number(text).toFixed(1)}</span>,
@@ -178,7 +288,7 @@ export default () => {
           ((Number(item.leak_normal_normal_img) +
             Number(item.err_fake_fake_img)) *
             100) /
-            Number(item.total_img),
+            (Number(item.total_img) - Number(item.ignore_img)),
       })),
   });
 
@@ -190,10 +300,12 @@ export default () => {
 
   return (
     <div className="card-content">
-      <h3>实物审核数据汇总</h3>
+      <h2 style={{ textAlign: 'center' }}>实物审核数据汇总</h2>
       <div>
         <b>* 不计废图像数量：</b>
         如果一开产品存在人工及AI同时判为实废，产品将在实物剔废单中，如果同一开位出现人工或AI漏检，为方便分析，该图像不计入作废分析中。
+        <br />
+        (鼠标移至表头问号处显示该列数据说明及计算规则)
       </div>
       <ResultPanel show={show} setShow={setShow} cartinfo={cartinfo} />
       <Table
