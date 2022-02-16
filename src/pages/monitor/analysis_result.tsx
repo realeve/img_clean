@@ -56,7 +56,7 @@ const columns = [
                     </div>
                   }
                 >
-                  <QuestionCircleOutlined />{' '}
+                  <QuestionCircleOutlined />
                 </Tooltip>
                 AI漏检
               </span>
@@ -81,7 +81,7 @@ const columns = [
                     </div>
                   }
                 >
-                  <QuestionCircleOutlined />{' '}
+                  <QuestionCircleOutlined />
                 </Tooltip>
                 人工误判
               </span>
@@ -124,7 +124,7 @@ const columns = [
                     </div>
                   }
                 >
-                  <QuestionCircleOutlined />{' '}
+                  <QuestionCircleOutlined />
                 </Tooltip>
                 人工漏检
               </span>
@@ -149,7 +149,7 @@ const columns = [
                     </div>
                   }
                 >
-                  <QuestionCircleOutlined />{' '}
+                  <QuestionCircleOutlined />
                 </Tooltip>
                 AI误判
               </span>
@@ -175,7 +175,24 @@ const columns = [
     ],
   },
   {
-    title: '图片总数',
+    title: (
+      <Tooltip title="如果一开产品存在人工及AI同时判为实废，产品将在实物剔废单中，如果同一开位出现人工或AI漏检，为方便分析，该图像不计入作废分析中。">
+        <QuestionCircleOutlined /> <span>不计废</span>
+      </Tooltip>
+    ),
+    key: 'ignore_img',
+    dataIndex: 'ignore_img',
+    render: (text) => <span>{Number(text).toFixed(1)}</span>,
+  },
+  {
+    title: (
+      <span>
+        <Tooltip title="不包含不计废图片">
+          <QuestionCircleOutlined />
+        </Tooltip>
+        图片总数
+      </span>
+    ),
     key: '图片总数',
     dataIndex: 'total_img',
     render: (text) => <span>{Number(text).toFixed(0)}</span>,
@@ -198,7 +215,7 @@ const columns = [
                     </div>
                   }
                 >
-                  <QuestionCircleOutlined />{' '}
+                  <QuestionCircleOutlined />
                 </Tooltip>
                 图核判废
               </span>
@@ -219,7 +236,7 @@ const columns = [
                     </div>
                   }
                 >
-                  <QuestionCircleOutlined />{' '}
+                  <QuestionCircleOutlined />
                 </Tooltip>
                 实物审核
               </span>
@@ -246,7 +263,7 @@ const columns = [
                 </div>
               }
             >
-              <QuestionCircleOutlined />{' '}
+              <QuestionCircleOutlined />
             </Tooltip>
             人工准确率
           </span>
@@ -261,16 +278,6 @@ const columns = [
       },
     ],
   },
-  {
-    title: (
-      <Tooltip title="如果一开产品存在人工及AI同时判为实废，产品将在实物剔废单中，如果同一开位出现人工或AI漏检，为方便分析，该图像不计入作废分析中。">
-        <QuestionCircleOutlined /> <span>不计废</span>
-      </Tooltip>
-    ),
-    key: 'ignore_img',
-    dataIndex: 'ignore_img',
-    render: (text) => <span>{Number(text).toFixed(1)}</span>,
-  },
 ];
 
 export default () => {
@@ -279,17 +286,19 @@ export default () => {
       url: DEV ? '@/mock/1430_d55a6e3d81.json' : '/1459/779881902e.json',
     },
     callback: (res: IAxiosState<ICartItem>) =>
-      res.data.map((item, i) => ({
-        ...item,
-        idx: i || '',
-        acc: Number(item.acc),
-        accHuman:
-          100 -
-          ((Number(item.leak_normal_normal_img) +
-            Number(item.err_fake_fake_img)) *
-            100) /
-            (Number(item.total_img) - Number(item.ignore_img)),
-      })),
+      res.data.map((item, i) => {
+        return {
+          ...item,
+          idx: i || '',
+          acc: Number(item.acc),
+          accHuman:
+            100 -
+            ((Number(item.leak_normal_normal_img) +
+              Number(item.err_fake_fake_img)) *
+              100) /
+              Number(item.total_img),
+        };
+      }),
   });
 
   const [show, setShow] = useState(false);
