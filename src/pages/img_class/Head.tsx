@@ -19,8 +19,6 @@ import useFetch from '@/component/hooks/useFetch';
 
 import { useState, useEffect } from 'react';
 
-import { saveShowModel } from '@/pages/index/lib';
-
 import * as db from './db';
 
 import { forwardRef, useImperativeHandle } from 'react';
@@ -37,21 +35,13 @@ export const originSize = 112;
 
 interface IHeadInterface {
   ip: string;
-  showModel?: boolean;
   dispatch: Dispatch;
   imgHeight: number;
   refInstance?: any;
-  judgeType: '0' | '1';
   curUser: string;
 }
 
-const Head = ({
-  ip,
-  showModel = false,
-  dispatch,
-  refInstance,
-  curUser,
-}: IHeadInterface) => {
+const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
   const {
     data: total_tasknum,
     loading,
@@ -222,19 +212,6 @@ const Head = ({
       </Col>
       <Col span={12} style={{ marginTop: 10 }}>
         <div>
-          显示模板图：
-          <Switch
-            checked={showModel}
-            onChange={(e) => {
-              saveShowModel(e);
-              dispatch({
-                type: 'common/setStore',
-                payload: {
-                  showModel: e,
-                },
-              });
-            }}
-          />
           <Button
             style={{ marginLeft: 20 }}
             type="dashed"
@@ -305,7 +282,6 @@ const Head = ({
 };
 
 const HeadPage = connect(({ common }: { common: ICommon }) => ({
-  showModel: common.showModel,
   ip: common.ip,
   curUser: common.curUser,
 }))(Head);

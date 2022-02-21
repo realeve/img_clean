@@ -30,6 +30,7 @@ import ImageSize from '@/component/ImageSize';
 type TTaskNum = { manual_flag: number; img_num: number };
 
 export const originSize = 112;
+export const defaultImageSize = 192;
 
 interface IHeadInterface {
   ip: string;
