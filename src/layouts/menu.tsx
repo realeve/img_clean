@@ -37,4 +37,16 @@ export const menu = [
       },
     ],
   },
+  {
+    title: '缺陷类型分类',
+    icon: <EyeOutlined />,
+    key: 'img_class',
+    data: [
+      {
+        title: '类型标记',
+        key: '/img_class/label',
+        icon: <EyeOutlined />,
+      },
+    ],
+  },
 ];

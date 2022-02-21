@@ -40,6 +40,11 @@ export const routes = [
         component: '@/pages/monitor/analysis_result',
         title: '实物审核',
       },
+      {
+        path: '/img_class/label',
+        component: '@/pages/img_class/label',
+        title: '缺陷类型分类标记',
+      },
     ],
   },
 ];

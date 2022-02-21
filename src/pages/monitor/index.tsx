@@ -205,7 +205,7 @@ export default () => {
       <ResultPanel show={show} setShow={setShow} cartinfo={cartinfo} />
       <Table
         dataSource={data}
-        loading={loading}
+        // loading={loading}
         pagination={{
           pageSize: 12,
         }}

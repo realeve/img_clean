@@ -9,13 +9,17 @@ import {
   Switch,
   Modal,
 } from 'antd';
+
+import styles from './label.less';
+
+import { IAxiosState } from '@/utils/axios';
+
 import { DEV } from '@/utils/setting';
 import useFetch from '@/component/hooks/useFetch';
 
 import { useState, useEffect } from 'react';
-import styles from './index.less';
 
-import { saveShowModel, saveJudgeType } from './lib';
+import { saveShowModel } from '@/pages/index/lib';
 
 import * as db from './db';
 
@@ -27,7 +31,7 @@ import { Dispatch } from 'redux';
 
 import ImageSize from '@/component/ImageSize';
 
-type TTaskNum = { manual_flag: number; img_num: number };
+type TTaskNum = { img_num: number };
 
 export const originSize = 112;
 
@@ -47,22 +51,17 @@ const Head = ({
   dispatch,
   refInstance,
   curUser,
-  judgeType,
 }: IHeadInterface) => {
-  const { data, loading, reFetch } = useFetch<TTaskNum>({
+  const {
+    data: total_tasknum,
+    loading,
+    reFetch,
+  } = useFetch<number>({
     param: {
-      url: DEV ? '@/mock/1392_70919f0f45.json' : '/1392/70919f0f45.json',
+      url: DEV ? '@/mock/1392_70919f0f45.json' : '/1466/a448c09eb5.json',
     },
-    callback: (e) => {
-      const data = { fake: 0, normal: 0 };
-      e.data.forEach((item: TTaskNum) => {
-        if (item.manual_flag == 1) {
-          data.fake = item.img_num;
-        } else if (item.manual_flag == 0) {
-          data.normal = item.img_num;
-        }
-      });
-      return data;
+    callback: (e: IAxiosState<TTaskNum>) => {
+      return e.data[0].img_num;
     },
   });
 
@@ -81,13 +80,13 @@ const Head = ({
     normal: number;
   }>({
     param: {
-      url: `/1394/2f1cbb3ffe.json`,
+      url: `/1467/d455febb3c.json`,
       params: {
         ip,
       },
     },
     valid: () => ip.length > 0,
-    callback: (e) => e.data?.[0] || { fake: 0, normal: 0 },
+    callback: (e) => e.data?.[0] || { img_num: 0 },
   });
 
   useImperativeHandle(refInstance, () => ({
@@ -124,53 +123,39 @@ const Head = ({
   >([]);
 
   useEffect(() => {
-    db.getImageJudgeNum().then(setTotalJudgeNum);
+    db.getImageClass().then(setTotalJudgeNum);
     if (!window.location.href.includes('/main/result')) {
       return;
     }
     db.getImageJudgeUsersList().then(setJudgeUsers);
   }, []);
 
-  const setJudgeType = (judgeType: '0' | '1') => {
-    dispatch({
-      type: 'common/setStore',
-      payload: {
-        judgeType,
-      },
-    });
-  };
-
   const [light, setLight] = useState(false);
-  const [rightSide, setRightSide] = useState(true);
-  useEffect(() => {
-    let item = parseInt(window.localStorage.getItem('rightSide') || '0');
-    setRightSide(Boolean(item));
-  }, []);
 
   return (
     <Row className={styles.head}>
       <Col span={18}>
         <div className={styles.main}>
           <div className={styles.item}>
-            <div style={{ width: 200 }}>待判废数据：</div>
+            <div style={{ width: 200 }}>待分类数据：</div>
             <Skeleton
               title={false}
               active
               loading={loading}
               paragraph={{ rows: 1, width: 300 }}
             >
-              {data && `实废：${data.fake}, 误废：${data.normal}`}
+              {total_tasknum}
             </Skeleton>
           </div>
           <div className={styles.item}>
-            <div style={{ width: 200 }}>{ip} 已判废:</div>
+            <div style={{ width: 200 }}>{ip} 已分类:</div>
             <Skeleton
               title={false}
               active
               loading={judgeLoading}
               paragraph={{ rows: 1, width: 300 }}
             >
-              {judgeNum && `实废：${judgeNum.fake}, 误废：${judgeNum.normal}`}
+              {judgeNum?.img_num}
             </Skeleton>
           </div>
         </div>
@@ -198,19 +183,6 @@ const Head = ({
               }}
             />
           </div>
-          <Radio.Group
-            defaultValue="1"
-            value={judgeType}
-            buttonStyle="solid"
-            onChange={(e) => {
-              setJudgeType(e.target.value);
-              saveJudgeType(e.target.value);
-            }}
-            className={styles.action}
-          >
-            <Radio.Button value="1">加载实废</Radio.Button>
-            <Radio.Button value="0">加载误废</Radio.Button>
-          </Radio.Group>
         </div>
       </Col>
       <ImageSize />
@@ -270,7 +242,7 @@ const Head = ({
               setShow(true);
             }}
           >
-            判废量统计
+            分类总量统计
           </Button>
         </div>
       </Col>
@@ -280,7 +252,7 @@ const Head = ({
           style={{ marginTop: 10, display: 'flex', justifyContent: 'flex-end' }}
         >
           <div>
-            查看判废人员：
+            查看分类人员：
             <Radio.Group
               defaultValue={0}
               value={curUser}
@@ -305,20 +277,7 @@ const Head = ({
           </div>
         </Col>
       )}
-      <Col span={24}>
-        <div>
-          数据初始载入：
-          <Switch
-            onChange={(e) => {
-              setRightSide(e);
-              window.localStorage.setItem('rightSide', e ? '1' : '0');
-            }}
-            checked={rightSide}
-            checkedChildren="左侧"
-            unCheckedChildren="右侧"
-          />
-        </div>
-      </Col>
+
       <Modal
         title="判废量汇总"
         visible={show}
@@ -349,7 +308,6 @@ const HeadPage = connect(({ common }: { common: ICommon }) => ({
   showModel: common.showModel,
   ip: common.ip,
   curUser: common.curUser,
-  judgeType: common.judgeType,
 }))(Head);
 
 export default forwardRef((props: IHeadInterface, ref) => (

@@ -1,0 +1,103 @@
+{
+  "data": [
+    {
+      "proc_name": "凹印",
+      "err_type": "色深",
+      "err_typeid": 1
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "白道子",
+      "err_typeid": 2
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "脏道子",
+      "err_typeid": 3
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "堆墨",
+      "err_typeid": 4
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "串色",
+      "err_typeid": 5
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "液脏",
+      "err_typeid": 6
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "滋墨",
+      "err_typeid": 7
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "色浅",
+      "err_typeid": 8
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "色深",
+      "err_typeid": 9
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "串色",
+      "err_typeid": 10
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "液脏",
+      "err_typeid": 11
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "色浅",
+      "err_typeid": 12
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "其它",
+      "err_typeid": 13
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "其它",
+      "err_typeid": 4
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "走版",
+      "err_typeid": 15
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "走版",
+      "err_typeid": 16
+    },
+    {
+      "proc_name": "凹印",
+      "err_type": "缺印",
+      "err_typeid": 17
+    },
+    {
+      "proc_name": "胶印",
+      "err_type": "缺印",
+      "err_typeid": 18
+    }
+  ],
+  "rows": 18,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["proc_name", "err_type", "err_typeid"],
+  "title": "缺陷类型列表",
+  "time": "5.125ms",
+  "serverTime": "2022-02-21 10:53:42",
+  "source": "数据来源：生产指挥中心BI数据",
+  "hash": "W/\"e95f2fdcc78be6b17b442f694ea821ac\""
+}
