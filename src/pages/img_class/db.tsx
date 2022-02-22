@@ -56,3 +56,20 @@ export const getImageClassTask = () =>
       return item;
     }),
   );
+
+/**
+*   @database: { 生产指挥中心BI数据 }
+*   @desc:     { 类型标记 } 
+以下参数在建立过程中与系统保留字段冲突，已自动替换:
+@id:_id. 参数说明：api 索引序号 
+*/
+export const setImageClass: (params: {
+  audit_flag: number;
+  ip: string;
+  audit_date: string;
+  _id: number;
+}) => Promise<boolean> = (params) =>
+  axios<TDbWrite>({
+    url: DEV ? _commonData : '/1470/83e450260c.json',
+    params,
+  }).then(({ data: [{ affected_rows }] }) => (affected_rows as number) > 0);

@@ -266,7 +266,7 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
       >
         <ul style={{ listStyle: 'auto', lineHeight: '30px' }}>
           {totalJudgeNum.map((item) => (
-            <li>
+            <li key={item.username}>
               <div style={{ display: 'flex' }}>
                 <div style={{ width: 100 }}>
                   <b>{item.username}：</b>

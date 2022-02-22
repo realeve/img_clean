@@ -27,96 +27,52 @@
     height: 100%;
     background-color: #ddd;
   }
-  .act {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background: rgba(17, 17, 17, 0.5);
-    cursor: pointer;
-    top: calc(50% - 15px);
-    right: 0;
-    z-index: 10;
-    line-height: 30px;
-    font-size: 20px;
-    color: rgb(194, 194, 194);
-    text-align: center;
-
-    &:hover {
-      background: rgba(17, 17, 17, 0.8);
-      transition: background 0.2s ease-in-out;
-    }
-    display: none;
-  }
-  .difficult {
-    display: none;
-    position: absolute;
-    left: 5px;
-    top: 5px;
-    z-index: 5;
-    :global {
-      .ant-btn {
-        padding: 2px;
-        line-height: 1;
-        color: #fff;
-        width: 32px;
-        height: 32px;
-      }
-    }
-    &:hover {
-      :global {
-        .ant-btn {
-          background: rgb(51, 109, 243);
-        }
-      }
-    }
-  }
-  &:hover {
-    .act {
-      display: block;
-    }
-    .difficult {
-      display: block;
-    }
-  }
   .detail {
     cursor: pointer;
     position: relative;
-    // z-index: 0;
-    // transform: scale(1) translateX(0px);
     .box {
       position: absolute;
       border: 1px solid #fff022;
       transform: scale(1.2);
     }
-    .box2 {
-      position: absolute;
-      border: 1px solid #22ff64;
-      transform: scale(1.2);
-    }
-    // &:hover {
-    //   z-index: 2;
-    //   transform: scale(1.2) translateX(22px);
-    //   transition: transform 0.3s;
-    //   transition-timing-function: ease-in-out;
-    // }
 
-    .spot {
+    .tools {
+      width: 100%;
+      top: 0;
+      left: 0;
       position: absolute;
-      right: 5px;
-      top: 5px;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      line-height: 24px;
-      text-align: center;
-      background-color: #e23;
-      color: #fff;
-      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      line-height: 30px;
     }
   }
 }
-.tool {
+
+.menuItem {
+  height: 25px;
+  line-height: 25px;
+  &:hover {
+    color: #1890ff;
+    background-color: #e6f7ff;
+  }
+}
+
+.toolContainer {
   display: flex;
-  flex-direction: row;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  position: fixed;
+  right: 5px;
+  top: 220px;
+  z-index: 2;
+  background: #fff;
+  border: 1px solid #1890ff;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 160px;
+  .highlight {
+    color: #1890ff;
+    font-weight: bold;
+    margin-right: 5px;
+  }
 }
