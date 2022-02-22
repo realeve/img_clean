@@ -23,9 +23,9 @@ const MenuList = ({
   data: IErrorType;
   onChange: (e: number) => void;
 }) => (
-  <Menu className={styles.tools} mode="horizontal">
+  <Menu className={styles.tools} mode="horizontal" style={{ width: '100%' }}>
     {Object.entries(data).map(([key, errItem]: [string, IErrorTypeItem[]]) => (
-      <Menu.SubMenu key={key} title={key} style={{ padding: '0 15px' }}>
+      <Menu.SubMenu key={key} title={key} style={{ padding: '0 10px' }}>
         {errItem.map((errtypeItem) => (
           <Menu.Item
             style={{
@@ -176,6 +176,11 @@ const LabelPage = ({
     updateImageList(_id);
   };
 
+  const updateChoosedTypename = (typeid: number) => {
+    setCurType(typeid);
+    setCurTypeDetail(errList.find((item) => item.err_typeid == typeid));
+  };
+
   return (
     <div className="card-content">
       <Header ref={ref} />
@@ -185,19 +190,16 @@ const LabelPage = ({
             ? curTypeDetail.proc_name + curTypeDetail.err_type
             : '未选择'}
         </span>
-        <MenuList
-          data={errtype}
-          onChange={(e) => {
-            setCurType(e);
-            setCurTypeDetail(errList.find((item) => item.err_typeid == e));
-          }}
-        />
+        <MenuList data={errtype} onChange={updateChoosedTypename} />
       </div>
       <div className={styles.detail}>
         {data.map((item) => (
           <ImageItem
             key={item.id}
             onChange={(typeid: number) => {
+              if (typeid != curtype) {
+                updateChoosedTypename(typeid);
+              }
               labelOneImg(item.id, typeid);
             }}
             onChoose={() => {
