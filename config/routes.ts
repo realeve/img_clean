@@ -45,6 +45,11 @@ export const routes = [
         component: '@/pages/img_class/label',
         title: '缺陷类型分类标记',
       },
+      {
+        path: '/img_class/result',
+        component: '@/pages/img_class/result',
+        title: '缺陷类型分类标记',
+      },
     ],
   },
 ];

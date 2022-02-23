@@ -39,8 +39,14 @@ export interface IClassItem {
   img_url: string;
   ai_flag: null | number;
   id: number;
-  imageIdx: number;
 }
+
+const handleImageItem = (item: IClassItem) => {
+  let url = item.type == null ? '' : `/${item.type}/`;
+  item.img_url = imageHost + (url + item.img_url).replace(/\/\//g, '/');
+  return item;
+};
+
 /**
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 领取分类任务 }
@@ -48,14 +54,7 @@ export interface IClassItem {
 export const getImageClassTask = () =>
   axios<IClassItem>({
     url: DEV ? '@/mock/1469_ede3539713.json' : '/1469/ede3539713.json',
-  }).then((res) =>
-    res.data.map((item, idx) => {
-      let url = item.type == null ? '' : `/${item.type}/`;
-      item.img_url = imageHost + (url + item.img_url).replace(/\/\//g, '/');
-      item.imageIdx = idx + 1;
-      return item;
-    }),
-  );
+  }).then((res) => res.data.map(handleImageItem));
 
 /**
 *   @database: { 生产指挥中心BI数据 }
@@ -73,3 +72,17 @@ export const setImageClass: (params: {
     url: DEV ? _commonData : '/1470/83e450260c.json',
     params,
   }).then(({ data: [{ affected_rows }] }) => (affected_rows as number) > 0);
+
+export interface IResultItem extends IClassItem {
+  err_type: string;
+}
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 标记结果 }
+ */
+export const getImageClassResult = () =>
+  axios<IResultItem>({
+    url: DEV ? '@/mock/1471_d090e74911.json' : '/1471/d090e74911.json',
+  })
+    .then((res) => res.data)
+    .then((res) => res.map(handleImageItem));

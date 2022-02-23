@@ -16,7 +16,7 @@ import { fetchXML, IBoxItem } from '@/pages/index/lib';
 import * as R from 'ramda';
 import { originSize, defaultImageSize } from '@/pages/index/Head';
 
-const MenuList = ({
+export const MenuList = ({
   data,
   onChange,
 }: {
@@ -60,7 +60,7 @@ export const ImageItem = ({
   item: IClassItem;
   imgHeight: number;
   onChange: (e: number) => void;
-  onChoose: () => void;
+  onChoose?: () => void;
   light?: boolean;
   errtype: IErrorType;
 }) => {
@@ -90,9 +90,18 @@ export const ImageItem = ({
     >
       <div
         className={styles.detail}
-        style={{ height: imgHeight, filter: `brightness(${light ? 2 : 1})` }}
+        style={{
+          height: imgHeight,
+          width: imgHeight * 2,
+          filter: `brightness(${light ? 2 : 1})`,
+        }}
       >
-        <img src={item.img_url} className={styles.img} onClick={onChoose} />
+        <img
+          src={item.img_url}
+          style={{ width: imgHeight * 2 }}
+          className={styles.img}
+          onClick={onChoose}
+        />
         {box && (
           <div
             className={styles.box}
@@ -106,12 +115,24 @@ export const ImageItem = ({
           />
         )}
         <MenuList data={errtype} onChange={onChange} />
+        <span
+          style={{
+            position: 'absolute',
+            left: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.4)',
+            color: '#fff',
+            padding: '0 5px',
+          }}
+        >
+          {item.err_type}
+        </span>
       </div>
     </div>
   );
 };
 
-interface IErrorType {
+export interface IErrorType {
   其它: IErrorTypeItem[];
   凹印: IErrorTypeItem[];
   胶印: IErrorTypeItem[];

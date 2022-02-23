@@ -47,6 +47,11 @@ export const menu = [
         key: '/img_class/label',
         icon: <EyeOutlined />,
       },
+      {
+        title: '标记示例',
+        key: '/img_class/result',
+        icon: <EyeOutlined />,
+      },
     ],
   },
 ];
