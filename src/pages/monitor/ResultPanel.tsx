@@ -82,9 +82,7 @@ export default ({
             state[tabKey].filter(
               (a) =>
                 a.verify_result2 == '0' &&
-                ['auto_lock_leak', 'auto_lock', 'auto_lock_verify'].includes(
-                  a.verify_ip2,
-                ),
+                ['auto_lock_leak', 'auto_lock'].includes(a.verify_ip2),
             ).length
           }{' '}
           / 实废：
@@ -92,17 +90,13 @@ export default ({
             state[tabKey].filter(
               (a) =>
                 a.verify_result2 == '1' &&
-                ['auto_lock_leak', 'auto_lock', 'auto_lock_verify'].includes(
-                  a.verify_ip2,
-                ),
+                ['auto_lock_leak', 'auto_lock'].includes(a.verify_ip2),
             ).length
           }{' '}
           / 不计废:
           {
             state[tabKey].filter((a) =>
-              ['auto_lock_leak', 'auto_lock', 'auto_lock_verify'].includes(
-                a.verify_ip2,
-              ),
+              ['auto_lock_leak', 'auto_lock'].includes(a.verify_ip2),
             ).length
           }
         </div>
