@@ -18,6 +18,31 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.result {
+  display: flex;
+  flex-direction: column;
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    h3 {
+      display: block;
+      width: 100%;
+      margin-left: 10px;
+      span {
+        padding: 0 10px;
+        border-bottom: 1px solid #e23;
+      }
+    }
+  }
+  .detail {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+}
+
 .imageItem {
   margin: 10px;
   overflow: hidden;

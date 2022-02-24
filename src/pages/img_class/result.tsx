@@ -20,7 +20,7 @@ const LabelResultPage = ({
   light: boolean;
   ip: string;
 }) => {
-  const [data, setData] = useState<IClassItem[]>([]);
+  const [data, setData] = useState<{ [key: string]: IClassItem[] }>({});
 
   const [maxId, setMaxId] = useState(0);
 
@@ -38,7 +38,7 @@ const LabelResultPage = ({
 
   const refreshImageList = () => {
     db.getImageClassResult(maxId).then((res) => {
-      setData(res);
+      setData(R.groupBy(R.prop('err_type'), res));
       setImgNum(res.length);
     });
   };
@@ -81,23 +81,36 @@ const LabelResultPage = ({
     updateImageList(_id);
   };
 
+  console.log(data);
+
   return (
     <div className="card-content">
       <Header />
       <Pagination setMaxId={setMaxId} refInstance={refPage} />
 
-      <div className={styles.detail}>
-        {data.map((item) => (
-          <ImageItem
-            key={item.id}
-            onChange={(typeid: number) => {
-              labelOneImg(item.id, typeid);
-            }}
-            item={item}
-            light={light}
-            imgHeight={imgHeight}
-            errtype={errtype}
-          />
+      <div className={styles.result}>
+        {Object.keys(data).map((key, id) => (
+          <div className={styles.row}>
+            <h3 className={styles.title}>
+              <span>
+                {id + 1}.{key}
+              </span>
+            </h3>
+            <div className={styles.detail}>
+              {data[key].map((item) => (
+                <ImageItem
+                  key={item.id}
+                  onChange={(typeid: number) => {
+                    labelOneImg(item.id, typeid);
+                  }}
+                  item={item}
+                  light={light}
+                  imgHeight={imgHeight}
+                  errtype={errtype}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
