@@ -80,9 +80,21 @@ export interface IResultItem extends IClassItem {
  *   @database: { 生产指挥中心BI数据 }
  *   @desc:     { 标记结果 }
  */
-export const getImageClassResult = () =>
+export const getImageClassResult = (maxId: number) =>
   axios<IResultItem>({
     url: DEV ? '@/mock/1471_d090e74911.json' : '/1471/d090e74911.json',
+    params: {
+      maxId,
+    },
   })
     .then((res) => res.data)
     .then((res) => res.map(handleImageItem));
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 分页信息 }
+ */
+export const getImageClassPageIndex = () =>
+  axios({
+    url: DEV ? '@/mock/1472_a8f348d604.json' : '/1472/a8f348d604.json',
+  }).then((res) => res.data);

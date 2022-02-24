@@ -9,6 +9,7 @@ import * as lib from '@/utils/lib';
 import { IClassItem, IErrorTypeItem } from './db';
 import * as R from 'ramda';
 import { ImageItem, IErrorType } from './label';
+import Pagination from './pagination';
 
 const LabelResultPage = ({
   imgHeight,
@@ -21,38 +22,48 @@ const LabelResultPage = ({
 }) => {
   const [data, setData] = useState<IClassItem[]>([]);
 
+  const [maxId, setMaxId] = useState(0);
+
   const [errtype, setErrtype] = useState<IErrorType>({
     其它: [],
     凹印: [],
     胶印: [],
   });
 
+  const [imgNum, setImgNum] = useState(0);
+
   const [errList, setErrList] = useState<IErrorTypeItem[]>([]);
 
+  const refPage = useRef(null);
+
   const refreshImageList = () => {
-    db.getImageClassResult().then(setData);
+    db.getImageClassResult(maxId).then((res) => {
+      setData(res);
+      setImgNum(res.length);
+    });
   };
 
   useEffect(() => {
     refreshImageList();
+  }, [maxId]);
+
+  useEffect(() => {
     db.getImageErrtype().then((res) => {
       let procs = R.groupBy(R.prop('proc_name'), res);
       setErrtype(procs);
       setErrList(res);
     });
   }, []);
-  const ref = useRef(null);
-
-  // const [curtype, setCurType] = useState(0);
-  // const [curTypeDetail, setCurTypeDetail] = useState<IErrorTypeItem>();
 
   const updateImageList = (id: number) => {
-    let nextData = R.reject((item) => item.id == id, data);
-    if (nextData.length > 0) {
-      setData(nextData);
+    // 同步更新
+    setImgNum((num) => num - 1);
+
+    if (imgNum > 1) {
       return;
     }
-    refreshImageList();
+
+    refPage?.current?.nextPage?.();
   };
 
   const labelOneImg = async (_id: number, audit_flag: number) => {
@@ -70,39 +81,18 @@ const LabelResultPage = ({
     updateImageList(_id);
   };
 
-  // const updateChoosedTypename = (typeid: number) => {
-  //     setCurType(typeid);
-  //     setCurTypeDetail(errList.find((item) => item.err_typeid == typeid));
-  // };
-
   return (
     <div className="card-content">
-      <Header ref={ref} />
-      {/* <div className={styles.toolContainer}>
-                <span className={styles.highlight}>
-                    {curTypeDetail
-                        ? curTypeDetail.proc_name + curTypeDetail.err_type
-                        : '未选择'}
-                </span>
-                <MenuList data={errtype} onChange={updateChoosedTypename} />
-            </div> */}
+      <Header />
+      <Pagination setMaxId={setMaxId} refInstance={refPage} />
+
       <div className={styles.detail}>
         {data.map((item) => (
           <ImageItem
             key={item.id}
             onChange={(typeid: number) => {
-              // if (typeid != curtype) {
-              //     updateChoosedTypename(typeid);
-              // }
               labelOneImg(item.id, typeid);
             }}
-            // onChoose={() => {
-            //     if (curtype == 0) {
-            //         message.error('请先选择右侧的缺陷类型标记工具');
-            //         return;
-            //     }
-            //     labelOneImg(item.id, curtype);
-            // }}
             item={item}
             light={light}
             imgHeight={imgHeight}

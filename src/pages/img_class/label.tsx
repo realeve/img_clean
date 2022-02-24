@@ -105,7 +105,7 @@ export const ImageItem = ({
           className={styles.img}
           onClick={() => {
             onChoose?.();
-            setHide(true);
+            onChoose && setHide(true);
           }}
         />
         {box && (
@@ -119,7 +119,7 @@ export const ImageItem = ({
             }}
             onClick={() => {
               onChoose?.();
-              setHide(true);
+              onChoose && setHide(true);
             }}
           />
         )}
