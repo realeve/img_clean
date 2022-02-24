@@ -1,4 +1,4 @@
-import { Menu, message } from 'antd';
+import { Menu, message, Button } from 'antd';
 
 import styles from './label.less';
 
@@ -78,6 +78,8 @@ export const ImageItem = ({
     };
   }, [item]);
 
+  const [hide, setHide] = useState(false);
+
   const scale = imgHeight / originSize;
 
   return (
@@ -86,6 +88,7 @@ export const ImageItem = ({
       style={{
         height: imgHeight,
         width: imgHeight,
+        display: !hide ? 'block' : 'none',
       }}
     >
       <div
@@ -100,7 +103,10 @@ export const ImageItem = ({
           src={item.img_url}
           style={{ width: imgHeight * 2 }}
           className={styles.img}
-          onClick={onChoose}
+          onClick={() => {
+            onChoose?.();
+            setHide(true);
+          }}
         />
         {box && (
           <div
@@ -111,10 +117,19 @@ export const ImageItem = ({
               width: scale * (box.x2 - box.x1),
               height: scale * (box.y2 - box.y1),
             }}
-            onClick={onChoose}
+            onClick={() => {
+              onChoose?.();
+              setHide(true);
+            }}
           />
         )}
-        <MenuList data={errtype} onChange={onChange} />
+        <MenuList
+          data={errtype}
+          onChange={(e) => {
+            onChange(e);
+            setHide(true);
+          }}
+        />
         <span
           style={{
             position: 'absolute',
@@ -156,8 +171,15 @@ const LabelPage = ({
 
   const [errList, setErrList] = useState<IErrorTypeItem[]>([]);
 
+  const [imgNum, setImgNum] = useState(0);
+
+  const ref = useRef(null);
   const refreshImageList = () => {
-    db.getImageClassTask().then(setData);
+    db.getImageClassTask().then((res) => {
+      setData(res);
+      setImgNum(res.length);
+    });
+    ref?.current?.refresh?.();
   };
 
   useEffect(() => {
@@ -168,17 +190,24 @@ const LabelPage = ({
       setErrList(res);
     });
   }, []);
-  const ref = useRef(null);
 
   const [curtype, setCurType] = useState(0);
   const [curTypeDetail, setCurTypeDetail] = useState<IErrorTypeItem>();
 
   const updateImageList = (id: number) => {
-    let nextData = R.reject((item) => item.id == id, data);
-    if (nextData.length > 0) {
-      setData(nextData);
+    // let nextData = R.reject((item) => item.id == id, data);
+    // if (nextData.length > 0) {
+    //   setData(nextData);
+    //   return;
+    // }
+
+    // 同步更新
+    setImgNum((num) => num - 1);
+
+    if (imgNum > 1) {
       return;
     }
+
     refreshImageList();
   };
 
@@ -205,13 +234,22 @@ const LabelPage = ({
   return (
     <div className="card-content">
       <Header ref={ref} />
+      <Button
+        type="primary"
+        style={{ margin: '10px 0 0 20px' }}
+        onClick={refreshImageList}
+      >
+        手动加载数据
+      </Button>
+
       <div className={styles.toolContainer}>
+        标记类型：
         <span className={styles.highlight}>
           {curTypeDetail
             ? curTypeDetail.proc_name + curTypeDetail.err_type
             : '未选择'}
         </span>
-        <MenuList data={errtype} onChange={updateChoosedTypename} />
+        {/* <MenuList data={errtype} onChange={updateChoosedTypename} /> */}
       </div>
       <div className={styles.detail}>
         {data.map((item) => (
