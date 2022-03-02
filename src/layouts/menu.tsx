@@ -48,7 +48,7 @@ export const menu = [
         icon: <EyeOutlined />,
       },
       {
-        title: '标记示例',
+        title: '标记审核',
         key: '/img_class/result',
         icon: <EyeOutlined />,
       },

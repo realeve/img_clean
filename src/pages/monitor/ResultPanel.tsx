@@ -4,6 +4,10 @@ import * as db from './db';
 import { IImageItem } from './db';
 import styles from './ResultPanel.less';
 import * as R from 'ramda';
+import { connect } from 'umi';
+
+import { ICommon } from '@/models/common';
+
 const TabPane = Tabs.TabPane;
 
 const titles = {
@@ -11,16 +15,18 @@ const titles = {
   leak_human: 'AI误检/人工漏判',
   leak_ai: 'AI漏检',
 };
+
 const initState = {
   leak_ai: [],
   leak_human: [],
   fake: [],
 };
 
-export default ({
+const ResultPanel = ({
   show,
   setShow,
   cartinfo,
+  imgHeight,
 }: {
   show: boolean;
   cartinfo: {
@@ -28,6 +34,7 @@ export default ({
     id: string;
   };
   setShow: (e: boolean) => void;
+  imgHeight: number;
 }) => {
   const [state, setState] = useState<{
     fake: IImageItem[];
@@ -115,13 +122,19 @@ export default ({
             <Skeleton active loading={loading}>
               <ul className={styles.panel}>
                 {state[item].map((subItem: IImageItem) => (
-                  <li key={subItem.id} className="animated zoomIn">
+                  <li
+                    key={subItem.id}
+                    className="animated zoomIn"
+                    style={{ width: imgHeight, height: imgHeight }}
+                  >
                     <div className={styles.wrap}>
                       <img src={`${subItem.image}`} />
                     </div>
                     <div className={styles.dot}>{subItem.probability}%</div>
                     <div className={styles.dotLeft}>
-                      id:{subItem.id}, 号码:{subItem.ex_codenum}, 开位:
+                      {subItem.ex_codenum}
+                      <br />
+                      开位:
                       {subItem.format_pos}
                     </div>
                     {subItem.verify_result && (
@@ -162,3 +175,7 @@ export default ({
     </Modal>
   );
 };
+
+export default connect(({ common }: { common: ICommon }) => ({
+  imgHeight: common.imgHeight,
+}))(ResultPanel);

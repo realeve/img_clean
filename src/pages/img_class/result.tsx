@@ -113,6 +113,7 @@ const LabelResultPage = ({
           </div>
         ))}
       </div>
+      <Pagination setMaxId={setMaxId} refInstance={refPage} />
     </div>
   );
 };

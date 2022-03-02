@@ -48,7 +48,7 @@ export const routes = [
       {
         path: '/img_class/result',
         component: '@/pages/img_class/result',
-        title: '缺陷类型分类标记',
+        title: '分类标记审核',
       },
     ],
   },

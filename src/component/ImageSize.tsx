@@ -22,6 +22,7 @@ export const ImageSizeComponent = ({
         imgHeight,
       },
     });
+    saveImageSize(imgHeight);
   };
   return (
     <Col span={12} style={{ marginTop: 10 }}>
@@ -32,7 +33,6 @@ export const ImageSizeComponent = ({
         buttonStyle="solid"
         onChange={(e) => {
           updateImgHeight(e.target.value);
-          saveImageSize(e.target.value);
         }}
       >
         {imgSize.map((item) => {

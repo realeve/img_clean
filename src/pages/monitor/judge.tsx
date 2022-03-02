@@ -100,7 +100,13 @@ const ImageItem = ({
     >
       <img src={data.image} />
       <div className={styles.dot}>{data.probability}%</div>
-      <div className={styles.dotLeft}>{data.img_order}</div>
+      <div className={styles.dotRight}>{data.img_order}</div>
+      <div className={styles.dotLeft}>
+        {data.ex_codenum}
+        <br />
+        开位:
+        {data.format_pos}
+      </div>
     </li>
   );
 };

@@ -17,8 +17,8 @@
   overflow-y: scroll;
 
   li {
-    width: 224px;
-    height: 224px;
+    width: auto;
+    height: auto;
     margin: 5px;
     font-size: 12px;
     cursor: pointer;
@@ -31,12 +31,12 @@
       z-index: 1;
       top: 0;
       transition: transform 0.3s;
-      width: 224px;
-      height: 224px;
+      width: 100%;
+      height: 100%;
       img {
         display: block;
-        border: 0;
         width: 100%;
+        border: 0;
         transition: transform 0.3s;
         position: absolute;
         z-index: 0;
@@ -69,6 +69,8 @@
       background: #3022ee;
       .dotBg;
       display: none;
+      height: unset;
+      text-align: left;
     }
     &:hover {
       .dotLeft {

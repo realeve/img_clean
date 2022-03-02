@@ -137,6 +137,8 @@ export interface IJudgeImageItem {
   id: string;
   ai_result: number;
   img_order: number;
+  ex_codenum: string;
+  format_pos: string;
 }
 /**
  *   @database: { 图像核查判废数据记录 }
