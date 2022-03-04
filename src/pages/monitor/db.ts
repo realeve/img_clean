@@ -53,6 +53,7 @@ export interface IImageItem {
   format_pos: string;
   verify_result2: string;
   verify_ip2: string;
+  ocr_result: string;
 }
 
 export interface IAnalyImageItem extends IImageItem {

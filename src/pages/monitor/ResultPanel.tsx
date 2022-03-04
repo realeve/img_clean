@@ -14,12 +14,14 @@ const titles = {
   fake: '共同检出',
   leak_human: 'AI误检/人工漏判',
   leak_ai: 'AI漏检',
+  ocr: 'OCR多取出',
 };
 
 const initState = {
   leak_ai: [],
   leak_human: [],
   fake: [],
+  ocr: [],
 };
 
 const ResultPanel = ({
@@ -40,6 +42,7 @@ const ResultPanel = ({
     fake: IImageItem[];
     leak_human: IImageItem[];
     leak_ai: IImageItem[];
+    ocr: IImageItem[];
   }>(R.clone(initState));
 
   const [loading, setLoading] = useState(false);
@@ -51,15 +54,30 @@ const ResultPanel = ({
     setLoading(true);
     setState(R.clone(initState));
     db.getDetail(cartinfo.id)
-      .then((res) => {
+      .then((res: IImageItem[]) => {
         const detail = {
           leak_ai: res
-            .filter((item) => item.human_result > item.ai_result)
+            .filter(
+              (item) =>
+                item.human_result > item.ai_result &&
+                [null, '0'].includes(item.ocr_result),
+            )
             .sort((b, a) => a.verify_result - b.verify_result),
           leak_human: res
-            .filter((item) => item.human_result < item.ai_result)
+            .filter(
+              (item) =>
+                item.human_result < item.ai_result &&
+                [null, '0'].includes(item.ocr_result),
+            )
             .sort((b, a) => a.verify_result - b.verify_result),
-          fake: res.filter((item) => item.human_result == item.ai_result),
+          fake: res.filter(
+            (item) =>
+              item.human_result == item.ai_result &&
+              [null, '0'].includes(item.ocr_result),
+          ),
+          ocr: res
+            .filter((item) => item.ocr_result == '1')
+            .sort((b, a) => a.ai_result - b.ai_result),
         };
         setState(detail);
       })
@@ -78,7 +96,7 @@ const ResultPanel = ({
       footer={null}
       width={1210}
     >
-      {tabKey != 'fake' && (
+      {['leak_ai', 'leak_human'].includes(tabKey) && (
         <div className={styles.info}>
           二次审核 误废：
           {state[tabKey].filter((a) => a.verify_result == '0').length} / 实废：
@@ -107,6 +125,14 @@ const ResultPanel = ({
             ).length
           }{' '}
           / 未审核：{state[tabKey].filter((a) => a.verify_ip2 == null).length}
+        </div>
+      )}
+      {tabKey == 'ocr' && (
+        <div className={styles.info}>
+          人工漏判（AI实废）：
+          {state[tabKey].filter((a) => a.ai_result == 1).length} /
+          AI与人工同时漏判：
+          {state[tabKey].filter((a) => a.ai_result == 0).length}
         </div>
       )}
       <Tabs defaultActiveKey={tabKey} accessKey={tabKey} onTabClick={setTabKey}>
@@ -163,6 +189,21 @@ const ResultPanel = ({
                         )
                           ? '(不计)'
                           : ''}
+                      </div>
+                    )}
+                    {subItem.ocr_result == '1' && (
+                      <div
+                        className={
+                          subItem.ai_result == 0
+                            ? styles.dotLeftFake
+                            : styles.dotLeftNormal
+                        }
+                      >
+                        {subItem.ai_result == 1 ? (
+                          <span>人工漏判</span>
+                        ) : (
+                          '同时漏判'
+                        )}
                       </div>
                     )}
                   </li>

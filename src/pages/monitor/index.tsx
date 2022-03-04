@@ -133,6 +133,35 @@ export const columns = [
       },
     ],
   },
+  {
+    title: 'OCR多取出',
+    children: [
+      {
+        title: (
+          <span>
+            AI 实废
+            <br />
+            人工误废
+          </span>
+        ),
+        key: 'AI实废+人工误废',
+        dataIndex: 'ocr_human_leak_img',
+        render: (text) => <span>{Number(text).toFixed(1)}</span>,
+      },
+      {
+        title: (
+          <span>
+            AI 误废
+            <br />
+            人工误废
+          </span>
+        ),
+        key: 'AI、人工同时误废',
+        dataIndex: 'ocr_ai_human_leak_img',
+        render: (text) => <span>{Number(text).toFixed(1)}</span>,
+      },
+    ],
+  },
   // {
   //   title: '开包量',
   //   children: [
