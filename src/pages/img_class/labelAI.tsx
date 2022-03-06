@@ -24,6 +24,7 @@ export const ImageItem = ({
   light = false,
   errtype,
   onChoose,
+  setRightPred,
 }: {
   item: IClassItem;
   imgHeight: number;
@@ -31,6 +32,7 @@ export const ImageItem = ({
   onChoose?: () => void;
   light?: boolean;
   errtype: IErrorType;
+  setRightPred: () => void;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
@@ -108,6 +110,7 @@ export const ImageItem = ({
           onClick={() => {
             onChange(item.ai_flag1);
             setHide(true);
+            setRightPred();
           }}
         >
           {item.err_type1}
@@ -173,7 +176,7 @@ const LabelPage = ({
   ip: string;
 }) => {
   const [data, setData] = useState<{ [key: string]: IClassItem[] }>({});
-
+  const [rightPred, setRightPred] = useState(0);
   const [errtype, setErrtype] = useState<IErrorType>({
     其它: [],
     凹印: [],
@@ -189,6 +192,7 @@ const LabelPage = ({
     db.getImageClassTask().then((res) => {
       setData(R.groupBy(R.prop('err_type1'), res));
       setImgNum(res.length);
+      setRightPred(0);
     });
     ref?.current?.refresh?.();
   };
@@ -254,6 +258,8 @@ const LabelPage = ({
             ? curTypeDetail.proc_name + curTypeDetail.err_type
             : '未选择'}
         </span>
+        <br />
+        本页正确数：<span className={styles.highlight}>{rightPred}/40</span>
         {/* <MenuList data={errtype} onChange={updateChoosedTypename} /> */}
       </div>
 
@@ -269,6 +275,9 @@ const LabelPage = ({
               {data[key].map((item) => (
                 <ImageItem
                   key={item.id}
+                  setRightPred={() => {
+                    setRightPred((rightPred) => rightPred + 1);
+                  }}
                   onChange={(typeid: number) => {
                     if (typeid != curtype) {
                       updateChoosedTypename(typeid);
