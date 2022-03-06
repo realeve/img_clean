@@ -48,6 +48,11 @@ export const menu = [
         icon: <EyeOutlined />,
       },
       {
+        title: 'AI标记类型',
+        key: '/img_class/labelAI',
+        icon: <EyeOutlined />,
+      },
+      {
         title: '标记审核',
         key: '/img_class/result',
         icon: <EyeOutlined />,

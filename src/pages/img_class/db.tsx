@@ -37,12 +37,27 @@ export const getImageClass = () =>
 export interface IClassItem {
   type: string;
   img_url: string;
-  ai_flag: null | number;
+  ai_flag1: number;
+  ai_flag2: number;
+  ai_flag3: number;
+  ai_flag4: number;
+  ai_flag5: number;
+  pred1: number;
+  pred2: number;
+  pred3: number;
+  pred4: number;
+  pred5: number;
+  err_type1: string;
+  err_type2: string;
+  err_type3: string;
+  err_type4: string;
+  err_type5: string;
   id: number;
 }
 
 const handleImageItem = (item: IClassItem) => {
-  let url = item.type == null ? '' : `/${item.type}/`;
+  // let url = item.type == null ? '' : `/${item.type}/`;
+  let url = '';
   item.img_url = imageHost + (url + item.img_url).replace(/\/\//g, '/');
   return item;
 };

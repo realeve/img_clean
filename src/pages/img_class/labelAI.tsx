@@ -15,38 +15,7 @@ import { IClassItem, IErrorTypeItem } from './db';
 import { fetchXML, IBoxItem } from '@/pages/index/lib';
 import * as R from 'ramda';
 import { originSize, defaultImageSize } from '@/pages/index/Head';
-
-export const MenuList = ({
-  data,
-  onChange,
-}: {
-  data: IErrorType;
-  onChange: (e: number) => void;
-}) => (
-  <Menu className={styles.tools} mode="horizontal" style={{ width: '100%' }}>
-    {Object.entries(data).map(([key, errItem]: [string, IErrorTypeItem[]]) => (
-      <Menu.SubMenu key={key} title={key} style={{ padding: '0 10px' }}>
-        {errItem.map((errtypeItem) => (
-          <Menu.Item
-            style={{
-              lineHeight: '30px',
-              height: 30,
-              marginBottom: 0,
-              marginTop: 0,
-            }}
-            key={errtypeItem.err_typeid}
-            className={styles.menuItem}
-            onClick={() => {
-              onChange(errtypeItem.err_typeid);
-            }}
-          >
-            {errtypeItem.err_type}
-          </Menu.Item>
-        ))}
-      </Menu.SubMenu>
-    ))}
-  </Menu>
-);
+import { MenuList, IErrorType } from './label';
 
 export const ImageItem = ({
   item,
@@ -85,7 +54,7 @@ export const ImageItem = ({
     <div
       className={styles.imageItem}
       style={{
-        height: imgHeight,
+        height: imgHeight + 150,
         width: imgHeight,
         display: !hide ? 'block' : 'none',
       }}
@@ -129,28 +98,71 @@ export const ImageItem = ({
             setHide(true);
           }}
         />
-        <span
-          style={{
-            position: 'absolute',
-            left: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.4)',
-            color: '#fff',
-            padding: '0 5px',
+        <span className={styles.dotLeftBottom}>
+          {(item.pred1 * 100).toFixed(0)}
+        </span>
+      </div>
+      <div className={styles.others}>
+        <Button
+          type="primary"
+          onClick={() => {
+            onChange(item.ai_flag1);
+            setHide(true);
           }}
         >
-          {item.err_type}
-        </span>
+          {item.err_type1}
+        </Button>
+
+        {item.pred2 > 0.001 && (
+          <Button
+            type="default"
+            onClick={() => {
+              onChange(item.ai_flag2);
+              setHide(true);
+            }}
+          >
+            {item.err_type2}({(item.pred2 * 100).toFixed(2)}%)
+          </Button>
+        )}
+
+        {item.pred3 > 0.001 && (
+          <Button
+            type="default"
+            onClick={() => {
+              onChange(item.ai_flag3);
+              setHide(true);
+            }}
+          >
+            {item.err_type3}({(item.pred3 * 100).toFixed(2)}%)
+          </Button>
+        )}
+        {item.pred4 > 0.001 && (
+          <Button
+            type="default"
+            onClick={() => {
+              onChange(item.ai_flag4);
+              setHide(true);
+            }}
+          >
+            {item.err_type4}({(item.pred4 * 100).toFixed(2)}%)
+          </Button>
+        )}
+        {item.pred5 > 0.001 && (
+          <Button
+            type="default"
+            onClick={() => {
+              onChange(item.ai_flag5);
+              setHide(true);
+            }}
+          >
+            {item.err_type5}({(item.pred5 * 100).toFixed(2)}%)
+          </Button>
+        )}
       </div>
     </div>
   );
 };
 
-export interface IErrorType {
-  其它: IErrorTypeItem[];
-  凹印: IErrorTypeItem[];
-  胶印: IErrorTypeItem[];
-}
 const LabelPage = ({
   imgHeight,
   ip,
@@ -160,7 +172,7 @@ const LabelPage = ({
   light: boolean;
   ip: string;
 }) => {
-  const [data, setData] = useState<IClassItem[]>([]);
+  const [data, setData] = useState<{ [key: string]: IClassItem[] }>({});
 
   const [errtype, setErrtype] = useState<IErrorType>({
     其它: [],
@@ -175,7 +187,7 @@ const LabelPage = ({
   const ref = useRef(null);
   const refreshImageList = () => {
     db.getImageClassTask().then((res) => {
-      setData(res);
+      setData(R.groupBy(R.prop('err_type1'), res));
       setImgNum(res.length);
     });
     ref?.current?.refresh?.();
@@ -194,12 +206,6 @@ const LabelPage = ({
   const [curTypeDetail, setCurTypeDetail] = useState<IErrorTypeItem>();
 
   const updateImageList = (id: number) => {
-    // let nextData = R.reject((item) => item.id == id, data);
-    // if (nextData.length > 0) {
-    //   setData(nextData);
-    //   return;
-    // }
-
     // 同步更新
     setImgNum((num) => num - 1);
 
@@ -250,28 +256,40 @@ const LabelPage = ({
         </span>
         {/* <MenuList data={errtype} onChange={updateChoosedTypename} /> */}
       </div>
-      <div className={styles.detail}>
-        {data.map((item) => (
-          <ImageItem
-            key={item.id}
-            onChange={(typeid: number) => {
-              if (typeid != curtype) {
-                updateChoosedTypename(typeid);
-              }
-              labelOneImg(item.id, typeid);
-            }}
-            onChoose={() => {
-              if (curtype == 0) {
-                message.error('请先选择右侧的缺陷类型标记工具');
-                return;
-              }
-              labelOneImg(item.id, curtype);
-            }}
-            item={item}
-            light={light}
-            imgHeight={imgHeight}
-            errtype={errtype}
-          />
+
+      <div className={styles.result} style={{ marginTop: 30 }}>
+        {Object.keys(data).map((key, id) => (
+          <div className={styles.row} key={key}>
+            <h3 className={styles.title}>
+              <span>
+                {id + 1}.{key}
+              </span>
+            </h3>
+            <div className={styles.detail}>
+              {data[key].map((item) => (
+                <ImageItem
+                  key={item.id}
+                  onChange={(typeid: number) => {
+                    if (typeid != curtype) {
+                      updateChoosedTypename(typeid);
+                    }
+                    labelOneImg(item.id, typeid);
+                  }}
+                  onChoose={() => {
+                    if (curtype == 0) {
+                      message.error('请先选择右侧的缺陷类型标记工具');
+                      return;
+                    }
+                    labelOneImg(item.id, curtype);
+                  }}
+                  item={item}
+                  light={light}
+                  imgHeight={imgHeight}
+                  errtype={errtype}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>

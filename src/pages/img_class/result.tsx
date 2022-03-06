@@ -81,8 +81,6 @@ const LabelResultPage = ({
     updateImageList(_id);
   };
 
-  console.log(data);
-
   return (
     <div className="card-content">
       <Header />
@@ -90,7 +88,7 @@ const LabelResultPage = ({
 
       <div className={styles.result}>
         {Object.keys(data).map((key, id) => (
-          <div className={styles.row}>
+          <div className={styles.row} key={key}>
             <h3 className={styles.title}>
               <span>
                 {id + 1}.{key}
