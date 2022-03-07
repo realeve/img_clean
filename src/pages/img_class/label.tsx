@@ -55,12 +55,14 @@ export const ImageItem = ({
   light = false,
   errtype,
   onChoose,
+  showMenu = true,
 }: {
   item: IClassItem;
   imgHeight: number;
   onChange: (e: number) => void;
   onChoose?: () => void;
   light?: boolean;
+  showMenu?: boolean;
   errtype: IErrorType;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
@@ -122,13 +124,15 @@ export const ImageItem = ({
             }}
           />
         )}
-        <MenuList
-          data={errtype}
-          onChange={(e) => {
-            onChange(e);
-            setHide(true);
-          }}
-        />
+        {showMenu && (
+          <MenuList
+            data={errtype}
+            onChange={(e) => {
+              onChange(e);
+              setHide(true);
+            }}
+          />
+        )}
         <span
           style={{
             position: 'absolute',

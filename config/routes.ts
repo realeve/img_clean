@@ -57,6 +57,11 @@ export const routes = [
         component: '@/pages/img_class/result',
         title: '分类标记审核',
       },
+      {
+        path: '/img_class/demo',
+        component: '@/pages/img_class/demo',
+        title: '分类结果示例',
+      },
     ],
   },
 ];

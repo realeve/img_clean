@@ -43,18 +43,23 @@ export const menu = [
     key: 'img_class',
     data: [
       {
-        title: '类型标记',
+        title: '类型标记(首次标记)',
         key: '/img_class/label',
         icon: <EyeOutlined />,
       },
       {
-        title: 'AI标记类型',
+        title: '类型标记(AI预判废)',
         key: '/img_class/labelAI',
         icon: <EyeOutlined />,
       },
       {
         title: '标记审核',
         key: '/img_class/result',
+        icon: <EyeOutlined />,
+      },
+      {
+        title: '类型示例(全类型示例展示)',
+        key: '/img_class/demo',
         icon: <EyeOutlined />,
       },
     ],

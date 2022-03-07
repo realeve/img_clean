@@ -129,3 +129,12 @@ export const getImageClassAcc = () =>
   axios<IAccItem>({
     url: DEV ? '/@/mock/1481_6ee1b33a8c.json' : '/1481/6ee1b33a8c.json',
   }).then((res) => res.data[0]);
+
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { 缺陷类型列表 }
+ */
+export const getErrorType = () =>
+  axios<IClassItem>({
+    url: DEV ? '@/mock/1482_ecf48c292d.json' : '/1482/ecf48c292d.json',
+  }).then((res) => res.data.map(handleImageItem));
