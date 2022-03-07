@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "right_pic3": "543",
+      "right_pic": "481",
+      "total_pic": "590",
+      "acc": "81.53",
+      "acc3": "92.03"
+    }
+  ],
+  "rows": 1,
+  "dates": [],
+  "ip": "10.8.60.203",
+  "header": ["right_pic3", "right_pic", "total_pic", "acc", "acc3"],
+  "title": "AI Top1 top3准确率",
+  "time": "19.214ms",
+  "serverTime": "2022-03-07 15:27:21",
+  "source": "数据来源：生产指挥中心BI数据",
+  "hash": "W/\"236053cedbd2d0c71580e5ebf72f6d38\""
+}

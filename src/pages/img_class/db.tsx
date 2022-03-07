@@ -113,3 +113,19 @@ export const getImageClassPageIndex = () =>
   axios({
     url: DEV ? '@/mock/1472_a8f348d604.json' : '/1472/a8f348d604.json',
   }).then((res) => res.data);
+
+export interface IAccItem {
+  right_pic3: string;
+  right_pic: string;
+  total_pic: string;
+  acc: string;
+  acc3: string;
+}
+/**
+ *   @database: { 生产指挥中心BI数据 }
+ *   @desc:     { AI Top1 top3准确率 }
+ */
+export const getImageClassAcc = () =>
+  axios<IAccItem>({
+    url: DEV ? '/@/mock/1481_6ee1b33a8c.json' : '/1481/6ee1b33a8c.json',
+  }).then((res) => res.data[0]);

@@ -1,4 +1,4 @@
-import { Menu, message, Button } from 'antd';
+import { message, Button } from 'antd';
 
 import styles from './label.less';
 

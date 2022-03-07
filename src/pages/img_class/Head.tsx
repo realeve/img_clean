@@ -20,7 +20,7 @@ import useFetch from '@/component/hooks/useFetch';
 import { useState, useEffect } from 'react';
 
 import * as db from './db';
-
+import { IAccItem } from './db';
 import { forwardRef, useImperativeHandle } from 'react';
 
 import { connect } from 'dva';
@@ -112,8 +112,12 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
     { username: string; fake_nums: number }[]
   >([]);
 
+  const [aiAcc, setAiAcc] = useState<IAccItem>({});
+
   useEffect(() => {
     db.getImageClass().then(setTotalJudgeNum);
+    db.getImageClassAcc().then(setAiAcc);
+
     if (!window.location.href.includes('/main/result')) {
       return;
     }
@@ -211,6 +215,15 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
         </div>
       </Col>
       <Col span={12} style={{ marginTop: 10 }}>
+        <span>AI待标记图片数：{aiAcc.total_pic}</span>
+        <span style={{ margin: '0 20px' }}>
+          AI标记正确图片数:{aiAcc.right_pic}({aiAcc.acc}%)
+        </span>
+        <span>
+          AI前3张标记正确图片数:{aiAcc.right_pic3}({aiAcc.acc3}%)
+        </span>
+      </Col>
+      <Col span={6} style={{ marginTop: 10 }}>
         <div>
           <Button
             style={{ marginLeft: 20 }}
