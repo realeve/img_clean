@@ -307,6 +307,8 @@ export default () => {
     id: '0',
   });
 
+  const [size, setSize] = useState(25);
+
   return (
     <div className="card-content">
       <h2 style={{ textAlign: 'center' }}>实物审核数据汇总</h2>
@@ -321,7 +323,11 @@ export default () => {
         dataSource={data}
         // loading={loading}
         pagination={{
-          pageSize: 12,
+          pageSizeOptions: ['10', '25', '50', '100'],
+          pageSize: size,
+          onChange: (page, pageSize) => {
+            pageSize && setSize(pageSize);
+          },
         }}
         bordered
         columns={[

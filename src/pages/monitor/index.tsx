@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import DatePicker from '@/component/DatePicker';
 import moment from 'moment';
-import { Button, Table } from 'antd';
+import { Button, Table, Tooltip } from 'antd';
 import * as db from './db';
 import { ICartItem } from './db';
 import { imageSearchUrl } from '@/utils/setting';
 import ResultPanel from './ResultPanel';
 import useFetch from '@/component/hooks/useFetch';
 import { DEV, IAxiosState } from '@/utils/axios';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const dateFormat = 'YYYYMMDD';
 
@@ -16,11 +17,13 @@ export const columns = [
     title: '#',
     dataIndex: 'idx',
     key: 'idx',
+    width: '40px',
   },
   {
     title: '车号',
     dataIndex: 'cart',
     key: '车号',
+    width: '80px',
     render: (text, record: ICartItem) =>
       record.id == '0' ? (
         text
@@ -36,6 +39,7 @@ export const columns = [
     title: '判废时间',
     dataIndex: 'judge_date',
     key: '判废时间',
+    width: '160px',
   },
   {
     title: '冠号',
@@ -49,13 +53,43 @@ export const columns = [
         title: 'AI漏检',
         children: [
           {
-            title: '审核实废',
+            title: (
+              <span style={{ color: 'red' }}>
+                <Tooltip
+                  title={
+                    <div>
+                      以图像核查二次审核为标准统计AI最终漏检。同时满足以下条件：
+                      <br />
+                      人工判实废、AI判误废、图像核查二次审核判实废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+                审核实废
+              </span>
+            ),
             key: '审核实废',
             dataIndex: 'leak_normal_fake_img',
             render: (text) => <span>{Number(text).toFixed(1)}</span>,
           },
           {
-            title: '审核误判',
+            title: (
+              <span>
+                <Tooltip
+                  title={
+                    <div>
+                      以图像核查二次审核为标准统计图核人工判为实废的图像中误判部分。同时满足以下条件：
+                      <br />
+                      人工判实废、AI判误废、图像核查二次审核判误废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+                审核误废
+              </span>
+            ),
             key: '审核误判',
             dataIndex: 'leak_normal_normal_img',
             render: (text) => <span>{Number(text).toFixed(1)}</span>,
@@ -71,6 +105,7 @@ export const columns = [
       {
         title: '共同检出误废',
         key: '共同检出误废',
+        width: '80px',
         dataIndex: 'normal_img',
         render: (text) => <span>{Number(text).toFixed(1)}</span>,
       },
@@ -83,13 +118,43 @@ export const columns = [
         title: 'AI误检',
         children: [
           {
-            title: '审核实废',
+            title: (
+              <span style={{ color: 'red' }}>
+                <Tooltip
+                  title={
+                    <div>
+                      以图像二次审核为标准统计人工最终漏检。同时满足以下条件：
+                      <br />
+                      人工判误废、AI判实废、图像二次判实废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+                人工漏检
+              </span>
+            ),
             key: '审核实废',
             dataIndex: 'err_fake_fake_img',
             render: (text) => <span>{Number(text).toFixed(1)}</span>,
           },
           {
-            title: '审核误判',
+            title: (
+              <span>
+                <Tooltip
+                  title={
+                    <div>
+                      以图像二次审核为标准统计AI最终误检。同时满足以下条件：
+                      <br />
+                      人工判误废、AI判实废、图像二次审核判误废
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+                审核误废
+              </span>
+            ),
             key: '审核误判',
             dataIndex: 'err_fake_normal_img',
             render: (text) => <span>{Number(text).toFixed(1)}</span>,
@@ -105,10 +170,21 @@ export const columns = [
       {
         title: '共同检出实废',
         key: '共同检出实废',
+        width: '80px',
         dataIndex: 'fake_img',
         render: (text) => <span>{Number(text).toFixed(1)}</span>,
       },
     ],
+  },
+  {
+    title: (
+      <Tooltip title="如果一开产品存在人工及AI同时判为实废，产品将在实物剔废单中，如果同一开位出现人工或AI漏检，为方便分析，该图像不计入作废分析中。">
+        <QuestionCircleOutlined /> <span>不计废</span>
+      </Tooltip>
+    ),
+    key: 'ignore_img',
+    dataIndex: 'ignore_img',
+    render: (text) => <span>{Number(text).toFixed(1)}</span>,
   },
   {
     title: '图片总数',
@@ -120,13 +196,43 @@ export const columns = [
     title: '准确率',
     children: [
       {
-        title: '图核判废',
+        title: (
+          <span>
+            <Tooltip
+              title={
+                <div>
+                  以图像核查为标准计算AI初次判废准确率。
+                  <br />
+                  准确率 = 100-(AI漏检+AI误判)*100/总条数
+                </div>
+              }
+            >
+              <QuestionCircleOutlined />
+            </Tooltip>
+            图核判废
+          </span>
+        ),
         key: '图核判废',
         dataIndex: 'acc',
         render: (text) => <span>{Number(text).toFixed(2)}%</span>,
       },
       {
-        title: '二次审核',
+        title: (
+          <span style={{ color: 'red' }}>
+            <Tooltip
+              title={
+                <div>
+                  以图像二次审核为标准计算AI判废系统最终判废准确率。
+                  <br />
+                  AI判废准确率 = 100-(AI漏检+AI误判)*100/(总条数-不计废)
+                </div>
+              }
+            >
+              <QuestionCircleOutlined />
+            </Tooltip>
+            二次审核
+          </span>
+        ),
         key: '二次审核',
         dataIndex: 'acc_fix',
         render: (text) => <span>{Number(text).toFixed(2)}%</span>,
@@ -211,6 +317,8 @@ export default () => {
     id: '0',
   });
 
+  const [size, setSize] = useState(25);
+
   return (
     <div
       className="card-content"
@@ -236,7 +344,11 @@ export default () => {
         dataSource={data}
         // loading={loading}
         pagination={{
-          pageSize: 12,
+          pageSizeOptions: ['10', '25', '50', '100'],
+          pageSize: size,
+          onChange: (page, pageSize) => {
+            pageSize && setSize(pageSize);
+          },
         }}
         bordered
         columns={[
@@ -245,6 +357,7 @@ export default () => {
             title: '操作',
             key: '操作',
             dataIndex: 'id',
+            width: '160px',
             render: (text, record: ICartItem) =>
               record.id > '0' ? (
                 <>

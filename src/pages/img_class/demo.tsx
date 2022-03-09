@@ -9,6 +9,18 @@ import { IClassItem, IErrorTypeItem } from './db';
 import * as R from 'ramda';
 import { ImageItem, IErrorType, MenuList } from './label';
 
+// 记录不同训练量下准确率
+const ai_result = [
+  {
+    train_pic: 10000,
+    acc: 69.09,
+  },
+  {
+    train_pic: 11604,
+    acc: 70.44,
+  },
+];
+
 const LabelResultPage = ({
   imgHeight,
   ip,
