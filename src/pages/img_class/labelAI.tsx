@@ -291,11 +291,11 @@ const LabelPage = ({
           .map((key, id) => (
             <div className={styles.row} key={key}>
               <div className={styles.title}>
-                <span>
+                <span className={styles.text}>
                   {id + 1}.{key}
                 </span>
                 <Button
-                  type="default"
+                  type="primary"
                   style={{ marginLeft: 20 }}
                   onClick={() => {
                     let id = data[key].map((item) => item.id);
