@@ -281,7 +281,10 @@ const LabelPage = ({
             : '未选择'}
         </span>
         <br />
-        本页正确数：<span className={styles.highlight}>{rightPred}/40</span>
+        本页正确数：
+        <span className={styles.highlight}>
+          {rightPred}/{data.length}
+        </span>
         {/* <MenuList data={errtype} onChange={updateChoosedTypename} /> */}
       </div>
 
