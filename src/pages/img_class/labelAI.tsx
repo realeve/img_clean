@@ -215,11 +215,18 @@ const LabelPage = ({
   const [curtype, setCurType] = useState(0);
   const [curTypeDetail, setCurTypeDetail] = useState<IErrorTypeItem>();
 
-  const updateImageList = (id: number) => {
+  const updateImageList = (id: number | number[]) => {
+    let remainImageNum = imgNum;
     // 同步更新
-    setImgNum((num) => num - 1);
+    if (typeof id == 'number') {
+      remainImageNum = imgNum - 1;
+      setImgNum((num) => num - 1);
+    } else {
+      remainImageNum = imgNum - id.length;
+      setImgNum((num) => num - id.length);
+    }
 
-    if (imgNum > 1) {
+    if (remainImageNum > 1) {
       return;
     }
 
