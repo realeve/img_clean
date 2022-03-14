@@ -195,6 +195,7 @@ const LabelPage = ({
   const refreshImageList = () => {
     setChoosedId([]);
     setChooseKey([]);
+    setData({});
     db.getImageClassTask().then((res) => {
       setData(R.groupBy(R.prop('err_type1'), res));
       setImgNum(res.length);
@@ -283,7 +284,7 @@ const LabelPage = ({
         <br />
         本页正确数：
         <span className={styles.highlight}>
-          {rightPred}/{data.length}
+          {rightPred}/{imgNum}
         </span>
         {/* <MenuList data={errtype} onChange={updateChoosedTypename} /> */}
       </div>
