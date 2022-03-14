@@ -188,7 +188,13 @@ const LabelPage = ({
   const [imgNum, setImgNum] = useState(0);
 
   const ref = useRef(null);
+
+  const [choosedId, setChoosedId] = useState<number[]>([]);
+  const [chooseKey, setChooseKey] = useState<string[]>([]);
+
   const refreshImageList = () => {
+    setChoosedId([]);
+    setChooseKey([]);
     db.getImageClassTask().then((res) => {
       setData(R.groupBy(R.prop('err_type1'), res));
       setImgNum(res.length);
@@ -220,7 +226,7 @@ const LabelPage = ({
     refreshImageList();
   };
 
-  const labelOneImg = async (_id: number, audit_flag: number) => {
+  const labelOneImg = async (_id: number | number[], audit_flag: number) => {
     let success = await db.setImageClass({
       _id,
       audit_flag,
@@ -232,7 +238,16 @@ const LabelPage = ({
       return;
     }
     message.success('标记成功');
+
     updateImageList(_id);
+
+    let nextId = choosedId;
+    if (typeof _id == 'number') {
+      nextId = [...nextId, _id];
+    } else {
+      nextId = [...nextId, ..._id];
+    }
+    setChoosedId(nextId);
   };
 
   const updateChoosedTypename = (typeid: number) => {
@@ -264,42 +279,50 @@ const LabelPage = ({
       </div>
 
       <div className={styles.result} style={{ marginTop: 30 }}>
-        {Object.keys(data).map((key, id) => (
-          <div className={styles.row} key={key}>
-            <h3 className={styles.title}>
-              <span>
-                {id + 1}.{key}
-              </span>
-            </h3>
-            <div className={styles.detail}>
-              {data[key].map((item) => (
-                <ImageItem
-                  key={item.id}
-                  setRightPred={() => {
-                    setRightPred((rightPred) => rightPred + 1);
+        {Object.keys(data)
+          .filter((key) => !chooseKey.includes(key))
+          .map((key, id) => (
+            <div className={styles.row} key={key}>
+              <div className={styles.title}>
+                <span>
+                  {id + 1}.{key}
+                </span>
+                <Button
+                  type="default"
+                  style={{ marginLeft: 20 }}
+                  onClick={() => {
+                    let id = data[key].map((item) => item.id);
+                    let typeid = data[key][0].ai_flag1;
+                    id = id.filter((item) => !choosedId.includes(item));
+                    setChooseKey([...chooseKey, key]);
+                    labelOneImg(id, typeid);
                   }}
-                  onChange={(typeid: number) => {
-                    if (typeid != curtype) {
-                      updateChoosedTypename(typeid);
-                    }
-                    labelOneImg(item.id, typeid);
-                  }}
-                  onChoose={() => {
-                    if (curtype == 0) {
-                      message.error('请先选择右侧的缺陷类型标记工具');
-                      return;
-                    }
-                    labelOneImg(item.id, curtype);
-                  }}
-                  item={item}
-                  light={light}
-                  imgHeight={imgHeight}
-                  errtype={errtype}
-                />
-              ))}
+                >
+                  批量确认
+                </Button>
+              </div>
+              <div className={styles.detail}>
+                {data[key].map((item) => (
+                  <ImageItem
+                    key={item.id}
+                    setRightPred={() => {
+                      setRightPred((rightPred) => rightPred + 1);
+                    }}
+                    onChange={(typeid: number) => {
+                      if (typeid != curtype) {
+                        updateChoosedTypename(typeid);
+                      }
+                      labelOneImg(item.id, typeid);
+                    }}
+                    item={item}
+                    light={light}
+                    imgHeight={imgHeight}
+                    errtype={errtype}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

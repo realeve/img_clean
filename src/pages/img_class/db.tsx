@@ -81,7 +81,7 @@ export const setImageClass: (params: {
   audit_flag: number;
   ip: string;
   audit_date: string;
-  _id: number;
+  _id: number | number[];
 }) => Promise<boolean> = (params) =>
   axios<TDbWrite>({
     url: DEV ? _commonData : '/1470/83e450260c.json',
