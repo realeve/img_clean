@@ -268,6 +268,11 @@ export const columns = [
       },
     ],
   },
+  {
+    title: '模型版本',
+    key: 'model_version',
+    dataIndex: 'model_version',
+  },
   // {
   //   title: '开包量',
   //   children: [

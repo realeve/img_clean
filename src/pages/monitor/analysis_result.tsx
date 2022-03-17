@@ -283,7 +283,7 @@ const columns = [
 export default () => {
   const { data, loading } = useFetch({
     param: {
-      url: DEV ? '@/mock/1430_d55a6e3d81.json' : '/1459/779881902e.json',
+      url: DEV ? '@/mock/1430_d55a6e3d81.json' : '/1459/779881902e/5.json',
     },
     callback: (res: IAxiosState<ICartItem>) =>
       res.data.map((item, i) => {
