@@ -120,6 +120,8 @@ export interface IAccItem {
   total_pic: string;
   acc: string;
   acc3: string;
+  right_pic_proc: string;
+  acc_proc: string;
 }
 /**
  *   @database: { 生产指挥中心BI数据 }

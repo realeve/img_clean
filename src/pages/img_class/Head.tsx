@@ -220,7 +220,10 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
           AI标记正确图片数:{aiAcc.right_pic}({aiAcc.acc}%)
         </span>
         <span>
-          AI前3张标记正确图片数:{aiAcc.right_pic3}({aiAcc.acc3}%)
+          前3张标记正确图片数:{aiAcc.right_pic3}({aiAcc.acc3}%)
+        </span>
+        <span>
+          工序标记正确图片数:{aiAcc.right_pic_proc}({aiAcc.acc_proc}%)
         </span>
       </Col>
       <Col span={6} style={{ marginTop: 10 }}>
