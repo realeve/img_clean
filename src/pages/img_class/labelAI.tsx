@@ -1,4 +1,4 @@
-import { message, Button } from 'antd';
+import { message, Button, Switch } from 'antd';
 
 import styles from './label.less';
 
@@ -22,6 +22,7 @@ export const ImageItem = ({
   onChange,
   imgHeight = defaultImageSize,
   light = false,
+  zip = false,
   errtype,
   onChoose,
   setRightPred,
@@ -33,6 +34,7 @@ export const ImageItem = ({
   light?: boolean;
   errtype: IErrorType;
   setRightPred: () => void;
+  zip?: boolean;
 }) => {
   const [box, setBox] = useState<IBoxItem | null>(null);
   useEffect(() => {
@@ -50,13 +52,14 @@ export const ImageItem = ({
 
   const [hide, setHide] = useState(false);
 
-  const scale = imgHeight / originSize;
+  const imgWidth = (item.img_url.includes('/2t_') ? 160 : originSize);
+  const scale = imgHeight / imgWidth;
 
   return (
     <div
       className={styles.imageItem}
       style={{
-        height: imgHeight + 150,
+        // height: imgHeight + 150,
         width: imgHeight,
         display: !hide ? 'block' : 'none',
       }}
@@ -64,8 +67,8 @@ export const ImageItem = ({
       <div
         className={styles.detail}
         style={{
-          height: imgHeight,
-          width: imgHeight * 2,
+          // height: imgHeight,
+          width: imgHeight * (zip ? 2 : 1),
           filter: `brightness(${light ? 2 : 1})`,
         }}
       >
@@ -169,10 +172,11 @@ export const ImageItem = ({
 const LabelPage = ({
   imgHeight,
   ip,
-  light,
+  light, zip
 }: {
   imgHeight: number;
   light: boolean;
+  zip: boolean;
   ip: string;
 }) => {
   const [data, setData] = useState<{ [key: string]: IClassItem[] }>({});
@@ -263,6 +267,8 @@ const LabelPage = ({
     setCurTypeDetail(errList.find((item) => item.err_typeid == typeid));
   };
 
+  const [shouldClick, setShouldClick] = useState(false)
+
   return (
     <div className="card-content">
       <Header ref={ref} />
@@ -272,7 +278,15 @@ const LabelPage = ({
         onClick={refreshImageList}
       >
         手动加载数据
-      </Button>
+      </Button>  <div style={{ marginLeft: 10 }}>
+        单击图片标定数据
+        <Switch
+          checked={shouldClick}
+          onChange={(e) => {
+            setShouldClick(e);
+          }}
+        />
+      </div>
 
       <div className={styles.toolContainer}>
         标记类型：
@@ -325,10 +339,23 @@ const LabelPage = ({
                       }
                       labelOneImg(item.id, typeid);
                     }}
+                    onChoose={() => {
+                      if (!shouldClick) {
+                        message.error('单击标定数据功能未打开');
+                        return true;
+                      }
+                      if (curtype == 0) {
+                        message.error('请先选择右侧的缺陷类型标记工具');
+                        return false;
+                      }
+                      labelOneImg(item.id, curtype);
+                      return false
+                    }}
                     item={item}
                     light={light}
                     imgHeight={imgHeight}
                     errtype={errtype}
+                    zip={zip}
                   />
                 ))}
               </div>
@@ -343,4 +370,5 @@ export default connect(({ common }: { common: ICommon }) => ({
   ip: common.ip,
   imgHeight: common.imgHeight,
   light: common.light,
+  zip: common.zip
 }))(LabelPage);

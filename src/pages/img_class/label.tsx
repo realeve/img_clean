@@ -53,6 +53,7 @@ export const ImageItem = ({
   onChange,
   imgHeight = defaultImageSize,
   light = false,
+  zip = false,
   errtype,
   onChoose,
   showMenu = true,
@@ -60,8 +61,9 @@ export const ImageItem = ({
   item: IClassItem;
   imgHeight: number;
   onChange: (e: number) => void;
-  onChoose?: () => void;
+  onChoose?: () => boolean;
   light?: boolean;
+  zip?: boolean;
   showMenu?: boolean;
   errtype: IErrorType;
 }) => {
@@ -96,7 +98,7 @@ export const ImageItem = ({
         className={styles.detail}
         style={{
           height: imgHeight,
-          width: imgHeight * 2,
+          width: imgHeight * (zip ? 2 : 1),
           filter: `brightness(${light ? 2 : 1})`,
         }}
       >
@@ -105,8 +107,8 @@ export const ImageItem = ({
           style={{ width: imgHeight * 2 }}
           className={styles.img}
           onClick={() => {
-            onChoose?.();
-            onChoose && setHide(true);
+            let status = onChoose?.();
+            status && onChoose && setHide(true);
           }}
         />
         {box && (
@@ -119,8 +121,8 @@ export const ImageItem = ({
               height: scale * (box.y2 - box.y1),
             }}
             onClick={() => {
-              onChoose?.();
-              onChoose && setHide(true);
+              let status = onChoose?.();
+              status && setHide(true);
             }}
           />
         )}
@@ -158,11 +160,11 @@ export interface IErrorType {
 const LabelPage = ({
   imgHeight,
   ip,
-  light,
+  light, zip
 }: {
   imgHeight: number;
   light: boolean;
-  ip: string;
+  ip: string; zip: boolean;
 }) => {
   const [data, setData] = useState<IClassItem[]>([]);
 
@@ -267,12 +269,14 @@ const LabelPage = ({
             onChoose={() => {
               if (curtype == 0) {
                 message.error('请先选择右侧的缺陷类型标记工具');
-                return;
+                return false;
               }
               labelOneImg(item.id, curtype);
+              return true
             }}
             item={item}
             light={light}
+            zip={zip}
             imgHeight={imgHeight}
             errtype={errtype}
           />
@@ -286,4 +290,5 @@ export default connect(({ common }: { common: ICommon }) => ({
   ip: common.ip,
   imgHeight: common.imgHeight,
   light: common.light,
+  zip: common.zip
 }))(LabelPage);

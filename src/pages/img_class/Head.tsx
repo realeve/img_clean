@@ -83,6 +83,7 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
     refresh: () => {
       refetchJudge();
       reFetch();
+      db.getImageClassAcc().then(setAiAcc);
     },
   }));
 
@@ -125,6 +126,9 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
   }, []);
 
   const [light, setLight] = useState(false);
+
+
+  const [zip, setZip] = useState(false)
 
   return (
     <Row className={styles.head}>
@@ -172,6 +176,30 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
                   type: 'common/setStore',
                   payload: {
                     light: e,
+                  },
+                });
+              }}
+            />
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <div style={{ marginRight: 10 }}>
+            图片拉伸：
+            <Switch
+              checked={zip}
+              onChange={(e) => {
+                setZip(e);
+                dispatch({
+                  type: 'common/setStore',
+                  payload: {
+                    zip: e,
                   },
                 });
               }}
@@ -226,7 +254,7 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
           工序标记正确图片数:{aiAcc.right_pic_proc}({aiAcc.acc_proc}%)
         </span>
       </Col>
-      <Col span={6} style={{ marginTop: 10 }}>
+      {/* <Col span={6} style={{ marginTop: 10 }}>
         <div>
           <Button
             style={{ marginLeft: 20 }}
@@ -238,7 +266,7 @@ const Head = ({ ip, dispatch, refInstance, curUser }: IHeadInterface) => {
             分类总量统计
           </Button>
         </div>
-      </Col>
+      </Col> */}
       {judgeUsers.length > 0 && (
         <Col
           span={12}

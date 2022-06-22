@@ -39,8 +39,8 @@ export const fetchXML = async (url: string) => {
     x2 = Number(box.xmax[0]),
     y2 = Number(box.ymax[0]);
 
-  // 20211116 背面缺陷框位置需要做坐标系转换
-  if (url.includes('image/14') || url.includes('image/15')) {
+  // 20211116 背面缺陷框位置需要做坐标系转换  || url.includes('image/15')
+  if (url.includes('image/14')) {
     let temp = x2;
     x2 = 112 - x1;
     x1 = 112 - temp;

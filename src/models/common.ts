@@ -14,6 +14,7 @@ export interface ICommon {
   curUser: string;
   judgeType: '0' | '1';
   light: boolean;
+  zip: boolean;
 }
 const defaultState: ICommon = {
   version: {},
@@ -24,6 +25,7 @@ const defaultState: ICommon = {
   curUser: '',
   judgeType: '0',
   light: false,
+  zip: false,
 };
 
 // 获取ip

@@ -63,7 +63,7 @@ export const ImageItem = ({
       title="点击改变状态"
       style={{
         height: imgHeight,
-        width: (showModel || hover ? 2 : 1) * imgHeight,
+        // width: (showModel || hover ? 2 : 1) * imgHeight,
       }}
     >
       {!showModel && (
