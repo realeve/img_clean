@@ -8,10 +8,7 @@
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "deploy": "umi build && hash.bat && deploy.bat"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
+  }, 
   "lint-staged": {
     "*.{js,jsx,less,md,json}": [
       "prettier --write"
