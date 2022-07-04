@@ -161,11 +161,16 @@ const JudgePage = ({
 }) => {
   const needReverse = !isCheckPage && judgeType == '1';
 
-  const [rightSide, setRightSide] = useState(true);
-  useEffect(() => {
-    let item = parseInt(window.localStorage.getItem('rightSide') || '0');
-    setRightSide(Boolean(item));
-  }, []);
+  // // const [rightSide, setRightSide] = useState(true);
+  // const [fakeWidth, setFakeWidth] = useState(8);
+  // const fakeWidth = judgeType == '1' && !rightSide ? 8 : 16;
+  const fakeWidth = 8;
+
+  // useEffect(() => {
+  //   let item = parseInt(window.localStorage.getItem('rightSide') || '0');
+  //   let rightSide = Boolean(item);
+  //   setFakeWidth(rightSide ? 8 : 16);
+  // }, []);
 
   const submit = async () => {
     let success1 =
@@ -197,8 +202,6 @@ const JudgePage = ({
     message.success('数据提交成功');
     onRefresh();
   };
-
-  const fakeWidth = judgeType == '1' && !rightSide ? 8 : 16;
 
   const removeFake = (i: number, id: number) => {
     const fake = R.remove(i, 1, judgeData.fake);
