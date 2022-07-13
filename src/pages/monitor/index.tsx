@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import DatePicker from '@/component/DatePicker';
 import moment from 'moment';
-import { Button, Table, Tooltip } from 'antd';
+import { Button, Table, Tooltip, Select } from 'antd';
 import * as db from './db';
 import { ICartItem } from './db';
 import { imageSearchUrl } from '@/utils/setting';
@@ -9,6 +9,8 @@ import ResultPanel from './ResultPanel';
 import useFetch from '@/component/hooks/useFetch';
 import { DEV, IAxiosState } from '@/utils/axios';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+
+const { Option } = Select;
 
 const dateFormat = 'YYYYMMDD';
 
@@ -291,6 +293,7 @@ export const columns = [
 ];
 
 export default () => {
+  const [prod, setProd] = useState('全部');
   const [state, setState] = useState({
     tstart: '',
     tend: '',
@@ -303,9 +306,14 @@ export default () => {
   const { data, loading } = useFetch({
     valid: () => /\d{8}/.test(state.tstart),
     param: {
-      url: DEV ? '@/mock/1430_d55a6e3d81.json' : '/1430/d55a6e3d81.json',
+      url: DEV
+        ? '@/mock/1430_d55a6e3d81.json'
+        : prod == '全部'
+        ? '/1430/d55a6e3d81'
+        : '/1572/a48d951b7a',
       params: {
         ...state,
+        prod,
       },
     },
     callback: (res: IAxiosState<ICartItem>) =>
@@ -329,6 +337,31 @@ export default () => {
       className="card-content"
       style={{ position: 'relative', paddingTop: 40 }}
     >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          position: 'absolute',
+          right: 320,
+          top: 5,
+        }}
+      >
+        品种：
+        <Select
+          defaultValue={prod}
+          onChange={(e) => {
+            setProd(e);
+          }}
+          style={{ width: 120 }}
+        >
+          <Option value="9607T">9607T</Option>
+          <Option value="9604T">9604T</Option>
+          <Option value="9602T">9602T</Option>
+          <Option value="全部">全部品种</Option>
+        </Select>
+      </div>
+
       <DatePicker
         value={[state.tstart, state.tend]}
         onChange={([tstart, tend]: [string, string]) => {
