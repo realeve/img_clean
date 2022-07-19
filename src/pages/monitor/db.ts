@@ -135,6 +135,7 @@ export const getCartsDateRange = () =>
 export interface IJudgeImageItem {
   probability: number;
   image: string;
+  cart_id: string;
   id: string;
   ai_result: number;
   img_order: number;
@@ -283,3 +284,24 @@ export const getAiLeakDetail = (cart: string) =>
       cart,
     },
   }).then((res) => res.data);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { AI数据校验结果统计汇总 }
+ */
+export const addJudgeResult = () =>
+  axios<TDbWrite>({
+    url: '/1554/1d02602723.json',
+  }).then(({ data: [{ id }] }) => id);
+
+/**
+ *   @database: { 图像核查判废数据记录 }
+ *   @desc:     { 移除判废数据 }
+ */
+export const delJudgeResult: (cartid: string) => Promise<boolean> = (cartid) =>
+  axios<TDbWrite>({
+    url: DEV ? _commonData : '/1575/246de56de2.json',
+    params: {
+      cartid,
+    },
+  }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);

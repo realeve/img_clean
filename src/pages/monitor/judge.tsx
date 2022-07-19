@@ -142,12 +142,14 @@ interface IJudgePageProps {
   ip: string;
   onRefresh: () => void;
   cart: string | undefined;
+  cartid: string | undefined;
 }
 const JudgeComponent = ({
   imgHeight,
   ip,
   onRefresh,
   cart,
+  cartid,
 }: IJudgePageProps) => {
   const [rightSide, setRightSide] = useState(true);
   const [taskList, setTaskList] = useState<{
@@ -164,7 +166,7 @@ const JudgeComponent = ({
   }, []);
 
   const refresh = () => {
-    db.getImagesNeedJudge(ip, cart).then((fake: IJudgeImageItem[]) => {
+    db.getImagesNeedJudge(ip, cartid).then((fake: IJudgeImageItem[]) => {
       if (!rightSide) {
         setTaskList({ fake, normal: [] });
       } else {
@@ -204,6 +206,11 @@ const JudgeComponent = ({
       fake: [],
       normal: [],
     });
+    if (cartid) {
+      await db.delJudgeResult(cartid);
+      // 更新提交结果
+      await db.addJudgeResult();
+    }
     refresh();
     onRefresh();
   };
@@ -324,7 +331,12 @@ const JudgePage = ({
   return (
     <div className="card-content">
       <Header ip={ip} ref={ref} cart={query.cart} />
-      <Judge ip={ip} onRefresh={onRefresh} cart={query.cart} />
+      <Judge
+        ip={ip}
+        onRefresh={onRefresh}
+        cart={query.cart}
+        cartid={query.cartid}
+      />
     </div>
   );
 };
