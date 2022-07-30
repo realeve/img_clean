@@ -151,7 +151,13 @@ const ResultPanel = ({
                   <li
                     key={subItem.id}
                     className="animated zoomIn"
-                    style={{ width: imgHeight, height: imgHeight }}
+                    style={{
+                      width: imgHeight,
+                      height:
+                        cartinfo.cartnumber.substring(2, 4) == '75'
+                          ? imgHeight
+                          : (imgHeight * 10) / 16,
+                    }}
                   >
                     <div className={styles.wrap}>
                       <img src={`${subItem.image}`} />
