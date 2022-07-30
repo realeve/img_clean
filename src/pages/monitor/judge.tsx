@@ -12,7 +12,14 @@ import { forwardRef, useImperativeHandle } from 'react';
 import * as R from 'ramda';
 
 const Header = forwardRef(
-  ({ ip, cart }: { ip: string; cart: string | undefined }, ref) => {
+  (
+    {
+      ip,
+      cart,
+      cartid,
+    }: { ip: string; cart: string | undefined; cartid: string | undefined },
+    ref,
+  ) => {
     const [taskList, setTaskList] = useState({ human_leak: '0', ai_leak: '0' });
     const [loading, setLoading] = useState(false);
     const [state, setState] = useState({
@@ -22,11 +29,11 @@ const Header = forwardRef(
     });
     const refresh = async () => {
       setLoading(true);
-      await db.getImageCount(ip, cart).then((res) => {
+      await db.getImageCount(ip, cartid).then((res) => {
         setTaskList(res);
         let total = Number(res.ai_leak) + Number(res.human_leak);
-        if (total == 0 && cart) {
-          db.updateCarts(cart);
+        if (total == 0 && cartid) {
+          db.updateCarts(cartid);
 
           let timeid = window.setTimeout(() => {
             window.close();
@@ -206,11 +213,7 @@ const JudgeComponent = ({
       fake: [],
       normal: [],
     });
-    if (cartid) {
-      await db.delJudgeResult(cartid);
-      // 更新提交结果
-      await db.addJudgeResult();
-    }
+
     refresh();
     onRefresh();
   };
@@ -330,7 +333,7 @@ const JudgePage = ({
   };
   return (
     <div className="card-content">
-      <Header ip={ip} ref={ref} cart={query.cart} />
+      <Header ip={ip} ref={ref} cart={query.cart} cartid={query.cartid} />
       <Judge
         ip={ip}
         onRefresh={onRefresh}

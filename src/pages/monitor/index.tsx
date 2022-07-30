@@ -38,6 +38,14 @@ export const columns = [
       ),
   },
   {
+    title: '核查工艺',
+    dataIndex: 'is_tubu',
+    key: '核查工艺',
+    width: '80px',
+    render: (text, record: ICartItem) =>
+      record.is_tubu == '1' ? '涂后' : '码后',
+  },
+  {
     title: '判废时间',
     dataIndex: 'judge_date',
     key: '判废时间',
@@ -316,12 +324,20 @@ export default () => {
         prod,
       },
     },
-    callback: (res: IAxiosState<ICartItem>) =>
-      res.data.map((item, i) => ({
-        ...item,
-        idx: i || '',
-        acc: Number(item.acc),
-      })),
+    callback: (res: IAxiosState<ICartItem>) => {
+      let start = -1;
+      return res.data.map((item, i) => {
+        if (item.cart == '平均值') {
+          start = -1;
+        }
+        start++;
+        return {
+          ...item,
+          idx: start || '',
+          acc: Number(item.acc),
+        };
+      });
+    },
   });
 
   const [show, setShow] = useState(false);
@@ -426,7 +442,11 @@ export default () => {
                   </a>
                 </>
               ) : (
-                <span>{data.length - 1} 万</span>
+                <span>
+                  {data?.filter((item) => item.is_tubu == record.is_tubu)
+                    ?.length - 1}
+                  万
+                </span>
               ),
           },
         ]}

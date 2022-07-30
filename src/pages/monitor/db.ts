@@ -4,6 +4,7 @@ import * as R from 'ramda';
 const admin1 = '10.8.60.203';
 
 export interface ICartItem {
+  is_tubu: string;
   id: string;
   cart: string;
   check_date: string;
@@ -260,13 +261,18 @@ export const getJudgeDetail: (cart: string) => Promise<IAxiosState> = (cart) =>
  *   @database: { 图像核查判废数据记录 }
  *   @desc:     { 更新判废状态 }
  */
-export const updateCarts = (cart: string) =>
-  axios<{ affected_rows: number }>({
+export const updateCarts = async (cart: string) => {
+  let success = await axios<{ affected_rows: number }>({
     url: DEV ? _commonData : '/1449/91798a1be1.json',
     params: {
       cart,
     },
   }).then((res) => res.data[0].affected_rows > 0);
+  await delJudgeResult(cart);
+  // 更新提交结果
+  await addJudgeResult();
+  return success;
+};
 
 export interface IAiLeakItem {
   ex_codenum: string;
