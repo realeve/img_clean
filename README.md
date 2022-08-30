@@ -52,3 +52,10 @@ item_flag:
 2 实废困难
 3 误废困难
 ```
+
+```sql
+
+ALTER TABLE tbl_image_judge_users CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+```
